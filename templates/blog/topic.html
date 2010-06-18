@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load markup %}
+
+{% block csslist %}
+<link rel='stylesheet' type='text/css' href='/media/styles/formAuth.css'>
+{% endblock %}
+
+{% block title %}Настройки бога пользователя {{ user.username }}{% endblock %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>Настройки блога</td>
+
+<td align='right'>
+[<a href='/{{user.username}}/profile/'>Отмена</a>]
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if form.cleaned_data %}
+<div class='news'>
+<h3>
+{% if form.cleaned_data.target %}
+<a href='/blogs/'>Блоги</a>
+{% else %}
+<a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a>
+{% endif %}
+
+→ <a href='/news/131313131'>{{ form.cleaned_data.title }}</a></h3>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr><td width='40px'>&nbsp;</td><td>
+<div class='content'>
+{{ form.cleaned_data.content|markup:form.cleaned_data.parser|safe }}
+{% if form.cleaned_data.tags %}
+<div class='tags'><p>Метки: {{ form.cleaned_data.tags|tags|safe }}
+</p></div>
+{% endif %}
+<p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | Автор: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>Комментариев: 0</a></p>
+</div>
+</td>
+<td width='40px'>&nbsp;</td><td>
+</table>
+</div>
+{% endif %}
+<div class='page_content'>
+<h3>Добавление нового топика</h3>
+<form method="POST" action="/{{ user.username }}/blog/addtopic/">{% csrf_token %}
+<table border='0' width='100%'>
+    {% if form.errors %}
+    <tr><td width='180px'><span style='color: #ff7e00'>Ошибка</span>:</td><td>&nbsp;</td></tr>
+    {% for value in form.errors.values %}
+        <tr><td colspan='2'>{{ value }}</td></tr>
+    {% endfor %}
+    {% endif %}
+    <tr><td width='180px'><b>Раздел</b>:</td><td>{{ form.target }}</td></tr>
+    <tr><td width='180px'><b>Заглавие</b>:</td><td>{{ form.title }}</td></tr>
+    <tr><td valign='top'><b>Тело сообщения</b>:</td><td>{{ form.content }}</td></tr>
+    <tr><td valign='top'><b>Язык разметки</b>:</td><td>{{ form.parser }}</td></tr>
+    <tr><td valign='top'><b>Теги<b>:</td><td>{{ form.tags }}</td></tr>
+    <tr><td valign='top'><b>Ограничения<b>:</td><td>{{ form.allow_negative }} ограничить отправку камментариев пользователям с отрицательной кармой</td></tr>
+    <tr><td colspan='2'>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Предпросмотр"></td></tr>
+{% if form.cleaned_data %}
+    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Сохранить"></td></tr>
+{% endif %}
+</table>
+</form>
+</div>
+
+{% endblock %}
+
+

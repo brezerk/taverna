@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load markup %}
+
+{% block title %}
+{% if user_blog.desc %}
+   {{ user_blog.desc }}
+{% else %}
+    Бло пользователя {{ user_info.username }}
+{% endif %}
+{% endblock %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>
+{% if user.username == user_info.username %}
+Мой блог
+{% else %}
+Блог
+{% endif %}
+</td>
+
+<td align='right'>
+{% if user.username != user_info.username %}
+    {% if user_blog %}
+        [<a href='/{{user_info.username}}/'>RSS</a>]
+    {% endif %}
+{% else %}
+    {% if user_blog %}
+        [<a href='/{{user.username}}/blog/addtopic/'>Добавить пост</a>]
+        [<a href='/{{user.username}}/blog/edit/'>Настройки блога</a>]
+    {% else %}
+        [<a href='/{{user.username}}/blog/edit/'>Создать блог</a>]
+    {% endif %}
+{% endif %}
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class='page_content'>
+{% if blog_posts %}
+{% for post in blog_posts %}
+
+<div class='news'>
+<h3>
+{% if post.blog_id = user_blog %}
+<a href='/{{ user_info.username }}/'>{{ user_info.username }}</a>
+{% else %}
+<a href='/blogs/{{ post.blog_id.id }}'>{{ post.blog_id.name }}</a>
+{% endif %}
+
+→ <a href='/news/131313131'>{{ post.title }}</a></h3>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr><td width='40px'>&nbsp;</td><td>
+<div class='content'>
+{{ post.content|strippost:post|safe }}
+{% if post.tags.all %}
+<div class='tags'><p>Метки: 
+{% for tag in post.tags.all %}{% if not forloop.first %}, {% endif %}<a href='/blogs/tags/{{ tag }}'>{{ tag }}</a>{% endfor %}
+</p></div>
+{% endif %}
+<p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | Автор: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>Комментариев: 0</a></p>
+</div>
+</td>
+<td width='40px'>&nbsp;</td><td>
+</table>
+</div>
+
+{% endfor %}
+{% else %}
+В блоге пользователя нет ниодного сообщения :)
+{% endif %}
+</div>
+
+{% endblock %}
+
+

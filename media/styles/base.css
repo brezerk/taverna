@@ -1,0 +1,189 @@
+html, body {
+    background-color: #282828;
+    color: #c1c1c1;
+    margin: 0px;
+    padding: 0px;
+    font-family:Trebuchet MS,sans-serif;
+    font-size:medium;
+    line-height:1.4
+}
+
+pre {
+    font-family: monospace;
+    font-size:medium;
+    line-height: 1.3;
+    margin: 0px;    
+    padding: 0px;
+}
+
+hr {
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid red;
+    background-color: #1c1c1c;
+}
+
+a {
+    color: #e8e8e8;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #abbac9;
+    text-decoration: none;
+}
+
+
+a:hover {
+    color: #abbac9;
+    text-decoration: none;
+}
+
+.menubox {
+    background-color: #3f3f3f;
+    border-bottom: 1px solid #686868;
+    border-top: 1px solid #686868;
+    text-align: center;
+    color: #afafaf;
+}
+
+.menubox a {
+    color: white;
+    text-decoration: none;
+}
+
+.menubox a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+
+.menubox a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+.actionbox {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.actionbox a {
+    color: white;
+    text-decoration: none;
+}
+
+.actionbox a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+
+.actionbox a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+
+.titlebox {
+    background-color: #111111;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 16px;
+    color: #c8c8c8;
+    text-align: left;
+}
+
+.news {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.news a {
+    color: white;
+    text-decoration: none;
+}
+
+.news a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+
+.news a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+.tags a {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+.tags a:visited {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+
+.tags a:hover {
+    color: #afafaf;
+}
+
+.content {
+    text-align: justify;
+}
+
+.sign {
+    text-align: center;
+    color: #6f6f6f;
+    font-size: 8pt;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 55px;
+    margin-right: 55px;
+    border-top: 1px dashed #686868;
+}
+
+.plus a {
+  color: #49d723;
+}
+
+.plus a:visited {
+  color: #49d723;
+}
+
+.plus a:hover {
+    color: green;
+}
+
+.minus a {
+  color: red;
+}
+
+.minus a:visited {
+  color: red;
+}
+
+.minus a:hover {
+    color: #ff7e00;
+}
+
+.page_content {
+    padding: 10px;
+}
+
+.form_content {
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.gravatar {
+    border: 3px solid #686868;
+}
+
+.usersign {
+    margin-top: 25px;
+}

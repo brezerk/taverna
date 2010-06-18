@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block csslist %}
+<link rel='stylesheet' type='text/css' href='/media/styles/formAuth.css'>
+<script type="text/javascript" src="http://api.recaptcha.net/js/recaptcha_ajax.js"></script>
+{% endblock %}
+
+{% block title %}Регистрация нового пользователя{% endblock %}
+
+{% block content %}
+<div class='page_content'> 
+<h3>Регистрация нового пользователя</h3>
+<p>Добро пожаловь на страницу регистрации новго пользователя на ресурсе Taverna.</p>
+<p>Пожалуйста, перед началом регистрации ознакомтесь с правилами нашего ресурса. Продолжив процедуру регистрации, вы автоматически соглашаетесь со всеми пунктами текущих правил ресурса.</p>
+<form method="POST" action="/register/">{% csrf_token %}
+<table border='0' width='450px'>
+{% if form.errors %}
+<tr>
+    <td width='180px'><span style='color: #ff7e00'>Ошибка</span>:</td>
+    <td>&nbsp;</td>
+</tr>
+{% for value in form.errors.values %}
+<tr>
+    <td colspan='2'>{{ value }}</td>
+</tr>
+{% endfor %}
+{% endif %}
+<tr><td width='180px'><b>Логин</b>:</td><td>{{ form.username }}</td></tr>
+<tr><td><b>E-Mail</b>:</td><td>{{ form.email }}</td></tr>
+<tr><td><b>Пароль</b>:</td><td>{{ form.password }}</td></tr>
+<tr><td><b>Повторите пароль</b>:</td><td>{{ form.rpassword }}</td></tr>
+<tr><td align='center' colspan='2'><div class='recaptcha'>{{ form.captchaHTML|safe }}</div></td></tr>
+<tr><td colspan='2'><input type="submit" name="submit" value="Регистрация" tabindex="6"></td></tr>
+</table>
+</form>
+
+</div>{% endblock %}

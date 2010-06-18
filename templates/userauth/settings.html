@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block csslist %}
+<link rel='stylesheet' type='text/css' href='/media/styles/formAuth.css'>
+{% endblock %}
+
+{% block title %}Профайл пользователя {{ user.username }}{% endblock %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>Профайл</td>
+
+<td align='right'>
+[<a href='/{{user.username}}/profile/'>Отмена</a>]
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class='page_content'>
+<h3>Редактирование пользователя {{ user.username }}</h3>
+<form method="POST" action="/{{ user.username }}/edit/">{% csrf_token %}
+<table border='0' width='600px'>
+    {% if form.errors %}
+    <tr><td width='180px'><span style='color: #ff7e00'>Ошибка</span>:</td><td>&nbsp;</td></tr>
+    {% for value in form.errors.values %}
+        <tr><td colspan='2'>{{ value }}</td></tr>
+    {% endfor %}
+    {% endif %}
+    <tr><td width='180px'>Имя:</td><td>{{ form.first_name }}</td></tr>
+    <tr><td>Фамилия:</td><td>{{ form.last_name }}</td></tr>
+    <tr><td>Вебсайт:</td><td>{{ form.website }}</td></tr>
+    <tr><td>Jabber:</td><td>{{ form.jabber }}</td></tr>
+    <tr><td><b>Email</b>:</td><td>{{ form.email }}</td></tr>
+    <tr><td>Город:</td><td>{{ form.location }}</td></tr>
+    <tr><td valign='top'>Подпись:</td><td> {{ form.sign }}</td></tr>
+    <tr><td><b>Текущий пароль</b>:</td><td>{{ form.password }}</td></tr>
+    <tr><td colspan='2'>&nbsp;</td></tr>
+    <tr><td colspan='2'>Смена пароля (не заполняйте, если не хотите менять)</td></tr>
+    <tr><td>Новый пароль:</td><td>{{ form.newpassword }}</td></tr>
+    <tr><td>Повторите пароль:</td><td>{{ form.rnewpassword }}</td></tr>
+    <tr><td colspan='2'>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Обновить"></td></tr>
+</table>
+</form>
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+# Create your models here.
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, unique=True)
+    karma = models.IntegerField(null=True, default=0)
+    jabber = models.CharField(null=True, max_length=32, blank=True)
+    website = models.CharField(null=True, max_length=32, blank=True)
+    location = models.CharField(null=True, max_length=32, blank=True)
+    sign = models.CharField(null=True, max_length=256, blank=True)
+    photo = models.CharField(null=True, max_length=33, blank=True)
+
+    def __unicode__(self):
+        return self.user.username
