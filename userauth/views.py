@@ -10,10 +10,11 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django import forms
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from userauth.models import UserProfile
 from blogs.models import Blog
+from util import rr
 
 import re
 import cracklib
@@ -181,6 +182,23 @@ def registerUser(request):
     return render_to_response("userauth/register.html", {'form': form},
                               context_instance=RequestContext(request)
                              )
+@rr('userauth/login.html')
+def loginUser(request):
+    from django.contrib.auth.forms import AuthenticationForm
+    if request.method == 'GET':
+        return {'form': AuthenticationForm()}
+    elif request.method == 'POST':
+        user = authenticate(username = request.POST["username"], 
+            password = request.POST["password"])
+        if user:
+            login(request, user)
+            return(HttpResponseRedirect('/'))
+        else:
+            return {'form': form}
+
+def logoutUser(request):
+    logout(request)
+    return HttpResponseRedirect("/")
 
 @login_required(redirect_field_name='/login')
 def viewProfile(request, username):

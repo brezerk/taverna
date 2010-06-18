@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Create your views here.
 
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
@@ -13,6 +12,7 @@ from django.contrib.auth.models import User
 from userauth.models import UserProfile
 from taverna.blogs.models import Blog, Post, Tag
 from taverna.parsers.models import Installed
+from util import rr
 
 #from taverna.parsers.engines.postmarkup import render_bbcode
 
@@ -145,3 +145,6 @@ def addTopic(request, username):
                               'tags': tags},
                               context_instance=RequestContext(request))
 
+@rr('base.html')
+def index(request):
+    return {}

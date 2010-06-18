@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<div style="margin: 1in;">
+<form method=post>
+<table align=center align=center>
+{{form}}
+{% csrf_token %}
+<tr><td rowspan=2><input type=submit value={% trans "Log in" %}>
+</table>
+</form>
+</div>
+
+{% endblock %}

@@ -25,9 +25,9 @@
         <td align='center'>[<a href='/treker/'>Трекер</a>] [<a href='/blogs/'>Блоги</a>] [<a href='/forum/'>Форум</a>] [<a href='/Library/'>Библиотека</a>]</td>
         <td width='300' align='right'>
         {% if user.is_authenticated %}
-            добро пожаловать, <a href='/{{ user.username}}/profile'>{{ user.username }}</a> [<span class='minus'><a href='/logout'>x</a></span>]
+            добро пожаловать, <a href='/{{ user.username}}/profile'>{{ user.username }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]
         {% else %}
-            [<a href='/login/'>Вход</a>] [<a href='/register/'>Регистрация</a>]
+            [<a href='{% url userauth.views.loginUser %}'>Вход</a>] [<a href='/register/'>Регистрация</a>]
         {% endif %}
         </td>
     </tr>
