@@ -15,6 +15,8 @@ from django.contrib.auth.models import User
 from userauth.models import UserProfile
 from blogs.models import Blog
 
+from django.conf import settings
+
 import re
 import cracklib
 import hashlib
@@ -91,7 +93,7 @@ class RegisterForm(forms.Form):
     recaptcha_response_field = forms.CharField(required=True)
     recaptcha_challenge_field = forms.CharField(required=True)
 
-    captchaHTML = captcha.displayhtml(public_key = "6LfAvLoSAAAAANYXkNHdNSX9EBSNRh0JMuS1dw-2",
+    captchaHTML = captcha.displayhtml(public_key = settings.RECAPTCHA_PUBLIC_KEY,
                 use_ssl = False,
                 error = None,
                 theme = "clean")

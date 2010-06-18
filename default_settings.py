@@ -104,3 +104,7 @@ INSTALLED_APPS = (
     'userauth',
     'parsers',
 )
+
+RECAPTCHA_PUBLIC_KEY = (
+    'put_you_key_here',
+)
