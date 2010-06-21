@@ -24,6 +24,6 @@ urlpatterns = patterns('',
     (r'^(?P<username>\w+)/blog/addtopic/$', 'blogs.views.addTopic'),
     (r'^(?P<username>\w+)/profile/$', 'userauth.views.viewProfile'),
     (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
-    (r'^(?P<username>\w+)/blog/edit/$', 'blogs.views.editBlog'),
+    (r'^blog-settings.html$', 'blogs.views.editBlog'),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

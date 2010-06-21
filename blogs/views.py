@@ -13,7 +13,7 @@ from userauth.models import UserProfile
 from taverna.blogs.models import Blog, Post, Tag
 from taverna.parsers.models import Installed
 from util import rr
-
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 class TopicEditForm(forms.Form):
@@ -74,32 +74,27 @@ class BlogEditForm(forms.Form):
             blog = Blog(owner_id=user, name=name, desc=desc)
             blog.save()
 
-@csrf_protect
+@rr('blog/settings.html')
 @login_required(redirect_field_name='/login')
-def editBlog(request, username):
-    if (request.user.username != username):
-        return HttpResponseRedirect('/')
+def editBlog(request):
 
-    form = None
+    class BlogForm(forms.ModelForm):
+        class Meta:
+            model = Blog
     try:
-        user_blog = Blog.objects.get(owner_id__exact=request.user)
+        blog = Blog.objects.get(owner_id = request.user)
     except Blog.DoesNotExist:
-        user_blog = None
+        blog = Blog(name = "%s's blog" % request.user.username)
+        blog.owner_id = request.user
+        blog.save()
 
-    if request.method == 'POST':
-        form = BlogEditForm(request.POST)
+    if request.method == 'GET':
+        return {'form': BlogForm(instance = blog)}
+    elif request.method == 'POST':
+        form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
-            form.save(request.user)
-            return HttpResponseRedirect('/' + username + "/profile")
-    else:
-        if user_blog:
-            form = BlogEditForm({'name': user_blog.name,
-                                'desc': user_blog.desc})
-        else:
-            form = BlogEditForm()
-    return render_to_response("blog/settings.html", {'form': form,
-                              'user_blog': user_blog},
-                              context_instance=RequestContext(request))
+            form.save()
+        return HttpResponseRedirect(reverse('blogs.views.editBlog'))
 
 def viewBlog(request, username):
     try:

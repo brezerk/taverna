@@ -2,13 +2,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from taverna.parsers.models import Installed
+from django.utils.translation import gettext as _
 
-# Create your models here.
 class Blog(models.Model):
-    name = models.CharField(max_length=32)
-    desc = models.CharField(max_length=48, null=True, blank=True)
-    active = models.BooleanField(default=0)
-    owner_id = models.ForeignKey(User)
+    name = models.CharField(max_length = 32)
+    desc = models.CharField(max_length = 48, null=True, blank=True, 
+        default = _("Blog description"))
+    active = models.BooleanField(default = False, editable = False, blank = True)
+    owner_id = models.ForeignKey(User, editable = False)
     def __unicode__(self):
         return self.name
 

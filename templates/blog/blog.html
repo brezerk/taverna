@@ -32,9 +32,9 @@
 {% else %}
     {% if user_blog %}
         [<a href='/{{user.username}}/blog/addtopic/'>{% trans "Add topic" %}</a>]
-        [<a href='/{{user.username}}/blog/edit/'>{% trans "Blog settings" %}</a>]
+        [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
     {% else %}
-        [<a href='/{{user.username}}/blog/edit/'>{% trans "Create blog blog" %}</a>]
+        [<a href='{% url blogs.views.editBlog %}'>{% trans "Create blog" %}</a>]
     {% endif %}
 {% endif %}
 </td>
