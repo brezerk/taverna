@@ -4,8 +4,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+class Profile(models.Model):
+    user = models.OneToOneField(User)
     karma = models.IntegerField(null=True, default=0)
     jabber = models.CharField(null=True, max_length=32)
     website = models.CharField(null=True, max_length=32)
@@ -15,3 +15,6 @@ class UserProfile(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+    def is_karma_good(self):
+        return self.karma > 10

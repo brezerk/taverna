@@ -24,7 +24,7 @@
     <table cellspacing='0' cellpadding='2' border='0' width='100%'>
     <tr>
         <td width='300'>&nbsp;</td>
-        <td align='center'>[<a href='/treker/'>{% trans "Traker" %}</a>] [<a href='/blogs/'>{% trans "Blogs" %}</a>] [<a href='/forum/'>{% trans "Forum" %}</a>] [<a href='/Library/'>{% trans "Library" %}</a>]</td>
+        <td align='center'>[<a href='/treker/'>{% trans "Traker" %}</a>] [<a href='/blogs/'>{% trans "Blogs" %}</a>] [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] [<a href='/Library/'>{% trans "Library" %}</a>]</td>
         <td width='300' align='right'>
         {% if user.is_authenticated %}
             {% trans "Welcome" %}, <a href='/{{ user.username}}/profile'>{{ user.username }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]

@@ -12,7 +12,7 @@ from django import forms
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from userauth.models import UserProfile
+from userauth.models import Profile
 from blogs.models import Blog
 from util import rr
 
@@ -78,7 +78,7 @@ class ProfileForm(forms.Form):
 
         User.objects.filter(username=self.user.username).update(first_name=first_name,last_name=last_name,email=email)
         mailhash = hashlib.md5(email).hexdigest()
-        UserProfile.objects.filter(user=self.user).update(jabber=jabber, website=website, sign=sign, location=location, photo=mailhash)
+        Profile.objects.filter(user=self.user).update(jabber=jabber, website=website, sign=sign, location=location, photo=mailhash)
 
         newpassword = self.cleaned_data['newpassword']
 
@@ -166,7 +166,7 @@ class RegisterForm(forms.Form):
                     is_superuser=False)
         user.set_password(password)
         user.save()
-        profile = UserProfile(user=user, photo=mailhash)
+        profile = Profile(user=user, photo=mailhash)
         profile.save()
         #FIXME: We need to accign group for new users, also, groups might be created at site startup
 
@@ -208,7 +208,7 @@ def logoutUser(request):
 def viewProfile(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
-        user_profile = UserProfile.objects.get(user=user_info)
+        user_profile = Profile.objects.get(user=user_info)
         try:
             user_blog = Blog.objects.get(owner_id=user_info)
         except Blog.DoesNotExist:
@@ -218,7 +218,7 @@ def viewProfile(request, username):
                                   'user_blog': user_blog},
                                   context_instance=RequestContext(request)
                                  )
-    except (User.DoesNotExist, UserProfile.DoesNotExist):
+    except (User.DoesNotExist, Profile.DoesNotExist):
         return HttpResponseRedirect('/')
 
 @login_required(redirect_field_name='/login')
@@ -232,7 +232,7 @@ def editProfile(request, username):
             form.save()
             return HttpResponseRedirect('/' + username + "/profile")
     else:
-        profile = UserProfile.objects.get(user=request.user)
+        profile = Profile.objects.get(user=request.user)
         form = ProfileForm({'first_name': request.user.first_name,
                             'last_name': request.user.last_name,
                             'email': request.user.email,

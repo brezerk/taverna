@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<table id=forums>
+<caption>{% trans "Forum list" %}</caption>
+{% for forum in forums %}
+<tr>
+ <td><a href="{% url forum.views.forum forum.id %}">{{forum.name}}</a>
+ <small>{{forum.description}}</small>
+ </tr>
+{% endfor %}
+</table>
+
+{% if user.profile.is_karma_good %}
+<form action="{% url forum.views.forum_create %}" method=post>
+{% csrf_token %}
+<caption>{% trans "Create forum" %}</caption>
+<table>
+{{forum_form}}
+<tr><td><td colspan=2><input type=submit value="{% trans "Add" %}">
+</table>
+</form>
+{% endif %}
+
+
+{% endblock %}

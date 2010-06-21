@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<table id="forum_posts">
+{% for post in forum.post_set.all %}
+<tr>
+ <td>{{post.title}}
+</tr>
+{% endfor %}
+</table>
+
+{% if user.profile.is_karma_good %}
+<table>
+{{form}}
+</table>
+{% endif %}
+
+{% endblock %}

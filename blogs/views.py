@@ -9,7 +9,7 @@ from django import forms
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from userauth.models import UserProfile
+from userauth.models import Profile
 from taverna.blogs.models import Blog, Post, Tag
 from taverna.parsers.models import Installed
 from util import rr

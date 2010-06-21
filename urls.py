@@ -6,24 +6,23 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Example:
-    # (r'^taverna/', include('taverna.foo.urls')),
-
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-    # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
     (r'^admin/', include(admin.site.urls)),
 
     (r'^$', 'blogs.views.index'),
     
+    (r'^forum.html$', 'forum.views.index'),
+    (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
+    (r'^forum_create/$', 'forum.views.forum_create'),
+    (r'^blog-settings.html$', 'blogs.views.editBlog'),
+
     (r'^register/$', 'userauth.views.registerUser'),
     (r'^login.html$', 'userauth.views.loginUser'),
     (r'^logout/$', 'userauth.views.logoutUser'),
-    (r'^(?P<username>\w+)/$', 'blogs.views.viewBlog'),
+
     (r'^(?P<username>\w+)/blog/addtopic/$', 'blogs.views.addTopic'),
     (r'^(?P<username>\w+)/profile/$', 'userauth.views.viewProfile'),
     (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
-    (r'^blog-settings.html$', 'blogs.views.editBlog'),
+    (r'^(?P<username>\w+)/$', 'blogs.views.viewBlog'), # this one must be last
+
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

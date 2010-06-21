@@ -1,3 +1,33 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Forum(models.Model):
+    name = models.CharField(max_length = 64)
+    description = models.CharField(max_length = 64)
+    owner = models.ForeignKey(User, editable = False)
+    rating = models.IntegerField(editable = False, default = 0)
+    created = models.DateTimeField(editable = False, auto_now_add = True)
+
+class Post(models.Model):
+    owner = models.ForeignKey(User, editable = False, related_name = 'forum_post')
+    forum = models.ForeignKey(Forum, editable = False)
+    title = models.CharField(max_length = 64)
+    text = models.TextField()
+    reply_to = models.ForeignKey('Post', editable = False, blank = True, null = True)
+    rating = models.IntegerField(editable = False, default = 0)
+    created = models.DateTimeField(editable = False, auto_now_add = True)
+    
+class ForumVote(models.Model):
+    forum = models.ForeignKey(Forum)
+    user = models.ForeignKey(User)
+    positive = models.BooleanField()
+    class Meta:
+        unique_together = ('forum', 'user')
+
+class PostVote(models.Model):
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+    positive = models.BooleanField()
+    class Meta:
+        unique_together = ('post', 'user')
+

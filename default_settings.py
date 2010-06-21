@@ -14,7 +14,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-AUTH_PROFILE_MODULE = 'userauth.UserProfile'
+AUTH_PROFILE_MODULE = 'userauth.Profile'
 
 DATABASES = {
     'default': {
@@ -86,9 +86,6 @@ ROOT_URLCONF = 'taverna.urls'
 
 TEMPLATE_DIRS = (
     PROJECT_ROOT + '/templates/',
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
