@@ -14,7 +14,7 @@ from taverna.blogs.models import Blog, Post, Tag
 from taverna.parsers.models import Installed
 from util import rr
 
-#from taverna.parsers.engines.postmarkup import render_bbcode
+from django.utils.translation import ugettext as _
 
 class TopicEditForm(forms.Form):
     target = forms.ModelChoiceField(queryset=Blog.objects.filter(owner_id=5),
@@ -132,7 +132,7 @@ def addTopic(request, username):
     if request.method == 'POST':
         form = TopicEditForm(request.POST)
         if form.is_valid():
-            if request.POST['submit']==u"Сохранить":
+            if request.POST['submit']==_("Save"):
                 form.save(user_info, user_blog)
                 return HttpResponseRedirect('/' + username + '/')
     else:

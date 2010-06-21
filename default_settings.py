@@ -104,6 +104,6 @@ INSTALLED_APPS = (
     'parsers',
 )
 
-RECAPTCHA_PUBLIC_KEY = (
-    'put_you_key_here',
-)
+RECAPTCHA_PUBLIC_KEY = 'put_you_key_here'
+
+RECAPTCHA_PRIVATE_KEY = 'put_you_key_here'

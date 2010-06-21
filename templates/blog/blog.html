@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% load markup %}
 
 {% block title %}
 {% if user_blog.desc %}
    {{ user_blog.desc }}
 {% else %}
-    Бло пользователя {{ user_info.username }}
+    {% trans "User's blog" %} {{ user_info.username }}
 {% endif %}
 {% endblock %}
 
@@ -16,9 +18,9 @@
 <tr>
 <td width='300'>
 {% if user.username == user_info.username %}
-Мой блог
+{% trans "My blog" %}
 {% else %}
-Блог
+{% trans "Blog" %}
 {% endif %}
 </td>
 
@@ -29,10 +31,10 @@
     {% endif %}
 {% else %}
     {% if user_blog %}
-        [<a href='/{{user.username}}/blog/addtopic/'>Добавить пост</a>]
-        [<a href='/{{user.username}}/blog/edit/'>Настройки блога</a>]
+        [<a href='/{{user.username}}/blog/addtopic/'>{% trans "Add topic" %}</a>]
+        [<a href='/{{user.username}}/blog/edit/'>{% trans "Blog settings" %}</a>]
     {% else %}
-        [<a href='/{{user.username}}/blog/edit/'>Создать блог</a>]
+        [<a href='/{{user.username}}/blog/edit/'>{% trans "Create blog blog" %}</a>]
     {% endif %}
 {% endif %}
 </td>
@@ -60,11 +62,11 @@
 <div class='content'>
 {{ post.content|strippost:post|safe }}
 {% if post.tags.all %}
-<div class='tags'><p>Метки: 
+<div class='tags'><p>{% trans "Tags" %}: 
 {% for tag in post.tags.all %}{% if not forloop.first %}, {% endif %}<a href='/blogs/tags/{{ tag }}'>{{ tag }}</a>{% endfor %}
 </p></div>
 {% endif %}
-<p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | Автор: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>Комментариев: 0</a></p>
+<p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
 </div>
 </td>
 <td width='40px'>&nbsp;</td><td>
@@ -73,7 +75,7 @@
 
 {% endfor %}
 {% else %}
-В блоге пользователя нет ниодного сообщения :)
+{% trans "Tereis no blog topict in current user blog :]" %}
 {% endif %}
 </div>
 

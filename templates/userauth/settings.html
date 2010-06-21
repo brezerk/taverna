@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block csslist %}
 <link rel='stylesheet' type='text/css' href='/media/styles/forms.css'>
 {% endblock %}
 
-{% block title %}Профайл пользователя {{ user.username }}{% endblock %}
+{% block title %}{% trans "User profile" %} :. {{ user.username }}{% endblock %}
 
 {% block menubox %}
 <div class='actionbox'>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
-<td width='300'>Профайл</td>
+<td width='300'>{% trans "User profile" %}</td>
 
 <td align='right'>
-[<a href='/{{user.username}}/profile/'>Отмена</a>]
+[<a href='/{{user.username}}/profile/'>{% trans "Cancel" %}</a>]
 </td>
 </tr>
 </table>
@@ -23,29 +25,29 @@
 {% block content %}
 
 <div class='page_content'>
-<h3>Редактирование пользователя {{ user.username }}</h3>
+<h3>{% trans "Edit profile" %} {{ user.username }}</h3>
 <form method="POST" action="/{{ user.username }}/edit/">{% csrf_token %}
 <table border='0' width='600px'>
     {% if form.errors %}
-    <tr><td width='180px'><span style='color: #ff7e00'>Ошибка</span>:</td><td>&nbsp;</td></tr>
+    <tr><td width='180px'><span style='color: #ff7e00'>{% trans "Error" %}</span>:</td><td>&nbsp;</td></tr>
     {% for value in form.errors.values %}
         <tr><td colspan='2'>{{ value }}</td></tr>
     {% endfor %}
     {% endif %}
-    <tr><td width='180px'>Имя:</td><td>{{ form.first_name }}</td></tr>
-    <tr><td>Фамилия:</td><td>{{ form.last_name }}</td></tr>
-    <tr><td>Вебсайт:</td><td>{{ form.website }}</td></tr>
+    <tr><td width='180px'>{% trans "First name" %}:</td><td>{{ form.first_name }}</td></tr>
+    <tr><td>{% trans "Second name" %}:</td><td>{{ form.last_name }}</td></tr>
+    <tr><td>{% trans "Website" %}:</td><td>{{ form.website }}</td></tr>
     <tr><td>Jabber:</td><td>{{ form.jabber }}</td></tr>
     <tr><td><b>Email</b>:</td><td>{{ form.email }}</td></tr>
-    <tr><td>Город:</td><td>{{ form.location }}</td></tr>
-    <tr><td valign='top'>Подпись:</td><td> {{ form.sign }}</td></tr>
-    <tr><td><b>Текущий пароль</b>:</td><td>{{ form.password }}</td></tr>
+    <tr><td>{% trans "City" %}:</td><td>{{ form.location }}</td></tr>
+    <tr><td valign='top'>{% trans "Sign" %}:</td><td> {{ form.sign }}</td></tr>
+    <tr><td><b>{% trans "Current password" %}</b>:</td><td>{{ form.password }}</td></tr>
     <tr><td colspan='2'>&nbsp;</td></tr>
-    <tr><td colspan='2'>Смена пароля (не заполняйте, если не хотите менять)</td></tr>
-    <tr><td>Новый пароль:</td><td>{{ form.newpassword }}</td></tr>
-    <tr><td>Повторите пароль:</td><td>{{ form.rnewpassword }}</td></tr>
+    <tr><td colspan='2'>{% trans "Password change (don't fill, if you don't wish to change current one)" %}</td></tr>
+    <tr><td>{% trans "New password" %}:</td><td>{{ form.newpassword }}</td></tr>
+    <tr><td>{% trans "Repeat password" %}:</td><td>{{ form.rnewpassword }}</td></tr>
     <tr><td colspan='2'>&nbsp;</td></tr>
-    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Обновить"></td></tr>
+    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Update" %}"></td></tr>
 </table>
 </form>
 </div>

@@ -141,7 +141,7 @@ class RegisterForm(forms.Form):
             cResponse = captcha.submit(
                       challenge,
                       response,
-                      "6LfAvLoSAAAAAH5WjYxXf0rSP0nkK8T3ylLe-mPf",
+                      settings.RECAPTCHA_PRIVATE_KEY,
                       self.remoteip)
             if not cResponse.is_valid:
                 raise forms.ValidationError(u"Ан-нет. Капчу подобрать не удалось.")
@@ -190,7 +190,7 @@ def loginUser(request):
     if request.method == 'GET':
         return {'form': AuthenticationForm()}
     elif request.method == 'POST':
-        user = authenticate(username = request.POST["username"], 
+        user = authenticate(username = request.POST["username"],
             password = request.POST["password"])
         if user:
             login(request, user)

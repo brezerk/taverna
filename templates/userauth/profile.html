@@ -1,26 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}Профайл пользователя {{ user_info.username }}{% endblock %}
+{% load i18n %}
+
+{% block title %}{% trans "User profile" %} :. {{ user_info.username }}{% endblock %}
 
 {% block menubox %}
 <div class='actionbox'>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
-<td width='300'>Профайл</td>
+<td width='300'>{% trans "User profile" %}</td>
 
 <td align='right'>
 {% if user.username != user_info.username %}
     {% if user_blog %}
-        [<a href='/{{user_info.username}}/'>Читать блог</a>]
+        [<a href='/{{user_info.username}}/'>{% trans "Read user's blog" %}</a>]
     {% endif %}
-[<a href='/{{user.username}}/ignore/{{user_info.username}}'>Игнорировать</a>]
+[<a href='/{{user.username}}/ignore/{{user_info.username}}'>{% trans "Ignore" %}</a>]
 {% else %}
     {% if user_blog %}
-        [<a href='/{{user.username}}/blog/edit/'>Настройки блога</a>]
+        [<a href='/{{user.username}}/blog/edit/'>{% trans "Blog settings" %}</a>]
     {% else %}
-        [<a href='/{{user.username}}/blog/edit/'>Создать блог</a>]
+        [<a href='/{{user.username}}/blog/edit/'>{% trans "Create blog" %}</a>]
     {% endif %}
-[<a href='/{{user.username}}/edit/'>Редактировать профиль</a>]
+[<a href='/{{user.username}}/edit/'>{% trans "Edit profile" %}</a>]
 {% endif %}
 </td>
 </tr>
@@ -31,26 +33,26 @@
 {% block content %}
 
 <div class='page_content'>
-<h3>Информация о пользователе {{ user_info.username }}</h3>
+<h3>{% trans "User's insformation" %} {{ user_info.username }}</h3>
 <table border='0' width='100%'>
     <tr><td valign='top'>
 <table border='0' width='100%'>
     {% if user_info.first_name or user_info.last_name %}
-    <tr><td>Настоящее имя: {{ user_info.first_name }} {{ user_info.last_name }}</td></tr>
+    <tr><td>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</td></tr>
     {% endif %}
-    <tr><td>Регистрация: {{ user_info.date_joined|date:"d.m.Y H:i:s" }}</td></tr>
-    <tr><td>Карма: {{ user_profile.karma }}</td></tr>
+    <tr><td>{% trans "Registration" %}: {{ user_info.date_joined|date:"d.m.Y H:i:s" }}</td></tr>
+    <tr><td>{% trans "Carma" %}: {{ user_profile.karma }}</td></tr>
     {% if user_profile.website %}
-    <tr><td>Вебсайт: <a href='{{ user_profile.website }}'>{{ user_profile.website }}</a></td></tr>
+    <tr><td>{% trans "Website" %}: <a href='{{ user_profile.website }}'>{{ user_profile.website }}</a></td></tr>
     {% endif %}
     {% if user_profile.jabber %}
     <tr><td>Jabber: <a href='{{ user_profile.jabber }}'>{{ user_profile.jabber }}</a></td></tr>
     {% endif %}
     {% if user.username == user_info.username or user.is_staff %}
-    <tr><td>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> (виден только вам и модераторам)</td></tr>
+    <tr><td>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> ({% trans "is avalible only for you and site moderators" %})</td></tr>
     {% endif %}
     {% if user_profile.location %}
-    <tr><td>Город: {{ user_profile.location }}</td></tr>
+    <tr><td>{% trans "City" %}: {{ user_profile.location }}</td></tr>
     {% endif %}
     <tr><td>&nbsp;</td></tr>
     <tr><td>{{ user_profile.sign|linebreaksbr }}</td></tr>
@@ -59,14 +61,14 @@
     <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
     </td></tr>
 </table>
-<h3>Сообщения пользователя:</h3>
+<h3>{% trans "User messags"%}:</h3>
 <ul>
-    <li><a href='/{{ user_info.username }}/'>Блог</a>
-    <li><a href='/{{ user_info.username }}/comments/blog'>Комментарии в блогах</a>
-    <li><a href='/{{ user_info.username }}/forum'>Форум</a>
-    <li><a href='/{{ user_info.username }}/comments/forum'>Комментарии в форуме</a>
+    <li><a href='/{{ user_info.username }}/'>{% trans "Blogs" %}</a>
+    <li><a href='/{{ user_info.username }}/comments/blog'>{% trans "Blog's comments" %}</a>
+    <li><a href='/{{ user_info.username }}/forum'>{% trans "Forum" %}</a>
+    <li><a href='/{{ user_info.username }}/comments/forum'>{% trans "Forum's comments" %}</a>
     {% if user.username == user_info.username %}
-    <li><a href='/{{ user_info.username }}/notifyes'>Уведомления</a>
+    <li><a href='/{{ user_info.username }}/notifyes'>{% trans "Notifyes" %}</a>
     {% endif %}
 </ul>
 </div>
