@@ -6,9 +6,8 @@ from django.utils.translation import gettext as _
 
 class Blog(models.Model):
     name = models.CharField(max_length = 32)
-    desc = models.CharField(max_length = 48, null=True, blank=True, 
-        default = _("Blog description"))
-    active = models.BooleanField(default = False, editable = False, blank = True)
+    desc = models.CharField(max_length = 48, default = _("Blog description"))
+    active = models.BooleanField(default = False, editable = False)
     owner_id = models.ForeignKey(User, editable = False)
     def __unicode__(self):
         return self.name

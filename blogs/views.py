@@ -59,7 +59,6 @@ class TopicEditForm(forms.Form):
             topic.tags.add(t)
 
 @rr('blog/settings.html')
-@login_required(redirect_field_name='/login')
 def editBlog(request):
 
     class BlogForm(forms.ModelForm):
@@ -72,13 +71,13 @@ def editBlog(request):
         blog.owner_id = request.user
         blog.save()
 
-    if request.method == 'GET':
-        return {'form': BlogForm(instance = blog)}
-    elif request.method == 'POST':
+    form = BlogForm(instance = blog)
+
+    if request.method == 'POST':
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
-        return HttpResponseRedirect(reverse('blogs.views.editBlog'))
+    return {'form': form}
 
 def viewBlog(request, username):
     try:
