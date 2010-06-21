@@ -14,6 +14,10 @@ input, select, textarea {
     border: 1px solid #a8a8a8;
 }
 
+label, th {
+    text-align: left;
+}
+
 .recaptcha {
     background-color: #606060;
     margin-bottom: 2px;

@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block csslist %}
+<link rel='stylesheet' type='text/css' href='/media/styles/formAuth.css'>
+{% endblock %}
+
 {% block content %}
 
-<div style="margin: 1in;">
+<div class="page_content">
+<h3>Задний вход</h3>
+
 <form method=post>
-<table align=center align=center>
+<table border='0' width='450px'>
 {{form}}
 {% csrf_token %}
-<tr><td rowspan=2><input type=submit value={% trans "Log in" %}>
+<tr><td>&nbsp;</td><td><input type=submit value={% trans "Log in" %}></tr>
 </table>
 </form>
 </div>
