@@ -196,6 +196,8 @@ a:hover {
     text-align: justify;
 }
 
+form table { width: 600px; }
+
 input, select, textarea {
     width: 100%;
     background-color: #606060;
