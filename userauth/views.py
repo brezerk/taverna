@@ -16,6 +16,8 @@ from userauth.models import UserProfile
 from blogs.models import Blog
 from util import rr
 
+from django.utils.translation import ugettext as _
+
 from django.conf import settings
 
 import re
@@ -42,7 +44,7 @@ class ProfileForm(forms.Form):
         email = self.cleaned_data['email']
         try:
             if User.objects.filter(email__exact=email).exclude(username=self.user.username):
-                raise forms.ValidationError(u"А такой емейл уже существует-то.")
+                raise forms.ValidationError(_("E-Mail already exists."))
         except User.DoesNotExist:
             pass
         return email
@@ -50,7 +52,7 @@ class ProfileForm(forms.Form):
     def clean_password(self):
         password = self.cleaned_data['password']
         if not self.user.check_password(password):
-            raise forms.ValidationError(u"А текущий пароль-то не верный :].")
+            raise forms.ValidationError(_("Current password is wrong."))
         return password
 
     def clean_newpassword(self):
@@ -58,11 +60,11 @@ class ProfileForm(forms.Form):
         rnewpassword = self.cleaned_data['rnewpassword']
         if newpassword:
             if newpassword != rnewpassword:
-                raise forms.ValidationError(u"А пароли-то не совпадают!")
+                raise forms.ValidationError(_("Passwords do not match."))
             try:
                 cracklib.VeryFascistCheck(newpassword)
             except ValueError:
-                raise forms.ValidationError(u"Пароль слишком простой.")
+                raise forms.ValidationError(_("Password is too simple."))
         return newpassword
 
     def save(self):
@@ -107,18 +109,18 @@ class RegisterForm(forms.Form):
         try:
             cracklib.VeryFascistCheck(password)
         except ValueError:
-            raise forms.ValidationError(u"Пароль слишком простой.")
+            raise forms.ValidationError(_("Password is too simple."))
 
         rpassword = self.cleaned_data['rpassword']
         if password != rpassword:
-            raise forms.ValidationError(u"А пароли-то не совпадают!")
+            raise forms.ValidationError(_("Passwords do not match."))
         return password
 
     def clean_email(self):
         email = self.cleaned_data['email']
         try:
             if User.objects.get(email__exact=email):
-                raise forms.ValidationError(u"А такой емейл уже существует-то.")
+                raise forms.ValidationError(_("E-Mail already exists."))
         except User.DoesNotExist:
             pass
         return email
@@ -127,7 +129,7 @@ class RegisterForm(forms.Form):
         username = self.cleaned_data['username']
         try:
             if User.objects.get(username__exact=username):
-                raise forms.ValidationError(u"А такой логин уже существует-то.")
+                raise forms.ValidationError(_("Login already in use"))
         except User.DoesNotExist:
             pass
 
@@ -144,11 +146,11 @@ class RegisterForm(forms.Form):
                       settings.RECAPTCHA_PRIVATE_KEY,
                       self.remoteip)
             if not cResponse.is_valid:
-                raise forms.ValidationError(u"Ан-нет. Капчу подобрать не удалось.")
+                raise forms.ValidationError(_("Wrong captcha"))
             return True
 
         except KeyError:
-            raise forms.ValidationError(u"Ан-нет. Капчу подобрать не удалось.")
+            raise forms.ValidationError(_("Wrong captcha"))
 
     def setReCaptchaVals(self, remoteip):
         self.remoteip = remoteip
