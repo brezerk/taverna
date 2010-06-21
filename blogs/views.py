@@ -58,22 +58,6 @@ class TopicEditForm(forms.Form):
                 t.save()
             topic.tags.add(t)
 
-
-class BlogEditForm(forms.Form):
-    name = forms.CharField(required=True, min_length=8, max_length=32)
-    desc = forms.CharField(required=False, min_length=8, max_length=48)
-
-    def save(self, user):
-        name = self.cleaned_data['name']
-        desc = self.cleaned_data['desc']
-        try:
-            if not Blog.objects.filter(owner_id__exact=user).update(name=name, desc=desc):
-                blog = Blog(owner_id=user, name=name, desc=desc)
-                blog.save()
-        except Blog.DoesNotExist:
-            blog = Blog(owner_id=user, name=name, desc=desc)
-            blog.save()
-
 @rr('blog/settings.html')
 @login_required(redirect_field_name='/login')
 def editBlog(request):
