@@ -14,7 +14,7 @@ class PostForm(forms.ModelForm):
 
 @rr('forum/index.html')
 def index(request):
-    return {'forums': Forum.objects.all(), 'forum_form': ForumForm()}
+    return {'forums': Forum.objects.all()}
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
@@ -23,7 +23,10 @@ def forum(request, forum_id):
         'form': PostForm(),
     }
 
+@rr('forum/forum_create.html')
 def forum_create(request):
+    if request.method == 'GET':
+        return {'form': ForumForm()}
     form = ForumForm(request.POST)
     if request.user.profile.is_karma_good() and form.is_valid():
         forum = form.save(commit = False)

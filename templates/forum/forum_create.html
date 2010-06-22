@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<form method=post>
+{% csrf_token %}
+<caption>{% trans "Create forum" %}</caption>
+<table>
+{{form}}
+<tr><td><td colspan=2><input type=submit value="{% trans "Add" %}">
+</table>
+</form>
+
+{% endblock %}
