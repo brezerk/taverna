@@ -39,6 +39,8 @@ a:hover {
     text-decoration: none;
 }
 
+#content { margin: 1em; }
+
 .menubox {
     background-color: #3f3f3f;
     border-bottom: 1px solid #686868;
@@ -134,7 +136,6 @@ a:hover {
 .content {
     text-align: justify;
 }
-
 .sign {
     text-align: center;
     color: #6f6f6f;
@@ -197,6 +198,11 @@ a:hover {
 }
 
 form table { width: 600px; }
+
+#forum_posts { width: 90%; margin: 1em; }
+#forum_posts tr.odd { background-color: #443; }
+#forum_posts tr.even { background-color: #332; }
+#forum_posts td.title { width: 60%; }
 
 input, select, textarea {
     width: 100%;

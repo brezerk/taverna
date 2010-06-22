@@ -4,17 +4,16 @@
 {% block content %}
 
 <table id="forum_posts">
+ <tr><td class=title><td><td>
 {% for post in forum.post_set.all %}
-<tr>
- <td>{{post.title}}
+<tr class="{% cycle "odd" "even" %}">
+ <td>{{post.title}}<td>{{post.created}}<td>{{post.owner}}
 </tr>
 {% endfor %}
 </table>
 
 {% if user.profile.is_karma_good %}
-<table>
-{{form}}
-</table>
+<a href="{% url forum.views.post_create forum.pk %}">{% trans "Post new topic" %}</a>
 {% endif %}
 
 {% endblock %}

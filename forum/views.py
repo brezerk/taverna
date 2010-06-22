@@ -31,3 +31,18 @@ def forum_create(request):
         forum.save()
         return HttpResponseRedirect(reverse(index))
 
+@rr('forum/post.html')
+def post_create(request, forum_id):
+    if request.method == 'GET':
+        return {'form': PostForm()}
+    elif request.method == 'POST' and request.user.profile.is_karma_good():
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit = False)
+            post.owner = request.user
+            post.forum_id = forum_id
+            post.save()
+    return HttpResponseRedirect(reverse(forum, args = [forum_id]))
+        
+
+

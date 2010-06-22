@@ -10,7 +10,8 @@ urlpatterns = patterns('',
 
     (r'^$', 'blogs.views.index'),
     
-    (r'^forum.html$', 'forum.views.index'),
+    (r'^forums.html$', 'forum.views.index'),
+    (r'^forums/post/(?P<forum_id>\d+).html$', 'forum.views.post_create'),
     (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
     (r'^blog-settings.html$', 'blogs.views.editBlog'),
