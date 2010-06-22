@@ -1,0 +1,323 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-06-22 19:23+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#: blogs/models.py:9
+msgid "Blog description"
+msgstr ""
+
+#: blogs/views.py:113 templates/blog/settings.html:14
+#: templates/blog/topic.html:66
+msgid "Save"
+msgstr ""
+
+#: templates/base.html:27
+msgid "Traker"
+msgstr ""
+
+#: templates/base.html:27 templates/blog/topic.html:26
+#: templates/userauth/profile.html:66
+msgid "Blogs"
+msgstr ""
+
+#: templates/base.html:27 templates/userauth/profile.html:68
+msgid "Forum"
+msgstr ""
+
+#: templates/base.html:27
+msgid "Library"
+msgstr ""
+
+#: templates/base.html:30
+msgid "Welcome"
+msgstr ""
+
+#: templates/base.html:32
+msgid "Log In"
+msgstr ""
+
+#: templates/base.html:32 templates/userauth/register.html:33
+msgid "Register"
+msgstr ""
+
+#: templates/blog/blog.html:11
+msgid "User's blog"
+msgstr ""
+
+#: templates/blog/blog.html:21
+msgid "My blog"
+msgstr ""
+
+#: templates/blog/blog.html:23
+msgid "Blog"
+msgstr ""
+
+#: templates/blog/blog.html:34
+msgid "Add topic"
+msgstr ""
+
+#: templates/blog/blog.html:35 templates/blog/settings.html:9
+#: templates/userauth/profile.html:21
+msgid "Blog settings"
+msgstr ""
+
+#: templates/blog/blog.html:37 templates/userauth/profile.html:23
+msgid "Create blog"
+msgstr ""
+
+#: templates/blog/blog.html:65 templates/blog/topic.html:37
+#: templates/blog/topic.html.py:61
+msgid "Tags"
+msgstr ""
+
+#: templates/blog/blog.html:69 templates/blog/topic.html:40
+msgid "Author"
+msgstr ""
+
+#: templates/blog/blog.html:69 templates/blog/topic.html:40
+msgid "Comments"
+msgstr ""
+
+#: templates/blog/blog.html:78
+msgid "Tereis no blog topict in current user blog :]"
+msgstr ""
+
+#: templates/blog/topic.html:5 templates/blog/topic.html.py:11
+#: templates/blog/topic.html:48
+msgid "Adding new topic"
+msgstr ""
+
+#: templates/blog/topic.html:14 templates/userauth/settings.html:14
+msgid "Cancel"
+msgstr ""
+
+#: templates/blog/topic.html:52 templates/userauth/register.html:19
+#: templates/userauth/settings.html:28
+msgid "Error"
+msgstr ""
+
+#: templates/blog/topic.html:57
+msgid "Section"
+msgstr ""
+
+#: templates/blog/topic.html:58
+msgid "Title"
+msgstr ""
+
+#: templates/blog/topic.html:59
+msgid "Topic body"
+msgstr ""
+
+#: templates/blog/topic.html:60
+msgid "Markup language"
+msgstr ""
+
+#: templates/blog/topic.html:62
+msgid "Restrictions"
+msgstr ""
+
+#: templates/blog/topic.html:62
+msgid "Restrict user comments with negative carma"
+msgstr ""
+
+#: templates/blog/topic.html:64
+msgid "Preview"
+msgstr ""
+
+#: templates/forum/forum.html:10
+msgid "ago"
+msgstr "назад"
+
+#: templates/forum/forum.html:16
+msgid "Post new topic"
+msgstr "Создать новый топик"
+
+#: templates/forum/forum_create.html:8 templates/forum/index.html:17
+msgid "Create forum"
+msgstr "Создать форум"
+
+#: templates/forum/forum_create.html:11
+msgid "Add"
+msgstr "Добавить"
+
+#: templates/forum/index.html:7
+msgid "Forum list"
+msgstr "Список форумов"
+
+#: templates/forum/post.html:10
+msgid "Send"
+msgstr "Отправить"
+
+#: templates/userauth/login.html:7
+msgid "Log in page"
+msgstr ""
+
+#: templates/userauth/login.html:13
+msgid "Log in"
+msgstr ""
+
+#: templates/userauth/profile.html:5 templates/userauth/profile.html.py:11
+#: templates/userauth/settings.html:5 templates/userauth/settings.html:11
+msgid "User profile"
+msgstr ""
+
+#: templates/userauth/profile.html:16
+msgid "Read user's blog"
+msgstr ""
+
+#: templates/userauth/profile.html:18
+msgid "Ignore"
+msgstr ""
+
+#: templates/userauth/profile.html:25 templates/userauth/settings.html:24
+msgid "Edit profile"
+msgstr ""
+
+#: templates/userauth/profile.html:36
+msgid "User's insformation"
+msgstr ""
+
+#: templates/userauth/profile.html:41
+msgid "Real name"
+msgstr ""
+
+#: templates/userauth/profile.html:43
+msgid "Registration"
+msgstr ""
+
+#: templates/userauth/profile.html:44
+msgid "Carma"
+msgstr ""
+
+#: templates/userauth/profile.html:46 templates/userauth/settings.html:35
+msgid "Website"
+msgstr ""
+
+#: templates/userauth/profile.html:52
+msgid "is avalible only for you and site moderators"
+msgstr ""
+
+#: templates/userauth/profile.html:55 templates/userauth/settings.html:38
+msgid "City"
+msgstr ""
+
+#: templates/userauth/profile.html:64
+msgid "User messags"
+msgstr ""
+
+#: templates/userauth/profile.html:67
+msgid "Blog's comments"
+msgstr ""
+
+#: templates/userauth/profile.html:69
+msgid "Forum's comments"
+msgstr ""
+
+#: templates/userauth/profile.html:71
+msgid "Notifyes"
+msgstr ""
+
+#: templates/userauth/register.html:8 templates/userauth/register.html:12
+msgid "New user registration"
+msgstr ""
+
+#: templates/userauth/register.html:13
+msgid "Welcome to new user registration page."
+msgstr ""
+
+#: templates/userauth/register.html:14
+msgid ""
+"Please, before registration begins, check out resouces rules. You will "
+"automaticaly agree with all rules term, while continue registration process."
+msgstr ""
+
+#: templates/userauth/register.html:28
+msgid "Username"
+msgstr ""
+
+#: templates/userauth/register.html:29
+msgid "E-Mail"
+msgstr ""
+
+#: templates/userauth/register.html:30
+msgid "Password"
+msgstr ""
+
+#: templates/userauth/register.html:31
+msgid "Password again"
+msgstr ""
+
+#: templates/userauth/settings.html:33
+msgid "First name"
+msgstr ""
+
+#: templates/userauth/settings.html:34
+msgid "Second name"
+msgstr ""
+
+#: templates/userauth/settings.html:39
+msgid "Sign"
+msgstr ""
+
+#: templates/userauth/settings.html:40
+msgid "Current password"
+msgstr ""
+
+#: templates/userauth/settings.html:42
+msgid "Password change (don't fill, if you don't wish to change current one)"
+msgstr ""
+
+#: templates/userauth/settings.html:43
+msgid "New password"
+msgstr ""
+
+#: templates/userauth/settings.html:44
+msgid "Repeat password"
+msgstr ""
+
+#: templates/userauth/settings.html:46
+msgid "Update"
+msgstr ""
+
+#: userauth/views.py:47 userauth/views.py:123
+msgid "E-Mail already exists."
+msgstr ""
+
+#: userauth/views.py:55
+msgid "Current password is wrong."
+msgstr ""
+
+#: userauth/views.py:63 userauth/views.py:116
+msgid "Passwords do not match."
+msgstr ""
+
+#: userauth/views.py:67 userauth/views.py:112
+msgid "Password is too simple."
+msgstr ""
+
+#: userauth/views.py:132
+msgid "Login already in use"
+msgstr ""
+
+#: userauth/views.py:149 userauth/views.py:153
+msgid "Wrong captcha"
+msgstr ""
+
+#~ msgid "аgo"
+#~ msgstr "назад"

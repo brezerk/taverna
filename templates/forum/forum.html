@@ -7,7 +7,7 @@
  <tr><td class=title><td><td>
 {% for post in forum.post_set.all %}
 <tr class="{% cycle "odd" "even" %}">
- <td>{{post.title}}<td>{{post.created|timesince}} {% trans "Ago" %}<td>{{post.owner}}
+ <td>{{post.title}}<td>{{post.created|timesince}} {% trans "ago" %}<td>{{post.owner}}
 </tr>
 {% endfor %}
 </table>
