@@ -27,7 +27,7 @@
         <td align='center'>[<a href='/treker/'>{% trans "Traker" %}</a>] [<a href='/blogs/'>{% trans "Blogs" %}</a>] [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] [<a href='/Library/'>{% trans "Library" %}</a>]</td>
         <td width='300' align='right'>
         {% if user.is_authenticated %}
-            {% trans "Welcome" %}, <a href='/{{ user.username}}/profile'>{{ user.username }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]
+            {% trans "Welcome" %}, <a href='{% url userauth.views.viewProfile user.username %}'>{{ user.username }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]
         {% else %}
             [<a href='{% url userauth.views.loginUser %}'>{% trans "Log In"%}</a>] [<a href='{% url userauth.views.registerUser %}'>{% trans "Register" %}</a>]
         {% endif %}
