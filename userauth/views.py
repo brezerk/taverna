@@ -180,10 +180,11 @@ class RegisterForm(forms.Form):
             blog.save()
         #FIXME: We need to accign group for new users, also, groups might be created at site startup
 
-@csrf_protect
+@rr('userauth/register.html')
 def registerUser(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         form.setReCaptchaVals(request.META['REMOTE_ADDR'])
@@ -193,9 +194,8 @@ def registerUser(request):
     else:
         form = RegisterForm()
 
-    return render_to_response("userauth/register.html", {'form': form},
-                              context_instance=RequestContext(request)
-                             )
+    return {'form': form}
+
 @rr('userauth/login.html')
 def loginUser(request):
     from django.contrib.auth.forms import AuthenticationForm
@@ -215,6 +215,7 @@ def logoutUser(request):
     return HttpResponseRedirect("/")
 
 @login_required()
+@rr ('userauth/profile.html')
 def viewProfile(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
@@ -223,11 +224,10 @@ def viewProfile(request, username):
             user_blog = Blog.objects.get(owner=user_info)
         except Blog.DoesNotExist:
             user_blog = None
-        return render_to_response("userauth/profile.html", {'user_info': user_info,
-                                  'user_profile': user_profile,
-                                  'user_blog': user_blog},
-                                  context_instance=RequestContext(request)
-                                 )
+        return {'user_info': user_info,
+                'user_profile': user_profile,
+                'user_blog': user_blog}
+
     except (User.DoesNotExist, Profile.DoesNotExist):
         return HttpResponseRedirect('/')
 
