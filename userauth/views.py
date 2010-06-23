@@ -18,6 +18,7 @@ from util import rr
 
 from django.utils.translation import ugettext as _
 
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 import re
@@ -231,15 +232,14 @@ def viewProfile(request, username):
         return HttpResponseRedirect('/')
 
 @login_required(redirect_field_name='/login')
-def editProfile(request, username):
-    if (request.user.username != username):
-        return HttpResponseRedirect('/')
+@rr ('userauth/settings.html')
+def editProfile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST)
         form.setUser(request.user)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/' + username + "/profile")
+            return HttpResponseRedirect(reverse("userauth.views.viewProfile", args=[request.user.username]))
     else:
         profile = Profile.objects.get(user=request.user)
         form = ProfileForm({'first_name': request.user.first_name,
@@ -250,6 +250,4 @@ def editProfile(request, username):
                             'location': profile.location,
                             'sign': profile.sign,
                           })
-    return render_to_response("userauth/settings.html", {'form': form},
-                              context_instance=RequestContext(request)
-                             )
+    return {'form': form}
