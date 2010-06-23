@@ -35,7 +35,12 @@ class Post(models.Model):
     def __unicode__(self):
         return self.title
 
-class PostVote(models.Model):
+class BlogPostVote(models.Model):
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
     positive = models.BooleanField()
+
+    class Meta:
+        unique_together = ('post', 'user')
+
+

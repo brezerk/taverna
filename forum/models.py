@@ -16,7 +16,7 @@ class Post(models.Model):
     reply_to = models.ForeignKey('Post', editable = False, blank = True, null = True)
     rating = models.IntegerField(editable = False, default = 0)
     created = models.DateTimeField(editable = False, auto_now_add = True)
-    
+
 class ForumVote(models.Model):
     forum = models.ForeignKey(Forum)
     user = models.ForeignKey(User)
