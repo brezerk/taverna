@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -9,7 +10,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     (r'^$', 'blogs.views.index'),
-    
+
     (r'^forums.html$', 'forum.views.index'),
     (r'^forums/post/(?P<forum_id>\d+).html$', 'forum.views.post_create'),
     (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
@@ -27,3 +28,5 @@ urlpatterns = patterns('',
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
+
+settings.LOGIN_URL = "/login.html"

@@ -214,7 +214,7 @@ def logoutUser(request):
     logout(request)
     return HttpResponseRedirect("/")
 
-@login_required(redirect_field_name='login.html')
+@login_required()
 def viewProfile(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
@@ -231,7 +231,7 @@ def viewProfile(request, username):
     except (User.DoesNotExist, Profile.DoesNotExist):
         return HttpResponseRedirect('/')
 
-@login_required(redirect_field_name='/login')
+@login_required()
 @rr ('userauth/settings.html')
 def editProfile(request):
     if request.method == 'POST':

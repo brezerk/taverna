@@ -17,7 +17,7 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
-@login_required(redirect_field_name='/login.html')
+@login_required()
 @rr('blog/settings.html')
 def editBlog(request):
 
@@ -53,7 +53,7 @@ def viewBlog(request, username):
             'user_blog': user_blog,
             'blog_posts': blog_posts}
 
-@login_required(redirect_field_name='/login.html')
+@login_required()
 @rr('blog/topic.html')
 def addTopic(request):
     try:
