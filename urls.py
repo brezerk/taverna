@@ -16,9 +16,9 @@ urlpatterns = patterns('',
     (r'^forum_create/$', 'forum.views.forum_create'),
     (r'^blog-settings.html$', 'blogs.views.editBlog'),
 
-    (r'^register/$', 'userauth.views.registerUser'),
+    (r'^register.html$', 'userauth.views.registerUser'),
     (r'^login.html$', 'userauth.views.loginUser'),
-    (r'^logout/$', 'userauth.views.logoutUser'),
+    (r'^logout.html$', 'userauth.views.logoutUser'),
 
     (r'^(?P<username>\w+)/blog/addtopic/$', 'blogs.views.addTopic'),
     (r'^(?P<username>\w+)/profile/$', 'userauth.views.viewProfile'),
