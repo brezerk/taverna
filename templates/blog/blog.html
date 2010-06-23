@@ -45,37 +45,11 @@
 
 {% block content %}
 {% if blog_posts %}
-{% for post in blog_posts %}
-
-<div class='news'>
-<h3>
-{% if post.blog = user_blog %}
-
-<a href='{% url userauth.views.viewProfile post.owner %}'>{{ post.owner }}</a>
+    {% for post in blog_posts %}
+        {% include 'blog/topic_body.html' %}
+    {% endfor %}
 {% else %}
-<a href='/blogs/{{ post.blog.id }}'>{{ post.blog.name }}</a>
-{% endif %}
-
-→ <a href='/{{ user_info.username }}/{{ post.id }}'>{{ post.title }}</a></h3>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td width='40px'>&nbsp;</td><td>
-<div class='content'>
-{{ post.content|strippost:post|safe }}
-{% if post.tags.all %}
-<div class='tags'><p>{% trans "Tags" %}: 
-{% for tag in post.tags.all %}{% if not forloop.first %}, {% endif %}<a href='/blogs/tags/{{ tag }}'>{{ tag }}</a>{% endfor %}
-</p></div>
-{% endif %}
-<p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
-</div>
-</td>
-<td width='40px'>&nbsp;</td><td>
-</table>
-</div>
-
-{% endfor %}
-{% else %}
-{% trans "No blog topics in current user blog :]" %}
+    {% trans "No blog topics in current user blog :]" %}
 {% endif %}
 
 {% endblock %}
