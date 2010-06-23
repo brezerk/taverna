@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     (r'^logout.html$', 'userauth.views.logoutUser'),
 
     (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
-    (r'^(?P<username>\w+)/profile/$', 'userauth.views.viewProfile'),
+    (r'^(?P<username>\w+)/profile.html$', 'userauth.views.viewProfile'),
     (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
     (r'^(?P<username>\w+)/$', 'blogs.views.viewBlog'), # this one must be last
 
