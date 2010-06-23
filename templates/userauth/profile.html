@@ -32,7 +32,6 @@
 
 {% block content %}
 
-<div class='page_content'>
 <h3>{% trans "User's insformation" %} {{ user_info.username }}</h3>
 <table border='0' width='100%'>
     <tr><td valign='top'>
@@ -71,7 +70,6 @@
     <li><a href='/{{ user_info.username }}/notifyes'>{% trans "Notifyes" %}</a>
     {% endif %}
 </ul>
-</div>
 
 {% endblock %}
 

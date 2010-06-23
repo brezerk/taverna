@@ -44,7 +44,6 @@
 </table>
 </div>
 {% endif %}
-<div class='page_content'>
 <h3>{% trans "Adding new topic" %}</h3>
 <form method="POST" action="/{{ user.username }}/blog/addtopic/">{% csrf_token %}
 <table border='0' id='blog_topic'>
@@ -67,7 +66,6 @@
 {% endif %}
 </table>
 </form>
-</div>
 
 {% endblock %}
 
