@@ -170,6 +170,13 @@ class RegisterForm(forms.Form):
         user.save()
         profile = Profile(user=user, photo=mailhash)
         profile.save()
+
+        try:
+            blog = Blog.objects.get(owner = user)
+        except Blog.DoesNotExist:
+            blog = Blog(name = "%s's blog" % user)
+            blog.owner = user
+            blog.save()
         #FIXME: We need to accign group for new users, also, groups might be created at site startup
 
 @csrf_protect

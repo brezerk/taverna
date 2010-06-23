@@ -82,6 +82,7 @@ def editBlog(request):
             return HttpResponseRedirect("/%s/" % request.user.username)
     return {'form': form}
 
+@rr('blog/blog.html')
 def viewBlog(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
@@ -90,12 +91,11 @@ def viewBlog(request, username):
     except (User.DoesNotExist, Blog.DoesNotExist):
         return HttpResponseRedirect('/')
 
-    return render_to_response("blog/blog.html", {'user_info': user_info,
-                              'user_blog': user_blog,
-                              'blog_posts': blog_posts},
-                              context_instance=RequestContext(request))
+    return {'user_info': user_info,
+            'user_blog': user_blog,
+            'blog_posts': blog_posts}
 
-@csrf_protect
+@rr('blog/topic.html')
 def addTopic(request, username):
     if (request.user.username != username):
         return HttpResponseRedirect('/')
@@ -115,16 +115,13 @@ def addTopic(request, username):
         if form.is_valid():
             if request.POST['submit']==_("Save"):
                 form.save(user_info, user_blog)
-                return HttpResponseRedirect('/' + username + '/')
+                return HttpResponseRedirect("/%s/" % username)
     else:
         form = TopicEditForm()
 
-    return render_to_response("blog/topic.html", {'user_info': user_info,
-                              'user_blog': user_blog,
-                              'form': form,
-                              'preview': preview,
-                              'tags': tags},
-                              context_instance=RequestContext(request))
+    return {'user_info': user_info,
+            'user_blog': user_blog,
+            'form': form}
 
 @rr('base.html')
 def index(request):
