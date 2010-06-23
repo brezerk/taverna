@@ -207,7 +207,7 @@ def loginUser(request):
             login(request, user)
             return(HttpResponseRedirect('/'))
         else:
-            return {'form': form}
+            return {'form': AuthenticationForm()}
 
 def logoutUser(request):
     logout(request)
