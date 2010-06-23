@@ -199,6 +199,8 @@ a:hover {
 
 form table { width: 600px; }
 
+#blog_topic { width: 100%; }
+
 #forum_posts { width: 90%; margin: 1em; }
 #forum_posts tr.odd { background-color: #443; }
 #forum_posts tr.even { background-color: #332; }

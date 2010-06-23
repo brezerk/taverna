@@ -92,7 +92,9 @@ class RegisterForm(forms.Form):
     rpassword = forms.CharField(required=True, max_length=32,
                                 widget=forms.PasswordInput
                                )
-    password = forms.CharField(required=True, max_length=32, widget=forms.PasswordInput)
+    password = forms.CharField(required=True, max_length=32,
+                               widget=forms.PasswordInput
+                              )
     recaptcha_response_field = forms.CharField(required=True)
     recaptcha_challenge_field = forms.CharField(required=True)
 
@@ -210,7 +212,7 @@ def viewProfile(request, username):
         user_info = User.objects.get(username__exact=username)
         user_profile = Profile.objects.get(user=user_info)
         try:
-            user_blog = Blog.objects.get(owner_id=user_info)
+            user_blog = Blog.objects.get(owner=user_info)
         except Blog.DoesNotExist:
             user_blog = None
         return render_to_response("userauth/profile.html", {'user_info': user_info,

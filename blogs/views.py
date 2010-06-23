@@ -11,21 +11,23 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blogs.models import Blog, Post, Tag
-from taverna.parsers.models import Installed
 from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from django.conf import settings
+
 class TopicEditForm(forms.Form):
-    target = forms.ModelChoiceField(queryset=Blog.objects.filter(owner_id=5),
-                                    empty_label=u"Свой блог", required=False)
+    target = forms.ModelChoiceField(queryset=Blog.objects.filter(owner=5),
+                                    empty_label=_("My own blog"), required=False)
     title = forms.CharField(required=True, min_length=8, max_length=128)
     content = forms.CharField(required=False,
                               widget=forms.Textarea(attrs={'rows':'25'}))
-    parser = forms.ModelChoiceField(queryset=Installed.objects.all(),
-                                    empty_label=None, required=True)
+    parser = forms.CharField(max_length=3,
+                    widget=forms.Select(choices=settings.PARSER_ENGINES))
+
     tags = forms.CharField(required=False, max_length=128)
-    allow_negative = forms.BooleanField(required=False, initial=False, label='Extra cheeze')
+    allow_negative = forms.BooleanField(required=False, initial=False)
 
     def save(self, user, blog):
         target = self.cleaned_data['target']
@@ -33,7 +35,7 @@ class TopicEditForm(forms.Form):
         title = self.cleaned_data['title']
 
         try:
-            if Post.objects.filter(title__exact=title, blog_id=target):
+            if Post.objects.filter(title__exact=title, blog=target):
                 return
         except Post.DoesNotExist:
             pass
@@ -45,7 +47,7 @@ class TopicEditForm(forms.Form):
         if not target:
             target = blog
 
-        topic = Post(blog_id=target, title=title, content=content, parser_id=parser, restrict_negative=allow_negative, owner_id=user)
+        topic = Post(blog=target, title=title, content=content, parser=parser, restrict_negative=allow_negative, owner=user)
         topic.save()
 
         tag_list = tags.split(", ")
@@ -65,10 +67,10 @@ def editBlog(request):
         class Meta:
             model = Blog
     try:
-        blog = Blog.objects.get(owner_id = request.user)
+        blog = Blog.objects.get(owner = request.user)
     except Blog.DoesNotExist:
         blog = Blog(name = "%s's blog" % request.user.username)
-        blog.owner_id = request.user
+        blog.owner = request.user
         blog.save()
 
     form = BlogForm(instance = blog)
@@ -77,13 +79,14 @@ def editBlog(request):
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
+            return HttpResponseRedirect("/%s/" % request.user.username)
     return {'form': form}
 
 def viewBlog(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
-        user_blog = Blog.objects.get(owner_id=user_info)
-        blog_posts = Post.objects.filter(owner_id=user_info)
+        user_blog = Blog.objects.get(owner=user_info)
+        blog_posts = Post.objects.filter(owner=user_info)
     except (User.DoesNotExist, Blog.DoesNotExist):
         return HttpResponseRedirect('/')
 
@@ -99,7 +102,7 @@ def addTopic(request, username):
 
     try:
         user_info = User.objects.get(username__exact=username)
-        user_blog = Blog.objects.get(owner_id__exact=user_info)
+        user_blog = Blog.objects.get(owner__exact=user_info)
     except (User.DoesNotExist, Blog.DoesNotExist):
         return HttpResponseRedirect('/')
 

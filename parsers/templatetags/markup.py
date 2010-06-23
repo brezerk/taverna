@@ -7,7 +7,6 @@ import markdown
 import string
 
 from django.template.defaultfilters import stringfilter
-from taverna.parsers.models import Installed
 from django.utils.html import conditional_escape
 
 
@@ -17,17 +16,16 @@ register = template.Library()
 @stringfilter
 def markup(value, parser):
 
-    if parser:
-        if parser.function == "render_bbcode":
-            value = render_bbcode(value)
-            return value
-        elif parser.function == "markdown":
-            value = markdown.markdown(value)
-            return value
-
-    esc = conditional_escape
-    value = esc(value)
-    value = linebreaks(value)
+    if parser == "1":
+        value = render_bbcode(value)
+        return value
+    elif parser == "2":
+        value = markdown.markdown(value)
+        return value
+    else:
+        esc = conditional_escape
+        value = esc(value)
+        value = linebreaks(value)
     return value
 
 @register.filter
@@ -50,8 +48,8 @@ def tags(value):
 def strippost(value, post):
     if len(value) > 382:
         value = value[:382]
-        value = markup(value, post.parser_id)
-        value = value + u" ... <p>>>> <a href='/" + post.owner_id.username + "/" + str(post.id) + u"'>Читать далее</a></p> "
+        value = markup(value, post.parser)
+        value = value + u" ... <p>>>> <a href='/" + post.owner.username + "/" + str(post.id) + u"'>Читать далее</a></p> "
     else:
-        value = markup(value, post.parser_id)
+        value = markup(value, post.parser)
     return value

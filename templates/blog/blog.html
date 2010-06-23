@@ -50,10 +50,10 @@
 
 <div class='news'>
 <h3>
-{% if post.blog_id = user_blog %}
+{% if post.blog = user_blog %}
 <a href='/{{ user_info.username }}/'>{{ user_info.username }}</a>
 {% else %}
-<a href='/blogs/{{ post.blog_id.id }}'>{{ post.blog_id.name }}</a>
+<a href='/blogs/{{ post.blog.id }}'>{{ post.blog.name }}</a>
 {% endif %}
 
 → <a href='/{{ user_info.username }}/{{ post.id }}'>{{ post.title }}</a></h3>
