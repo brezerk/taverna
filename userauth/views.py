@@ -213,7 +213,7 @@ def logoutUser(request):
     logout(request)
     return HttpResponseRedirect("/")
 
-@login_required(redirect_field_name='/login')
+@login_required(redirect_field_name='login.html')
 def viewProfile(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
