@@ -15,15 +15,16 @@ urlpatterns = patterns('',
     (r'^forums/post/(?P<forum_id>\d+).html$', 'forum.views.post_create'),
     (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
-    (r'^blog-settings.html$', 'blogs.views.editBlog'),
 
-    (r'^register.html$', 'userauth.views.registerUser'),
     (r'^login.html$', 'userauth.views.loginUser'),
     (r'^logout.html$', 'userauth.views.logoutUser'),
+    (r'^register.html$', 'userauth.views.registerUser'),
 
-    (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
     (r'^(?P<username>\w+)/profile.html$', 'userauth.views.viewProfile'),
     (r'^profile-edit.html$', 'userauth.views.editProfile'),
+
+    (r'^blog-settings.html$', 'blogs.views.editBlog'),
+    (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
     (r'^(?P<username>\w+)/$', 'blogs.views.viewBlog'), # this one must be last
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
