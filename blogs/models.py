@@ -27,6 +27,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     blog = models.ForeignKey(Blog)
     created = models.DateTimeField(auto_now = True, auto_now_add = True)
+    rating = models.IntegerField(editable = False, default = 0)
 
     class Meta:
         ordering = ['-created']
@@ -34,3 +35,7 @@ class Post(models.Model):
     def __unicode__(self):
         return self.title
 
+class PostVote(models.Model):
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+    positive = models.BooleanField()
