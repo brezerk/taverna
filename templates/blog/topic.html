@@ -45,7 +45,7 @@
 </div>
 {% endif %}
 <h3>{% trans "Adding new topic" %}</h3>
-<form method="POST" action="/{{ user.username }}/blog/addtopic/">{% csrf_token %}
+<form method="POST" action="{% url blogs.views.addTopic %}">{% csrf_token %}
 <table border='0' id='blog_topic'>
     {% if form.errors %}
     <tr><td width='180px'><span style='color: #ff7e00'>{% trans "Error" %}</span>:</td><td>&nbsp;</td></tr>

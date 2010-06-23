@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     (r'^login.html$', 'userauth.views.loginUser'),
     (r'^logout.html$', 'userauth.views.logoutUser'),
 
-    (r'^(?P<username>\w+)/blog/addtopic/$', 'blogs.views.addTopic'),
+    (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
     (r'^(?P<username>\w+)/profile/$', 'userauth.views.viewProfile'),
     (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
     (r'^(?P<username>\w+)/$', 'blogs.views.viewBlog'), # this one must be last
