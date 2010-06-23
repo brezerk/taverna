@@ -34,12 +34,6 @@ class TopicEditForm(forms.Form):
         content = self.cleaned_data['content']
         title = self.cleaned_data['title']
 
-        try:
-            if Post.objects.filter(title__exact=title, blog=target):
-                return
-        except Post.DoesNotExist:
-            pass
-
         parser = self.cleaned_data['parser']
         tags = self.cleaned_data['tags']
         allow_negative = self.cleaned_data['allow_negative']
