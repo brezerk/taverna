@@ -121,6 +121,10 @@ def addTopic(request):
     return {'form': form}
 
 @rr('blog/traker.html')
+def viewPost(request, user, post):
+    return {}
+
+@rr('blog/traker.html')
 def index(request):
     topics = Post.objects.order_by('-created')[:10]
     return { 'topics': topics }
