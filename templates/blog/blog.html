@@ -31,8 +31,8 @@
 {% endblock %}
 
 {% block content %}
-{% if blog_posts %}
-    {% for post in blog_posts %}
+{% if user.post_set.all %}
+    {% for post in user.post_set.all %}
         {% include 'blog/topic_body.html' %}
     {% endfor %}
 {% else %}
