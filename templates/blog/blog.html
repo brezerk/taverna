@@ -4,39 +4,26 @@
 
 {% load markup %}
 
-{% block title %}
-{% if user_blog.desc %}
-   {{ user_blog.desc }}
-{% else %}
-    {% trans "User's blog" %} {{ user_info.username }}
-{% endif %}
-{% endblock %}
-
 {% block menubox %}
 <div class='actionbox'>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td width='300'>
-{% if user.username == user_info.username %}
-{% trans "My blog" %}
-{% else %}
 {% trans "Blog" %}
-{% endif %}
 </td>
 
 <td align='right'>
-{% if user.username != user_info.username %}
-    {% if user_blog %}
-        [<a href='/{{user_info.username}}/'>RSS</a>]
-    {% endif %}
+    [<a href='/{{user_info.username}}/'>RSS</a>]
+
+{% if user == user_info %}
+ {% if user.blog_set %}
+    [<a href='{% url blogs.views.addTopic %}'>{% trans "Add topic" %}</a>]
+    [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
+ {% endif %}
 {% else %}
-    {% if user_blog %}
-        [<a href='{% url blogs.views.addTopic %}'>{% trans "Add topic" %}</a>]
-        [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
-    {% else %}
-        [<a href='{% url blogs.views.editBlog %}'>{% trans "Create blog" %}</a>]
-    {% endif %}
+    [<a href='{% url blogs.views.editBlog %}'>{% trans "Create blog" %}</a>]
 {% endif %}
+
 </td>
 </tr>
 </table>

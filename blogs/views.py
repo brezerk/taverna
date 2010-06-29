@@ -41,17 +41,7 @@ def editBlog(request):
 
 @rr('blog/blog.html')
 def viewBlog(request, username):
-    try:
-        user_info = User.objects.get(username__exact=username)
-        user_blog = Blog.objects.get(owner=user_info)
-        blog_posts = Post.objects.filter(owner=user_info)
-    except (User.DoesNotExist, Blog.DoesNotExist):
-        return HttpResponseRedirect('/')
-
-    return render_to_response("blog/blog.html", {'user_info': user_info,
-                              'user_blog': user_blog,
-                              'blog_posts': blog_posts},
-                              context_instance=RequestContext(request))
+    return {'user_info': User.objects.get(username = username)}
 
 @rr('blog/topic.html')
 def addTopic(request):
