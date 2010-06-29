@@ -5,7 +5,6 @@
 
 {% block content %}
 
-<div class='page_content'>
 <h3>{% trans "Blog settings" %}</h3>
 
 <form method="POST" action="{% url blogs.views.editBlog %}">{% csrf_token %}
@@ -14,7 +13,6 @@
     <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Save" %}"></td></tr>
 </table>
 </form>
-</div>
 
 {% endblock %}
 

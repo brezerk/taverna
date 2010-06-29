@@ -18,6 +18,7 @@ from util import rr
 
 from django.utils.translation import ugettext as _
 
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 import re
@@ -170,12 +171,20 @@ class RegisterForm(forms.Form):
         user.save()
         profile = Profile(user=user, photo=mailhash)
         profile.save()
+
+        try:
+            blog = Blog.objects.get(owner = user)
+        except Blog.DoesNotExist:
+            blog = Blog(name = "%s's blog" % user)
+            blog.owner = user
+            blog.save()
         #FIXME: We need to accign group for new users, also, groups might be created at site startup
 
-@csrf_protect
+@rr('userauth/register.html')
 def registerUser(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         form.setReCaptchaVals(request.META['REMOTE_ADDR'])
@@ -185,9 +194,8 @@ def registerUser(request):
     else:
         form = RegisterForm()
 
-    return render_to_response("userauth/register.html", {'form': form},
-                              context_instance=RequestContext(request)
-                             )
+    return {'form': form}
+
 @rr('userauth/login.html')
 def loginUser(request):
     from django.contrib.auth.forms import AuthenticationForm
@@ -200,13 +208,14 @@ def loginUser(request):
             login(request, user)
             return(HttpResponseRedirect('/'))
         else:
-            return {'form': form}
+            return {'form': AuthenticationForm()}
 
 def logoutUser(request):
     logout(request)
     return HttpResponseRedirect("/")
 
-@login_required(redirect_field_name='/login')
+@login_required()
+@rr ('userauth/profile.html')
 def viewProfile(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
@@ -215,24 +224,22 @@ def viewProfile(request, username):
             user_blog = Blog.objects.get(owner=user_info)
         except Blog.DoesNotExist:
             user_blog = None
-        return render_to_response("userauth/profile.html", {'user_info': user_info,
-                                  'user_profile': user_profile,
-                                  'user_blog': user_blog},
-                                  context_instance=RequestContext(request)
-                                 )
+        return {'user_info': user_info,
+                'user_profile': user_profile,
+                'user_blog': user_blog}
+
     except (User.DoesNotExist, Profile.DoesNotExist):
         return HttpResponseRedirect('/')
 
-@login_required(redirect_field_name='/login')
-def editProfile(request, username):
-    if (request.user.username != username):
-        return HttpResponseRedirect('/')
+@login_required()
+@rr ('userauth/settings.html')
+def editProfile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST)
         form.setUser(request.user)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/' + username + "/profile")
+            return HttpResponseRedirect(reverse("userauth.views.viewProfile", args=[request.user.username]))
     else:
         profile = Profile.objects.get(user=request.user)
         form = ProfileForm({'first_name': request.user.first_name,
@@ -243,6 +250,4 @@ def editProfile(request, username):
                             'location': profile.location,
                             'sign': profile.sign,
                           })
-    return render_to_response("userauth/settings.html", {'form': form},
-                              context_instance=RequestContext(request)
-                             )
+    return {'form': form}

@@ -17,7 +17,6 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
-
 @rr('blog/settings.html')
 def editBlog(request):
 
@@ -40,6 +39,7 @@ def editBlog(request):
             return HttpResponseRedirect("/%s/" % request.user.username)
     return {'form': form}
 
+@rr('blog/blog.html')
 def viewBlog(request, username):
     try:
         user_info = User.objects.get(username__exact=username)
@@ -94,6 +94,11 @@ def addTopic(request):
         'preview': preview,
         'tags': tags}
 
-@rr('base.html')
-def index(request):
+@rr('blog/traker.html')
+def viewPost(request, user, post):
     return {}
+
+@rr('blog/traker.html')
+def index(request):
+    topics = Post.objects.order_by('-created')[:10]
+    return { 'topics': topics }

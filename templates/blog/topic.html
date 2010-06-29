@@ -21,13 +21,13 @@
 {% block content %}
 {#  {{{ #}
 {% if form.cleaned_data %}
- <div class='news'>
- <h3>
- {% if form.cleaned_data.target %}
-  <a href='/blogs/'>{% trans "Blogs" %}</a>
-  {% else %}
-  <a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a>
- {% endif %}
+<div class='news'>
+<h3>
+{% if form.cleaned_data.target %}
+<a href='/blogs/'>{% trans "Blogs" %}</a>
+{% else %}
+<a href='{% url userauth.views.viewProfile user.username %}'>{{ user.username }}</a>
+{% endif %}
 
 → <a href='/news/131313131'>{{ form.cleaned_data.title }}</a></h3>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
@@ -39,7 +39,6 @@
 <div class='tags'><p>{% trans "Tags" %}: {{ form.cleaned_data.tags|tags|safe }}
 </p></div>
 {% endif %}
-
 <p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
 </div>
 </td>
@@ -61,7 +60,6 @@
 {% endif %}
 </table>
 </form>
-
 </div>
 
 {% endblock %}
