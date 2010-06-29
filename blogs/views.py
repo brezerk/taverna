@@ -55,9 +55,9 @@ def addTopic(request):
         class Meta:
             model = Post
             exclude = ('tags', )
-        def save(self, owner, **args):
+        def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
-            post.owner = owner
+            post.owner = request.user
             post.save()
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:
@@ -77,7 +77,7 @@ def addTopic(request):
         if 'submit' in request.POST:
             if form.is_valid():
                 if request.POST['submit']==_("Save"):
-                    form.save(owner = request.user)
+                    form.save()
                     return HttpResponseRedirect(reverse(viewBlog, args = [request.user.username]))
     return {
         'form': form,
