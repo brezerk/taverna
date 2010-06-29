@@ -85,8 +85,8 @@ def addTopic(request):
         'tags': tags}
 
 @rr('blog/traker.html')
-def viewPost(request, user, post):
-    return {}
+def viewPost(request, username, post):
+    return { 'topics': Post.objects.filter(owner__username = username, id = post)}
 
 @rr('blog/traker.html')
 def index(request):
