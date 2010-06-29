@@ -21,9 +21,9 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length = 128)
     content = models.TextField(null = False)
-    parser = models.CharField(max_length = 1, choices = settings.PARSER_ENGINES)
-    restrict_negative = models.BooleanField(default = 0)
-    owner = models.ForeignKey(User)
+    parser = models.IntegerField(choices = settings.PARSER_ENGINES, default = 0)
+    restrict_negative = models.BooleanField(_("Restrict user comments with negative carma"), default = 0)
+    owner = models.ForeignKey(User, editable = False)
     tags = models.ManyToManyField(Tag)
     blog = models.ForeignKey(Blog)
     created = models.DateTimeField(auto_now = True, auto_now_add = True)

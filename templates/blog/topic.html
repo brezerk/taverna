@@ -19,24 +19,27 @@
 {% endblock %}
 
 {% block content %}
+{#  {{{ #}
 {% if form.cleaned_data %}
-<div class='news'>
-<h3>
-{% if form.cleaned_data.target %}
-<a href='/blogs/'>{% trans "Blogs" %}</a>
-{% else %}
-<a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a>
-{% endif %}
+ <div class='news'>
+ <h3>
+ {% if form.cleaned_data.target %}
+  <a href='/blogs/'>{% trans "Blogs" %}</a>
+  {% else %}
+  <a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a>
+ {% endif %}
 
 → <a href='/news/131313131'>{{ form.cleaned_data.title }}</a></h3>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr><td width='40px'>&nbsp;</td><td>
 <div class='content'>
 {{ form.cleaned_data.content|markup:form.cleaned_data.parser|safe }}
+
 {% if form.cleaned_data.tags %}
 <div class='tags'><p>{% trans "Tags" %}: {{ form.cleaned_data.tags|tags|safe }}
 </p></div>
 {% endif %}
+
 <p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
 </div>
 </td>
@@ -44,29 +47,21 @@
 </table>
 </div>
 {% endif %}
+
+{# }}} #}
+
 <div class='page_content'>
 <h3>{% trans "Adding new topic" %}</h3>
-<form method="POST" action="/{{ user.username }}/blog/addtopic/">{% csrf_token %}
-<table border='0' id='blog_topic'>
-    {% if form.errors %}
-    <tr><td width='180px'><span style='color: #ff7e00'>{% trans "Error" %}</span>:</td><td>&nbsp;</td></tr>
-    {% for value in form.errors.values %}
-        <tr><td colspan='2'>{{ value }}</td></tr>
-    {% endfor %}
-    {% endif %}
-    <tr><td width='180px'><b>{% trans "Section" %}</b>:</td><td>{{ form.target }}</td></tr>
-    <tr><td width='180px'><b>{% trans "Title" %}</b>:</td><td>{{ form.title }}</td></tr>
-    <tr><td valign='top'><b>{% trans "Topic body" %}</b>:</td><td>{{ form.content }}</td></tr>
-    <tr><td valign='top'><b>{% trans "Markup language" %}</b>:</td><td>{{ form.parser }}</td></tr>
-    <tr><td valign='top'><b>{% trans "Tags" %}<b>:</td><td>{{ form.tags }}</td></tr>
-    <tr><td valign='top'><b>{% trans "Restrictions" %}<b>:</td><td>{{ form.allow_negative }} {% trans "Restrict user comments with negative carma" %}</td></tr>
-    <tr><td colspan='2'>&nbsp;</td></tr>
-    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Preview" %}"></td></tr>
+<form method="POST" action="{% url blogs.views.addTopic %}">{% csrf_token %}
+<table id='blog_topic'>
+    {{form}}
+    <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Preview" %}"></td></tr>
 {% if form.cleaned_data %}
     <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Save" %}"></td></tr>
 {% endif %}
 </table>
 </form>
+
 </div>
 
 {% endblock %}

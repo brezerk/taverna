@@ -17,42 +17,6 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
-class TopicEditForm(forms.Form):
-    target = forms.ModelChoiceField(queryset=Blog.objects.filter(owner=5),
-                                    empty_label=_("My own blog"), required=False)
-    title = forms.CharField(required=True, min_length=8, max_length=128)
-    content = forms.CharField(required=False,
-                              widget=forms.Textarea(attrs={'rows':'25'}))
-    parser = forms.CharField(max_length=3,
-                    widget=forms.Select(choices=settings.PARSER_ENGINES))
-
-    tags = forms.CharField(required=False, max_length=128)
-    allow_negative = forms.BooleanField(required=False, initial=False)
-
-    def save(self, user, blog):
-        target = self.cleaned_data['target']
-        content = self.cleaned_data['content']
-        title = self.cleaned_data['title']
-
-        parser = self.cleaned_data['parser']
-        tags = self.cleaned_data['tags']
-        allow_negative = self.cleaned_data['allow_negative']
-
-        if not target:
-            target = blog
-
-        topic = Post(blog=target, title=title, content=content, parser=parser, restrict_negative=allow_negative, owner=user)
-        topic.save()
-
-        tag_list = tags.split(", ")
-        for tag in tag_list:
-            t = None
-            try:
-                t = Tag.objects.get(name__exact=tag)
-            except Tag.DoesNotExist:
-                t = Tag(name=tag)
-                t.save()
-            topic.tags.add(t)
 
 @rr('blog/settings.html')
 def editBlog(request):
@@ -89,36 +53,46 @@ def viewBlog(request, username):
                               'blog_posts': blog_posts},
                               context_instance=RequestContext(request))
 
-@csrf_protect
-def addTopic(request, username):
-    if (request.user.username != username):
-        return HttpResponseRedirect('/')
+@rr('blog/topic.html')
+def addTopic(request):
+    user_blogs = Blog.objects.filter(owner = request.user)
 
-    try:
-        user_info = User.objects.get(username__exact=username)
-        user_blog = Blog.objects.get(owner__exact=user_info)
-    except (User.DoesNotExist, Blog.DoesNotExist):
-        return HttpResponseRedirect('/')
+    class PostForm(forms.ModelForm):
+        tag_string = forms.CharField()
+        blog = forms.ModelChoiceField(queryset = user_blogs, 
+            initial = user_blogs[0], 
+            label = _("Post to"))
+        class Meta:
+            model = Post
+            exclude = ('tags', )
+        def save(self, owner, **args):
+            post = super(PostForm, self).save(commit = False, **args)
+            post.owner = owner
+            post.save()
+            for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
+                try:
+                    post.tags.add(Tag.objects.get(name = name))
+                except Tag.DoesNotExist:
+                    tag = Tag(name = name)
+                    tag.save()
+                    post.tags.add(tag)
 
-    form = None
+    form = PostForm()
     preview = None
     tags = None
 
     if request.method == 'POST':
-        form = TopicEditForm(request.POST)
-        if form.is_valid():
-            if request.POST['submit']==_("Save"):
-                form.save(user_info, user_blog)
-                return HttpResponseRedirect('/' + username + '/')
-    else:
-        form = TopicEditForm()
-
-    return render_to_response("blog/topic.html", {'user_info': user_info,
-                              'user_blog': user_blog,
-                              'form': form,
-                              'preview': preview,
-                              'tags': tags},
-                              context_instance=RequestContext(request))
+        form = PostForm(request.POST)
+        form.is_valid()
+        if 'submit' in request.POST:
+            if form.is_valid():
+                if request.POST['submit']==_("Save"):
+                    form.save(owner = request.user)
+                    return HttpResponseRedirect(reverse(viewBlog, args = [request.user.username]))
+    return {
+        'form': form,
+        'preview': preview,
+        'tags': tags}
 
 @rr('base.html')
 def index(request):

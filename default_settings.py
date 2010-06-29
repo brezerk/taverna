@@ -106,7 +106,7 @@ RECAPTCHA_PUBLIC_KEY = 'put_you_key_here'
 RECAPTCHA_PRIVATE_KEY = 'put_you_key_here'
 
 PARSER_ENGINES = (
-    ('Plain Text', '0'),
-    ('BBCodes', '1'),
-    ('Markdown', '2'),
+    (0, 'Plain Text'),
+    (1, 'BBCode'),
+    (2, 'Markdown'),
 )
