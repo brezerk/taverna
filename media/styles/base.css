@@ -211,6 +211,8 @@ input, select, textarea {
 
 label, th {
     text-align: left;
+    vertical-align: text-top;
+    width: 220px;
 }
 
 .recaptcha {
