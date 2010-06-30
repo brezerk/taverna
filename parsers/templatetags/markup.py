@@ -16,10 +16,10 @@ register = template.Library()
 @stringfilter
 def markup(value, parser):
 
-    if parser == "1":
+    if parser == 1:
         value = render_bbcode(value)
         return value
-    elif parser == "2":
+    elif parser == 2:
         value = markdown.markdown(value)
         return value
     else:

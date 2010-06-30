@@ -49,8 +49,8 @@ def addTopic(request):
 
     class PostForm(forms.ModelForm):
         tag_string = forms.CharField()
-        blog = forms.ModelChoiceField(queryset = user_blogs, 
-            initial = user_blogs[0], 
+        blog = forms.ModelChoiceField(queryset = user_blogs,
+            initial = user_blogs[0],
             label = _("Post to"))
         class Meta:
             model = Post
