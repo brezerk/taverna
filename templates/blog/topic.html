@@ -35,8 +35,8 @@
 <div class='content'>
 {{ form.cleaned_data.content|markup:form.cleaned_data.parser|safe }}
 
-{% if form.cleaned_data.tags %}
-<div class='tags'><p>{% trans "Tags" %}: {{ form.cleaned_data.tags|tags|safe }}
+{% if form.cleaned_data.tag_string %}
+<div class='tags'><p>{% trans "Tags" %}: {{ form.cleaned_data.tag_string|tags|safe }}
 </p></div>
 {% endif %}
 <p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='/{{ user_info.username }}/profile'>{{ user_info.username }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
