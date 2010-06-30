@@ -103,3 +103,8 @@ def index(request):
     #FIXME: Use paginator for posts view!!!
     topics = Post.objects.order_by('-created')[:10]
     return { 'topics': topics }
+
+@rr('blog/blog_list.html')
+def viewBlogsList(request):
+    #FIXME: Use paginator for posts view!!!
+    return {  }

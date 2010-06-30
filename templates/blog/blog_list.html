@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load markup %}
+
+{% block title %}
+    {% trans "Blog's traker" %}
+{% endblock %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>
+    {% trans "Blog's traker" %}
+</td>
+
+<td align='right'>
+{% if user.username %}
+        [<a href='{% url blogs.views.addTopic %}'>{% trans "Add topic" %}</a>]
+        [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
+{% endif %}
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% if topics %}
+    {% for post in topics %}
+        {% include 'blog/topic_body.html' %}
+    {% endfor %}
+{% else %}
+    {% trans "No blog topics so nothing to track :]" %}
+{% endif %}
+
+{% endblock %}
+
+

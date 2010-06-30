@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     (r'^logout.html$', 'userauth.views.logoutUser'),
     (r'^register.html$', 'userauth.views.registerUser'),
 
+
+    (r'^blogs-list.html$', 'blogs.views.viewBlogsList'),
     (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
     (r'^profile-edit.html$', 'userauth.views.editProfile'),
     (r'^blog-settings.html$', 'blogs.views.editBlog'),
