@@ -43,7 +43,7 @@ def editBlog(request):
 def viewBlog(request, username):
     return {'user_info': User.objects.get(username = username)}
 
-@rr('blog/topic.html')
+@rr('blog/add_post.html')
 def addTopic(request):
     user_blogs = Blog.objects.filter(owner = request.user)
 
@@ -84,9 +84,9 @@ def addTopic(request):
         'preview': preview,
         'tags': tags}
 
-@rr('blog/traker.html')
+@rr('blog/view_post.html')
 def viewPost(request, username, post):
-    return { 'topics': Post.objects.filter(owner__username = username, id = post)}
+    return { 'post': Post.objects.filter(owner__username = username, id = post)[0] }
 
 @rr('blog/traker.html')
 def index(request):

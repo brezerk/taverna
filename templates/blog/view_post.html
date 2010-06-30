@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load markup %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>
+{% trans "Blog" %}
+</td>
+
+<td align='right'>
+    [<a href='/{{user_info.username}}/'>RSS</a>]
+
+{% if user == post.owner %}
+ {% if user.blog_set %}
+    [<a href='{% url blogs.views.addTopic %}'>{% trans "Add topic" %}</a>]
+    [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
+ {% endif %}
+{% else %}
+    [<a href='{% url blogs.views.editBlog %}'>{% trans "Add comments" %}</a>]
+{% endif %}
+
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+    {% if post %}
+        {% include 'blog/view_post_fullbody.html' %}
+    {% endif %}
+
+{% endblock %}
+
+
