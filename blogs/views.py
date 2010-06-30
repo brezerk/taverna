@@ -41,7 +41,17 @@ def editBlog(request):
 
 @rr('blog/blog.html')
 def viewBlog(request, username):
-    return {'user_info': User.objects.get(username = username)}
+    #FIXME: use paginator for posts view!!!
+    user_info = None
+    blog_posts = None
+    try:
+        user_info = User.objects.get(username = username)
+        blog_posts = Post.objects.filter(owner = user_info).order_by('-created')[:10]
+    except (User.DoesNotExist, Blog.DoesNotExist):
+        return HttpResponseRedirect("/")
+
+    return {'user_info': user_info,
+            'blog_posts': blog_posts }
 
 @rr('blog/add_post.html')
 def addTopic(request):
@@ -90,5 +100,6 @@ def viewPost(request, post):
 
 @rr('blog/traker.html')
 def index(request):
+    #FIXME: Use paginator for posts view!!!
     topics = Post.objects.order_by('-created')[:10]
     return { 'topics': topics }

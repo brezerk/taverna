@@ -5,7 +5,7 @@
 <h3>
 {% if post.blog.owner %}
 
-<a href='{% url userauth.views.viewProfile post.owner %}'>{{ post.owner }}</a>
+<a href='{% url blogs.views.viewBlog post.owner %}'>{{ post.owner }}</a>
 {% else %}
 <a href='/blogs/{{ post.blog.id }}'>{{ post.blog.name }}</a>
 {% endif %}
