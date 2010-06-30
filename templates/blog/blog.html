@@ -32,8 +32,6 @@
 
 {% block content %}
 
-
-{{  blog_posts }}
 {% if blog_posts %}
     {% for post in blog_posts %}
         {% include 'blog/topic_body.html' %}
