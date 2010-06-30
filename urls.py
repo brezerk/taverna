@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     (r'^profile-edit.html$', 'userauth.views.editProfile'),
     (r'^blog-settings.html$', 'blogs.views.editBlog'),
     (r'^(?P<username>\w+)/profile.html$', 'userauth.views.viewProfile'),
-    (r'^(?P<username>\w+)/(?P<post>\w+)$', 'blogs.views.viewPost'),
+    (r'^(.+)/(?P<post>\w+)$', 'blogs.views.viewPost'),
     (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
     (r'^(?P<username>\w+)/$', 'blogs.views.viewBlog'), # WARNING: this one MUST be last
 
