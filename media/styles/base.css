@@ -212,6 +212,10 @@ input, select, textarea {
 label, th {
     text-align: left;
     vertical-align: text-top;
+/*    width: 220px;*/
+}
+
+#blog_topic th {
     width: 220px;
 }
 
@@ -242,3 +246,16 @@ label, th {
     padding: 0px;
 }
 
+.theader {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.theader td {
+    border: 1px solid #3f3f3f;
+}
+
+.theader th {
+    border: 1px solid #3f3f3f;
+    background-color: #3f3f3f;
+}

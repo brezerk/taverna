@@ -107,4 +107,7 @@ def index(request):
 @rr('blog/blog_list.html')
 def viewBlogsList(request):
     #FIXME: Use paginator for posts view!!!
-    return {  }
+    public_blogs = Blog.objects.filter(owner = 1)
+
+    user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
+    return { 'public_blogs': public_blogs, 'user_blogs': user_blogs }

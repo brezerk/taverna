@@ -13,7 +13,7 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td width='300'>
-    {% trans "Blog's traker" %}
+    {% trans "Blog's list" %}
 </td>
 
 <td align='right'>
@@ -29,12 +29,24 @@
 
 {% block content %}
 
-{% if topics %}
-    {% for post in topics %}
-        {% include 'blog/topic_body.html' %}
-    {% endfor %}
-{% else %}
-    {% trans "No blog topics so nothing to track :]" %}
+{% if public_blogs %}
+<h3>{% trans "public blogs:" %}</h3>
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='220px'>{% trans "Blog name" %}</th><th>{% trans "Description" %}</th></tr>
+{% for blog in public_blogs %}
+<tr><td><a href='{%url blogs.views.viewBlog blog.owner %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+
+{% if user_blogs %}
+<h3>{% trans "Top 20 user blogs:" %}</h3>
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='220px'>{% trans "Blog name" %}</th><th>{% trans "Description" %}</th></tr>
+{% for blog in user_blogs %}
+<tr><td><a href='{%url blogs.views.viewBlog blog.owner %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
+{% endfor %}
+</table>
 {% endif %}
 
 {% endblock %}
