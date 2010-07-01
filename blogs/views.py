@@ -119,3 +119,4 @@ def viewBlogsUserList(request):
     #FIXME: Use paginator for posts view!!!
     user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
     return { 'user_blogs': user_blogs }
+

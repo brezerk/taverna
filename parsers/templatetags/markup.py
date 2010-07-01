@@ -9,6 +9,8 @@ import string
 from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape
 
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 register = template.Library()
 
@@ -49,7 +51,7 @@ def strippost(value, post):
     if len(value) > 382:
         value = value[:382]
         value = markup(value, post.parser)
-        value = value + u" ... <p>>>> <a href='/" + post.owner.username + "/" + str(post.id) + u"'>Читать далее</a></p> "
+        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('blogs.views.viewPost', args=[post.blog.name, post.id]), _("Read full post"))
     else:
         value = markup(value, post.parser)
     return value
