@@ -23,10 +23,11 @@ def editBlog(request):
     class BlogForm(forms.ModelForm):
         class Meta:
             model = Blog
+            exclude = ('name','owner')
     try:
         blog = Blog.objects.get(owner = request.user)
     except Blog.DoesNotExist:
-        blog = Blog(name = "%s's blog" % request.user.username)
+        blog = Blog(name = request.user.username)
         blog.owner = request.user
         blog.save()
 
@@ -40,22 +41,19 @@ def editBlog(request):
     return {'form': form}
 
 @rr('blog/blog.html')
-def viewBlog(request, username):
+def viewBlog(request, blog_slug):
     #FIXME: use paginator for posts view!!!
-    user_info = None
     blog_posts = None
     try:
-        user_info = User.objects.get(username = username)
-        blog_posts = Post.objects.filter(owner = user_info).order_by('-created')[:10]
-    except (User.DoesNotExist, Blog.DoesNotExist):
+        blog_posts = Post.objects.filter(blog__name=blog_slug).order_by('-created')[:10]
+    except (Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
-    return {'user_info': user_info,
-            'blog_posts': blog_posts }
+    return {'blog_posts': blog_posts }
 
 @rr('blog/add_post.html')
 def addTopic(request):
-    user_blogs = Blog.objects.filter(owner = request.user)
+    user_blogs = Blog.objects.filter(owner__in = [1, request.user]).order_by('name').order_by('-owner__id')
 
     class PostForm(forms.ModelForm):
         tag_string = forms.CharField()
@@ -106,8 +104,18 @@ def index(request):
 
 @rr('blog/blog_list.html')
 def viewBlogsList(request):
-    #FIXME: Use paginator for posts view!!!
     public_blogs = Blog.objects.filter(owner = 1)
 
     user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
     return { 'public_blogs': public_blogs, 'user_blogs': user_blogs }
+
+@rr('blog/blog_list.html')
+def viewBlogsPublicList(request):
+    public_blogs = Blog.objects.filter(owner = 1)
+    return { 'public_blogs': public_blogs }
+
+@rr('blog/blog_list.html')
+def viewBlogsUserList(request):
+    #FIXME: Use paginator for posts view!!!
+    user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
+    return { 'user_blogs': user_blogs }

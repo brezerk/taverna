@@ -8,8 +8,8 @@
 <div class='actionbox'>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
-<td width='300'>
-{% trans "Blog" %}
+<td>
+<a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ post.blog.desc }}
 </td>
 
 <td align='right'>

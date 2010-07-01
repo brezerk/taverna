@@ -88,7 +88,7 @@ class ProfileForm(forms.Form):
            self.user.save()
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(required=True, max_length=16)
+    username = forms.SlugField(required=True, max_length=16)
     email = forms.EmailField(required=True, max_length=32)
     rpassword = forms.CharField(required=True, max_length=32,
                                 widget=forms.PasswordInput

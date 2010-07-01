@@ -3,14 +3,10 @@
 
 <div class='news'>
 <h3>
-{% if post.blog.owner %}
 
-<a href='{% url blogs.views.viewBlog post.owner %}'>{{ post.owner }}</a>
-{% else %}
-<a href='/blogs/{{ post.blog.id }}'>{{ post.blog.name }}</a>
-{% endif %}
+<a href='{% url blogs.views.viewBlog post.blog.name %}'>{{ post.blog.name }}</a>
 
-→ <a href='/{{ post.owner}}/{{ post.id }}'>{{ post.title }}</a></h3>
+→ <a href='{% url blogs.views.viewPost post.blog.name post.id %}'>{{ post.title }}</a></h3>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr><td width='40px'>&nbsp;</td><td>
 <div class='content'>

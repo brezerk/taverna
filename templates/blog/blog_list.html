@@ -34,7 +34,7 @@
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
 <tr class='theader'><th width='220px'>{% trans "Blog name" %}</th><th>{% trans "Description" %}</th></tr>
 {% for blog in public_blogs %}
-<tr><td><a href='{%url blogs.views.viewBlog blog.owner %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
+<tr><td><a href='{%url blogs.views.viewBlog blog.name %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
 {% endfor %}
 </table>
 {% endif %}
@@ -44,7 +44,7 @@
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
 <tr class='theader'><th width='220px'>{% trans "Blog name" %}</th><th>{% trans "Description" %}</th></tr>
 {% for blog in user_blogs %}
-<tr><td><a href='{%url blogs.views.viewBlog blog.owner %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
+<tr><td><a href='{%url blogs.views.viewBlog blog.name %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
 {% endfor %}
 </table>
 {% endif %}
