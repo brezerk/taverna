@@ -83,9 +83,9 @@ def addTopic(request):
         'preview': preview,
         'tags': tags}
 
-@rr('blog/view_post.html')
+@rr('blog/blog.html')
 def viewPost(request, post):
-    return { 'post': Post.objects.get(id = post) }
+    return { 'blog_posts': Post.objects.filter(id = post), 'dont_strip': True }
 
 @rr('blog/blog.html')
 def viewBlog(request, blog_slug):

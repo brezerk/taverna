@@ -10,7 +10,11 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr><td width='40px'>&nbsp;</td><td>
 <div class='content'>
+{% if dont_strip %}
+{{ post.content|markup:post.parser|safe }}
+{% else %}
 {{ post.content|strippost:post|safe }}
+{% endif %}
 {% if post.tags.all.1 %}
 <div class='tags'><p>{% trans "Tags" %}: 
 {% for tag in post.tags.all %}{% if not forloop.first %}, {% endif %}<a href='/blogs/tags/{{ tag }}'>{{ tag }}</a>{% endfor %}
