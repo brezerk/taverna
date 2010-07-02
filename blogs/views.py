@@ -17,6 +17,7 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
+@login_required()
 @rr('blog/settings.html')
 def editBlog(request):
 
@@ -51,6 +52,7 @@ def viewBlog(request, blog_slug):
 
     return {'blog_posts': blog_posts }
 
+@login_required()
 @rr('blog/add_post.html')
 def addTopic(request):
     user_blogs = Blog.objects.filter(owner__in = [1, request.user]).order_by('name').order_by('-owner__id')

@@ -17,7 +17,8 @@
 </td>
 
 <td align='right'>
-{% if user.username %}
+    [<a href='/{{user_info.username}}/'>RSS</a>]
+{% if user.is_authenticated %}
         [<a href='{% url blogs.views.addTopic %}'>{% trans "Add topic" %}</a>]
         [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
 {% endif %}
