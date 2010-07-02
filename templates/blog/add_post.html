@@ -26,7 +26,7 @@
 {% if form.cleaned_data.target %}
 <a href='/blogs/'>{% trans "Blogs" %}</a>
 {% else %}
-<a href='{% url blogs.views.viewBlog form.cleaned_data.blog %}'>{{ form.cleaned_data.blog }}</a>
+<a href='{% url blogs.views.viewBlog form.cleaned_data.blog.name %}'>{{ form.cleaned_data.blog }}</a> 
 {% endif %}
 
 → <a href='/news/131313131'>{{ form.cleaned_data.title }}</a></h3>
