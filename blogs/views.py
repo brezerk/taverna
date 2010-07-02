@@ -41,19 +41,6 @@ def editBlog(request):
             return HttpResponseRedirect("/%s/" % request.user.username)
     return {'form': form}
 
-@rr('blog/blog.html')
-def viewBlog(request, blog_slug):
-    #FIXME: use paginator for posts view!!!
-    blog_posts = None
-    blog_info = None
-    try:
-        blog_info = Blog.objects.get(name=blog_slug)
-        blog_posts = Post.objects.filter(blog=blog_info).order_by('-created')[:10]
-    except (Blog.DOesNotExist, Post.DoesNotExist):
-        return HttpResponseRedirect("/")
-
-    return {'blog_posts': blog_posts, 'blog_info': blog_info }
-
 @login_required()
 @rr('blog/add_post.html')
 def addTopic(request):
@@ -100,11 +87,24 @@ def addTopic(request):
 def viewPost(request, post):
     return { 'post': Post.objects.get(id = post) }
 
-@rr('blog/traker.html')
+@rr('blog/blog.html')
+def viewBlog(request, blog_slug):
+    #FIXME: use paginator for posts view!!!
+    blog_posts = None
+    blog_info = None
+    try:
+        blog_info = Blog.objects.get(name=blog_slug)
+        blog_posts = Post.objects.filter(blog=blog_info).order_by('-created')[:10]
+    except (Blog.DOesNotExist, Post.DoesNotExist):
+        return HttpResponseRedirect("/")
+
+    return {'blog_posts': blog_posts, 'blog_info': blog_info }
+
+@rr('blog/blog.html')
 def index(request):
     #FIXME: Use paginator for posts view!!!
-    topics = Post.objects.order_by('-created')[:10]
-    return { 'topics': topics }
+    blog_posts = Post.objects.order_by('-created')[:10]
+    return { 'blog_posts': blog_posts }
 
 @rr('blog/blog_list.html')
 def viewBlogsList(request):
