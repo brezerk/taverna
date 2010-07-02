@@ -7,13 +7,13 @@
  <tr><td class=title><td><td>
 {% for post in forum.post_set.all %}
 <tr class="{% cycle "odd" "even" %}">
- <td><a href="{% url forum.views.topic post.pk %}">{{post.title}}</a><td>{{post.created|timesince}} {% trans "ago" %}<td>{{post.owner}}
+ <td><a href="{% url forum.views.thread post.pk %}">{{post.title}}</a><td>{{post.created|timesince}} {% trans "ago" %}<td>{{post.owner}}
 </tr>
 {% endfor %}
 </table>
 
 {% if user.profile.is_karma_good %}
-<a href="{% url forum.views.post_create forum.pk %}">{% trans "Post new topic" %}</a>
+<a href="{% url forum.views.reply forum.pk %}">{% trans "Post new topic" %}</a>
 {% endif %}
 
 {% endblock %}

@@ -3,12 +3,20 @@
 
 {% block content %}
 
-<div class=forum>
-<h1><a href="{% url forum.views.forum post.forum.pk %}">{{post.forum.name}}</a> :: <a>{{post.title}}</a></h1>
+<div class=thread>
 
-{% include "forum/post.include.html" %}
+{% if post.forum %}
+<h1><a href="{% url forum.views.forum post.forum.pk %}">{{post.forum.name}}</a> :: <a>{{post.title}}</a></h1>
+{% endif %}
+
+{{post.text}}
+
+<ul>
+{% for s in tree %}
+{{s|safe}}
+{% endfor %}
+</ul>
 
 </div>
-
 
 {% endblock %}

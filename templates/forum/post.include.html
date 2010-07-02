@@ -1,6 +1,12 @@
 {% load i18n %}
 
-<h2>{{post.owner}}</h2>
+<li>
+
+<div>
+<h4>{{post.owner}}</h4>
 <p>{{post.text}}</p>
 <pre>{{post.created}}</pre>
-<a href="">{% trans "Reply" %}</a>
+<a href="{% url forum.views.reply post.pk %}">{% trans "Reply" %}</a>
+</div>
+
+<ul>

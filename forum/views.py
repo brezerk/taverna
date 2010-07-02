@@ -3,6 +3,7 @@ from util import rr
 from django import forms
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 
 class ForumForm(forms.ModelForm):
     class Meta:
@@ -23,9 +24,37 @@ def forum(request, forum_id):
         'form': PostForm(),
     }
 
-@rr('forum/topic.html')
-def topic(request, topic_id):
-    return {'post': Post.objects.get(pk = topic_id)}
+@rr('forum/thread.html')
+def thread(request, post_id):
+    def tree(post):
+        yield render_to_string('forum/post.include.html', {'post': post})
+        for child in post.post_set.all():
+            for r in tree(child):
+                yield r
+            yield '</ul>'
+        yield '</li>'
+
+    post = Post.objects.get(pk = post_id)
+    return {'post': post, 'tree': tree(post)}
+
+@rr('forum/reply.html')
+def reply(request, forum_id = None, post_id = None):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit = False)
+            if forum_id:
+                post.forum = Forum.objects.get(pk = forum_id)
+                redirect = reverse(forum, args = [forum_id])
+            else:
+                post.reply_to = Post.objects.get(pk = post_id)
+                redirect = reverse(thread, args = [post.reply_to.pk])
+            post.owner = request.user
+            post.save()
+            return HttpResponseRedirect(redirect)
+    else:
+        form = PostForm()
+    return {'form': form}
 
 @rr('forum/forum_create.html')
 def forum_create(request):
@@ -37,19 +66,5 @@ def forum_create(request):
         forum.owner = request.user
         forum.save()
         return HttpResponseRedirect(reverse(index))
-
-@rr('forum/post.html')
-def post_create(request, forum_id):
-    if request.method == 'GET':
-        return {'form': PostForm()}
-    elif request.method == 'POST' and request.user.profile.is_karma_good():
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit = False)
-            post.owner = request.user
-            post.forum_id = forum_id
-            post.save()
-    return HttpResponseRedirect(reverse(forum, args = [forum_id]))
-        
 
 
