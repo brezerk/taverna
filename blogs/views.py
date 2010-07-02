@@ -45,12 +45,14 @@ def editBlog(request):
 def viewBlog(request, blog_slug):
     #FIXME: use paginator for posts view!!!
     blog_posts = None
+    blog_info = None
     try:
-        blog_posts = Post.objects.filter(blog__name=blog_slug).order_by('-created')[:10]
-    except (Post.DoesNotExist):
+        blog_info = Blog.objects.get(name=blog_slug)
+        blog_posts = Post.objects.filter(blog=blog_info).order_by('-created')[:10]
+    except (Blog.DOesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
-    return {'blog_posts': blog_posts }
+    return {'blog_posts': blog_posts, 'blog_info': blog_info }
 
 @login_required()
 @rr('blog/add_post.html')

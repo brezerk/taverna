@@ -9,21 +9,18 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-<a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ blog_posts.0.blog.desc }}
+<a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ blog_info.desc }}
 </td>
 
 <td align='right'>
     [<a href='/{{user_info.username}}/'>RSS</a>]
-
 {% if user.is_authenticated %}
-{% if user == user_info %}
- {% if user.blog_set %}
+    {% if blog_info.owner = user or blog_info.owner.id = 1 %}
     [<a href='{% url blogs.views.addTopic %}'>{% trans "Add topic" %}</a>]
+    {% if blog_info.owner = user %}
     [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
- {% endif %}
-{% else %}
-    [<a href='{% url blogs.views.editBlog %}'>{% trans "Create blog" %}</a>]
-{% endif %}
+    {% endif %}
+    {% endif %}
 {% endif %}
 
 </td>
