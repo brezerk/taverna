@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
 
 class Forum(models.Model):
-    name = models.CharField(max_length = 64)
-    description = models.CharField(max_length = 64)
+    name = models.CharField(_("Name"), max_length = 64)
+    description = models.CharField(_("Description"), max_length = 64)
     owner = models.ForeignKey(User, editable = False)
     rating = models.IntegerField(editable = False, default = 0)
     created = models.DateTimeField(editable = False, auto_now_add = True)

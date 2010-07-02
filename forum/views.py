@@ -23,6 +23,10 @@ def forum(request, forum_id):
         'form': PostForm(),
     }
 
+@rr('forum/topic.html')
+def topic(request, topic_id):
+    return {'post': Post.objects.get(pk = topic_id)}
+
 @rr('forum/forum_create.html')
 def forum_create(request):
     if request.method == 'GET':

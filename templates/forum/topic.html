@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<div class=forum>
+<h1><a href="{% url forum.views.forum post.forum.pk %}">{{post.forum.name}}</a> :: <a>{{post.title}}</a></h1>
+
+{% include "forum/post.include.html" %}
+
+</div>
+
+
+{% endblock %}
