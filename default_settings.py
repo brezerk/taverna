@@ -101,10 +101,6 @@ INSTALLED_APPS = (
     'parsers',
 )
 
-RECAPTCHA_PUBLIC_KEY = 'put_you_key_here'
-
-RECAPTCHA_PRIVATE_KEY = 'put_you_key_here'
-
 PARSER_ENGINES = (
     (0, 'Plain Text'),
     (1, 'BBCode'),

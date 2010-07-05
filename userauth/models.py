@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
+    openid_hash = models.CharField(blank = True, null = True, max_length = 33)
+    visible_name = models.SlugField(blank = True, null = True, max_length = 32)
     karma = models.IntegerField(editable = False, default = 0)
     jabber = models.CharField(blank = True, null = True, max_length = 32)
     website = models.CharField(blank = True, null = True, max_length = 32)

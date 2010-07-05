@@ -14,7 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from blogs.models import Blog
-from util import rr
+from util import rr, getViewURL, getOpenIDStore
 
 from django.utils.translation import ugettext as _
 
@@ -24,6 +24,13 @@ from django.conf import settings
 import re
 import cracklib
 import hashlib
+
+import openid
+
+from openid.store import filestore
+from openid.consumer import consumer
+
+from django.template.defaultfilters import slugify
 
 class ProfileForm(forms.Form):
     first_name = forms.CharField(required=False, max_length=32)
@@ -87,129 +94,6 @@ class ProfileForm(forms.Form):
            self.user.set_password(newpassword)
            self.user.save()
 
-class RegisterForm(forms.Form):
-    username = forms.SlugField(required=True, max_length=16)
-    email = forms.EmailField(required=True, max_length=32)
-    rpassword = forms.CharField(required=True, max_length=32,
-                                widget=forms.PasswordInput
-                               )
-    password = forms.CharField(required=True, max_length=32,
-                               widget=forms.PasswordInput
-                              )
-    recaptcha_response_field = forms.CharField(required=True)
-    recaptcha_challenge_field = forms.CharField(required=True)
-
-    captchaHTML = captcha.displayhtml(public_key = settings.RECAPTCHA_PUBLIC_KEY,
-                use_ssl = False,
-                error = None,
-                theme = "clean")
-    remoteip = None
-    response = None
-    challange = None
-
-    def clean_password(self):
-        password = self.cleaned_data['password']
-        try:
-            cracklib.VeryFascistCheck(password)
-        except ValueError:
-            raise forms.ValidationError(_("Password is too simple."))
-
-        rpassword = self.cleaned_data['rpassword']
-        if password != rpassword:
-            raise forms.ValidationError(_("Passwords do not match."))
-        return password
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        try:
-            if User.objects.get(email__exact=email):
-                raise forms.ValidationError(_("E-Mail already exists."))
-        except User.DoesNotExist:
-            pass
-        return email
-
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        try:
-            if User.objects.get(username__exact=username):
-                raise forms.ValidationError(_("Login already in use"))
-        except User.DoesNotExist:
-            pass
-
-        return username
-
-    def clean_recaptcha_challenge_field(self):
-        try:
-            challenge = self.cleaned_data['recaptcha_challenge_field']
-            response = self.cleaned_data['recaptcha_response_field']
-
-            cResponse = captcha.submit(
-                      challenge,
-                      response,
-                      settings.RECAPTCHA_PRIVATE_KEY,
-                      self.remoteip)
-            if not cResponse.is_valid:
-                raise forms.ValidationError(_("Wrong captcha"))
-            return True
-
-        except KeyError:
-            raise forms.ValidationError(_("Wrong captcha"))
-
-    def setReCaptchaVals(self, remoteip):
-        self.remoteip = remoteip
-
-
-    def save(self):
-        username = self.cleaned_data['username']
-        email = self.cleaned_data['email']
-        password = self.cleaned_data['password']
-        mailhash = hashlib.md5(email).hexdigest()
-        user = User(username=username, email=email,
-                    is_staff=False, is_active=True,
-                    is_superuser=False)
-        user.set_password(password)
-        user.save()
-        profile = Profile(user=user, photo=mailhash)
-        profile.save()
-
-        try:
-            blog = Blog.objects.get(owner = user)
-        except Blog.DoesNotExist:
-            blog = Blog(user)
-            blog.owner = user
-            blog.save()
-        #FIXME: We need to accign group for new users, also, groups might be created at site startup
-
-@rr('userauth/register.html')
-def registerUser(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect('/')
-
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        form.setReCaptchaVals(request.META['REMOTE_ADDR'])
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/')
-    else:
-        form = RegisterForm()
-
-    return {'form': form}
-
-@rr('userauth/login.html')
-def loginUser(request):
-    from django.contrib.auth.forms import AuthenticationForm
-    if request.method == 'GET':
-        return {'form': AuthenticationForm()}
-    elif request.method == 'POST':
-        user = authenticate(username = request.POST["username"],
-            password = request.POST["password"])
-        if user:
-            login(request, user)
-            return(HttpResponseRedirect('/'))
-        else:
-            return {'form': AuthenticationForm()}
-
 def logoutUser(request):
     logout(request)
     return HttpResponseRedirect("/")
@@ -251,3 +135,79 @@ def editProfile(request):
                             'sign': profile.sign,
                           })
     return {'form': form}
+
+@rr ('userauth/openid.html')
+def openidChalange(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+
+    class OpenidForm(forms.Form):
+        openid = forms.CharField(required=True, max_length=32)
+
+    form = None
+
+    if (request.POST):
+        form = OpenidForm(request.POST)
+
+        store = getOpenIDStore("/tmp/taverna_openid", "c_")
+        c = consumer.Consumer(request.session, store)
+        openid_url = request.POST['openid']
+
+        try:
+            auth_request = c.begin(openid_url)
+        except consumer.DiscoveryFailure, exc:
+            error = "OpenID discovery error: %s" % str(exc)
+            return {'form': form, 'error': error}
+
+        if auth_request.shouldSendRedirect():
+            trust_root = getViewURL(request, openidChalange)
+            redirect_to = getViewURL(request, openidFinish)
+            return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
+    else:
+        form = OpenidForm()
+    return {'form': form}
+
+@rr ('userauth/openid.html')
+def openidFinish(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+
+    form = None
+    error = None
+    request_args = request.GET
+
+    store = getOpenIDStore("/tmp/taverna_openid", "c_")
+    c = consumer.Consumer(request.session, store)
+
+    return_to = getViewURL(request, openidFinish)
+    response = c.complete(request_args, return_to)
+
+    if response.status == consumer.SUCCESS:
+        openid_hash=hashlib.md5(response.getDisplayIdentifier()).hexdigest()
+
+        try:
+            profile = Profile.objects.get(openid_hash = openid_hash)
+            username = profile.user.username
+            password = profile.user.password
+            user = authenticate(username=username)
+            if user is not None:
+                login(request, user)
+        except Profile.DoesNotExist:
+            user = User(username = slugify(response.getDisplayIdentifier()[7:-1]),
+                        is_staff = False, is_active = True,
+                        is_superuser = False)
+            user.save()
+            profile = Profile(user = user, photo = "", openid_hash = openid_hash)
+            profile.save()
+            try:
+                blog = Blog.objects.get(owner = user)
+            except Blog.DoesNotExist:
+                blog = Blog(owner = user)
+                blog.save()
+
+        return HttpResponseRedirect("/")
+    else:
+        error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
+
+    return {'from': form, 'error': error}
+

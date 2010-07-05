@@ -33,7 +33,7 @@
         {% if user.is_authenticated %}
             {% trans "Welcome" %}, <a href='{% url userauth.views.viewProfile user.username %}'>{{ user.username }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]
         {% else %}
-            [<a href='{% url userauth.views.loginUser %}'>{% trans "Log In"%}</a>] [<a href='{% url userauth.views.registerUser %}'>{% trans "Register" %}</a>]
+            [<a href='{% url userauth.views.openidChalange %}'>{% trans "Log In"%}</a>]
         {% endif %}
         </td>
     </tr>

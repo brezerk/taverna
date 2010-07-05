@@ -7,6 +7,9 @@
 
 <form method=post>
 <table border='0' width='450px'>
+{% if error %}
+<tr><td colspan='3'>{{error}}</td></tr>
+{% endif %}
 {{form}}
 {% csrf_token %}
 <tr><td>&nbsp;</td><td><input type=submit value={% trans "Log in" %}></tr>

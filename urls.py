@@ -25,12 +25,13 @@ urlpatterns = patterns('',
     (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
 
-    (r'^login.html$', 'userauth.views.loginUser'),
-    (r'^logout.html$', 'userauth.views.logoutUser'),
-    (r'^register.html$', 'userauth.views.registerUser'),
+    (r'^logout.so$', 'userauth.views.logoutUser'),
     (r'^(?P<username>\w+)/profile.html$', 'userauth.views.viewProfile'),
     (r'^profile-edit.html$', 'userauth.views.editProfile'),
     (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
+
+    (r'^login/$', 'userauth.views.openidChalange'),
+    (r'^login/finish/$', 'userauth.views.openidFinish'),
 
     (r'^(?P<blog_slug>\w+)/$', 'blogs.views.viewBlog'), # WARNING: this one MUST be last
 
