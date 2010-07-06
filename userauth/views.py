@@ -68,7 +68,7 @@ def editProfile(request):
             if request.POST['email']:
                 mailhash = md5(request.POST['email']).hexdigest()
                 profile.photo = mailhash
-                profile.save()
+            profile.save()
 
     class UserSettingsForm(forms.ModelForm):
         class Meta:
@@ -163,7 +163,7 @@ def openidFinish(request):
             if user is not None:
                 login(request, auth)
 
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect(reverse("userauth.views.editProfile"))
     else:
         error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
 
