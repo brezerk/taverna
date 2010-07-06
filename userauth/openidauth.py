@@ -8,7 +8,12 @@ class OpenIDBackend:
 
     def authenticate(self, username=None, password=None, request=None):
         try:
-            user = User.objects.get(username=username)
+            if password:
+                user = User.objects.get(username=username, password=password)
+            else:
+                user = User.objects.get(username=username)
+                if user.is_staff or user.is_superuser:
+                    return None
             # plus any other test of User/UserProfile, etc.
             return user # indicates success
         except User.DoesNotExist:
