@@ -3,6 +3,22 @@
 
 {% block title %}Настройки бога пользователя {{ user.username }}{% endblock %}
 
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>
+    {% trans "Blog's list" %}
+</td>
+<td align='right'>
+[<a href='{% url userauth.views.viewProfile user.id %}'>{% trans "Cancel" %}</a>]
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
 {% block content %}
 
 <h3>{% trans "My blog settings" %}</h3>

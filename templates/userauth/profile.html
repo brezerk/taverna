@@ -17,10 +17,9 @@
     {% endif %}
 [<a href='/{{user.username}}/ignore/{{user_info.username}}'>{% trans "Ignore" %}</a>]
 {% else %}
+    [<a href='{% url blogs.views.addPost %}'>{% trans "Add topic" %}</a>]
     {% if user_blog %}
         [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
-    {% else %}
-        [<a href='{% url blogs.views.editBlog %}'>{% trans "Create blog" %}</a>]
     {% endif %}
 [<a href='{% url userauth.views.editProfile %}'>{% trans "Edit profile" %}</a>]
 {% endif %}
