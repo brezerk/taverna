@@ -16,6 +16,11 @@ MANAGERS = ADMINS
 
 AUTH_PROFILE_MODULE = 'userauth.Profile'
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'userauth.openidauth.OpenIDBackend', # if they fail the normal test
+)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
