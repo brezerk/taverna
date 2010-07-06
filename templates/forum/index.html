@@ -1,6 +1,31 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td>
+{% if blog_info.desc %}
+<a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ blog_info.desc }}
+{% else %}
+{% trans "Blog's traker" %}
+{% endif %}
+</td>
+
+<td align='right'>
+    [<a href='/{{user_info.username}}/'>RSS</a>]
+
+{% if user.is_authenticated %}
+    {% if user.profile.karma > 0 %}
+    [<a href='{% url blogs.views.editBlog %}'>{% trans "Create forum" %}</a>]
+    {% endif %}
+{% endif %}
+</td>
+</tr>
+</table>
+{% endblock %}
+
 {% block content %}
 
 <table id=forums>
@@ -12,10 +37,5 @@
  </tr>
 {% endfor %}
 </table>
-
-{% if user.profile.is_karma_good %}
-<a href="{% url forum.views.forum_create %}">{%trans "Create forum" %}</a>
-{% endif %}
-
 
 {% endblock %}
