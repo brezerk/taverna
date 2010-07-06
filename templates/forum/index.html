@@ -9,7 +9,7 @@
 {% if blog_info.desc %}
 <a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ blog_info.desc }}
 {% else %}
-{% trans "Blog's traker" %}
+{% trans "Forum list" %}
 {% endif %}
 </td>
 
@@ -18,7 +18,7 @@
 
 {% if user.is_authenticated %}
     {% if user.profile.karma > 0 %}
-    [<a href='{% url blogs.views.editBlog %}'>{% trans "Create forum" %}</a>]
+    [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
     {% endif %}
 {% endif %}
 </td>
@@ -28,13 +28,13 @@
 
 {% block content %}
 
-<table id=forums>
-<caption>{% trans "Forum list" %}</caption>
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='220px'>{% trans "Forum name" %}</th><th>{% trans "Description" %}</th></tr>
 {% for forum in forums %}
 <tr>
- <td><a href="{% url forum.views.forum forum.id %}">{{forum.name}}</a>
- <small>{{forum.description}}</small>
- </tr>
+    <td width='210px'><a href="{% url forum.views.forum forum.id %}">{{forum.name}}</a></td>
+    <td>{{forum.description}}</td>
+</tr>
 {% endfor %}
 </table>
 
