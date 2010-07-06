@@ -57,9 +57,9 @@ def editProfile(request):
         class Meta:
             model = Profile
             if profile.visible_name:
-                exclude = ('user', 'openid_hash', 'photo', 'visible_name')
+                exclude = ('karma', 'photo', 'visible_name')
             else:
-                exclude = ('user', 'openid_hash', 'photo')
+                exclude = ('karma', 'photo')
 
         def save(self, **args):
             profile = super(SettingsForm, self).save(commit = False, **args)

@@ -5,10 +5,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Profile(models.Model):
-    user = models.OneToOneField(User)
-    openid_hash = models.CharField(blank = True, null = True, max_length = 33)
+    user = models.OneToOneField(User, editable = False)
+    openid_hash = models.CharField(editable = False, blank = True, null = True, max_length = 33)
     visible_name = models.SlugField(blank = False, null = True, max_length = 33)
-    karma = models.IntegerField(editable = False, default = 0)
+    karma = models.IntegerField(default = 0)
     jabber = models.EmailField(blank = True, null = True, max_length = 32)
     website = models.CharField(blank = True, null = True, max_length = 32)
     location = models.CharField(blank = True, null = True, max_length = 32)
