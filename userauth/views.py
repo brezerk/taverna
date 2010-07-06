@@ -205,6 +205,10 @@ def openidFinish(request):
                 blog = Blog(owner = user)
                 blog.save()
 
+            auth = authenticate(username=user.username)
+            if user is not None:
+                login(request, auth)
+
         return HttpResponseRedirect("/")
     else:
         error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
