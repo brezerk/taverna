@@ -21,10 +21,6 @@ from django.conf import settings
 @rr('blog/settings.html')
 def editBlog(request):
 
-    class BlogForm(forms.ModelForm):
-        class Meta:
-            model = Blog
-            exclude = ('name','owner')
     try:
         blog = Blog.objects.get(owner = request.user)
     except Blog.DoesNotExist:
@@ -32,19 +28,24 @@ def editBlog(request):
         blog.owner = request.user
         blog.save()
 
+    class BlogForm(forms.ModelForm):
+        class Meta:
+            model = Blog
+            exclude = ('owner', 'name')
+
     form = BlogForm(instance = blog)
 
     if request.method == 'POST':
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("/%s/" % request.user.username)
+            return HttpResponseRedirect(reverse(viewBlog, args = [blog.id]))
     return {'form': form}
 
 @login_required()
 @rr('blog/add_post.html')
-def addTopic(request):
-    user_blogs = Blog.objects.filter(owner__in = [1, request.user]).order_by('name').order_by('-owner__id')
+def addPost(request):
+    user_blogs = Blog.objects.filter(owner__in = [1, request.user.id]).order_by('name').order_by('-owner__id')
 
     class PostForm(forms.ModelForm):
         tag_string = forms.CharField()
@@ -65,6 +66,7 @@ def addTopic(request):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
+            return post.id
 
     form = PostForm()
     preview = None
@@ -76,31 +78,32 @@ def addTopic(request):
         if 'submit' in request.POST:
             if form.is_valid():
                 if request.POST['submit']==_("Save"):
-                    form.save()
-                    return HttpResponseRedirect(reverse(viewBlog, args = [request.user.username]))
+                    postid = form.save()
+                    return HttpResponseRedirect(reverse(viewPost, args = [postid]))
     return {
         'form': form,
         'preview': preview,
-        'tags': tags}
+        'tags': tags,
+        'dont_strip': True}
 
 @rr('blog/blog.html')
-def viewPost(request, post):
+def viewPost(request, postid):
     blog_posts = None
     blog_info = None
     try:
-        blog_posts = Post.objects.filter(id = post)
+        blog_posts = Post.objects.filter(id = postid)
         blog_info = blog_posts[0].blog
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
-    return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(id = post), 'dont_strip': True }
+    return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(id = postid), 'dont_strip': True }
 
 @rr('blog/blog.html')
-def viewBlog(request, blog_slug):
+def viewBlog(request, blogid):
     #FIXME: use paginator for posts view!!!
     blog_posts = None
     blog_info = None
     try:
-        blog_info = Blog.objects.get(name=blog_slug)
+        blog_info = Blog.objects.get(id=blogid)
         blog_posts = Post.objects.filter(blog=blog_info).order_by('-created')[:10]
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")

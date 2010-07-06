@@ -37,13 +37,11 @@ def logoutUser(request):
 def viewProfile(request, userid):
     try:
         user_info = User.objects.get(id__exact=userid)
-        user_profile = Profile.objects.get(user=user_info)
         try:
             user_blog = Blog.objects.get(owner=user_info)
         except Blog.DoesNotExist:
             user_blog = None
         return {'user_info': user_info,
-                'user_profile': user_profile,
                 'user_blog': user_blog}
 
     except (User.DoesNotExist, Profile.DoesNotExist):
@@ -69,6 +67,10 @@ def editProfile(request):
                 mailhash = md5(request.POST['email']).hexdigest()
                 profile.photo = mailhash
             profile.save()
+
+            blog = Blog.objects.get(owner = request.user.id)
+            blog.name = request.POST['visible_name']
+            blog.save()
 
     class UserSettingsForm(forms.ModelForm):
         class Meta:
@@ -146,6 +148,8 @@ def openidFinish(request):
             user = authenticate(username=username)
             if user is not None:
                 login(request, user)
+
+            return HttpResponseRedirect("/")
         except Profile.DoesNotExist:
             user = User(username = slugify(response.getDisplayIdentifier()[7:-1]),
                         is_staff = False, is_active = True,
@@ -156,14 +160,14 @@ def openidFinish(request):
             try:
                 blog = Blog.objects.get(owner = user)
             except Blog.DoesNotExist:
-                blog = Blog(owner = user)
+                blog = Blog(owner = user, name = slugify(response.getDisplayIdentifier()[7:-1]))
                 blog.save()
 
             auth = authenticate(username=user.username)
             if user is not None:
                 login(request, auth)
 
-        return HttpResponseRedirect(reverse("userauth.views.editProfile"))
+            return HttpResponseRedirect(reverse("userauth.views.editProfile"))
     else:
         error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
 

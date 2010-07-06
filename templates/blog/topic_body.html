@@ -4,9 +4,14 @@
 <div class='news'>
 <h3>
 
-<a href='{% url blogs.views.viewBlog post.blog.name %}'>{{ post.blog.name }}</a>
-
-→ <a href='{% url blogs.views.viewPost post.blog.name post.id %}'>{{ post.title }}</a></h3>
+<a href='{% url blogs.views.viewBlog post.blog.id %}'>{{ post.blog.name }}</a>
+→ <a href='
+{% if post.id %}
+{% url blogs.views.viewPost post.id %}'>{{ post.title }}
+{% else %}
+{% url blogs.views.viewBlog post.blog.id %}'>{{ post.title }}
+{% endif %}
+</a></h3>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr><td width='40px'>&nbsp;</td><td>
 <div class='content'>
@@ -15,12 +20,22 @@
 {% else %}
 {{ post.content|strippost:post|safe }}
 {% endif %}
-{% if post.tags.all.1 %}
+{% if post.tags.all.0 %}
 <div class='tags'><p>{% trans "Tags" %}: 
 {% for tag in post.tags.all %}{% if not forloop.first %}, {% endif %}<a href='/blogs/tags/{{ tag }}'>{{ tag }}</a>{% endfor %}
+{% endif %}
+{% if post.tag_string %}
+<div class='tags'><p>{% trans "Tags" %}: 
+{{ post.tag_string|tags|safe }}
 </p></div>
 {% endif %}
-<p>[<span class='plus'><a href=''>▲</a></span>] {{ post.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='{% url userauth.views.viewProfile post.owner %}'>{{ post.owner }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
+<p>[<span class='plus'><a href=''>▲</a></span>] {{ post.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='
+{% if post.owner %}
+{% url userauth.views.viewProfile post.owner.id %}'>{{ post.owner.profile.get_visible_name }}
+{% else %}
+{% url userauth.views.viewProfile user.id %}'>{{ user.profile.get_visible_name }}
+{% endif %}
+</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
 </div>
 </td>
 <td width='40px'>&nbsp;</td><td>

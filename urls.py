@@ -14,9 +14,9 @@ urlpatterns = patterns('',
     (r'^blogs/public/$', 'blogs.views.viewBlogsPublicList'),
     (r'^blogs/users/$', 'blogs.views.viewBlogsUserList'),
     (r'^blogs/users/(?P<page>\w+)/$', 'blogs.views.viewBlogsUserList'),
-    (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
+    (r'^blog/libpost-new-1.so$', 'blogs.views.addPost'),
     (r'^blog/libsettings-0.so$', 'blogs.views.editBlog'),
-    (r'^(.+)/(?P<post>\w+)$', 'blogs.views.viewPost'),
+    (r'^blog/libpost-0.so.(?P<postid>\d+)$', 'blogs.views.viewPost'),
 
     (r'^forums.html$', 'forum.views.index'),
     (r'^forums/thread/(?P<post_id>\d+).html$', 'forum.views.thread'),
@@ -32,7 +32,7 @@ urlpatterns = patterns('',
     (r'^login/$', 'userauth.views.openidChalange'),
     (r'^login/finish/$', 'userauth.views.openidFinish'),
 
-    (r'^(?P<blog_slug>\w+)/$', 'blogs.views.viewBlog'), # WARNING: this one MUST be last
+    (r'^blog/libblog-0.so.(?P<blogid>\d+)$', 'blogs.views.viewBlog'), # WARNING: this one MUST be last
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

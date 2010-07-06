@@ -40,33 +40,33 @@
     <tr><td>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</td></tr>
     {% endif %}
     <tr><td>{% trans "Registration" %}: {{ user_info.date_joined|date:"d.m.Y H:i:s" }}</td></tr>
-    <tr><td>{% trans "Carma" %}: {{ user_profile.karma }}</td></tr>
-    {% if user_profile.website %}
-    <tr><td>{% trans "Website" %}: <a href='{{ user_profile.website }}'>{{ user_profile.website }}</a></td></tr>
+    <tr><td>{% trans "Carma" %}: {{ user_info.profile.karma }}</td></tr>
+    {% if user_info.profile.website %}
+    <tr><td>{% trans "Website" %}: <a href='{{ user_info.profile.website }}'>{{ user_info.profile.website }}</a></td></tr>
     {% endif %}
-    {% if user_profile.jabber %}
-    <tr><td>Jabber: <a href='{{ user_profile.jabber }}'>{{ user_profile.jabber }}</a></td></tr>
+    {% if user_info.profile.jabber %}
+    <tr><td>Jabber: <a href='{{ user_info.profile.jabber }}'>{{ user_info.profile.jabber }}</a></td></tr>
     {% endif %}
     {% if user_info.email %}
     {% if user.username == user_info.username or user.is_staff %}
     <tr><td>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> ({% trans "is avalible only for you and site moderators" %})</td></tr>
     {% endif %}
     {% endif %}
-    {% if user_profile.location %}
-    <tr><td>{% trans "City" %}: {{ user_profile.location }}</td></tr>
+    {% if user_info.profile.location %}
+    <tr><td>{% trans "City" %}: {{ user_info.profile.location }}</td></tr>
     {% endif %}
     <tr><td>&nbsp;</td></tr>
-    <tr><td>{{ user_profile.sign|linebreaksbr }}</td></tr>
+    <tr><td>{{ user_info.profile.sign|linebreaksbr }}</td></tr>
 </table>
     </td><td width='160px' valign='top'>
-    {% if user_profile.photo %}
-        <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
+    {% if user_info.profile.photo %}
+        <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_info.profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
     {% endif %}
     </td></tr>
 </table>
 <h3>{% trans "User messags"%}:</h3>
 <ul>
-    <li><a href='/{{ user_info.username }}/'>{% trans "Blogs" %}</a>
+    <li><a href='{% url blogs.views.viewBlog user_blog.id %}'>{% trans "Blogs" %}</a>
     <li><a href='/{{ user_info.username }}/comments/blog'>{% trans "Blog's comments" %}</a>
     <li><a href='/{{ user_info.username }}/forum'>{% trans "Forum" %}</a>
     <li><a href='/{{ user_info.username }}/comments/forum'>{% trans "Forum's comments" %}</a>

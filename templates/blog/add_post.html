@@ -11,7 +11,7 @@
 <td width='300'>{% trans "Adding new topic" %}</td>
 
 <td align='right'>
-[<a href='/{{user.username}}/profile/'>{% trans "Cancel" %}</a>]
+[<a href='{% url userauth.views.viewProfile user.id %}'>{% trans "Cancel" %}</a>]
 </td>
 </tr>
 </table>
@@ -19,39 +19,16 @@
 {% endblock %}
 
 {% block content %}
-{#  {{{ #}
+
 {% if form.cleaned_data %}
-<div class='news'>
-<h3>
-{% if form.cleaned_data.target %}
-<a href='/blogs/'>{% trans "Blogs" %}</a>
-{% else %}
-<a href='{% url blogs.views.viewBlog form.cleaned_data.blog.name %}'>{{ form.cleaned_data.blog }}</a> 
+{% with form.cleaned_data as post %}
+    {% include 'blog/topic_body.html' %}
+{% endwith %}
 {% endif %}
-
-→ <a href='/news/131313131'>{{ form.cleaned_data.title }}</a></h3>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td width='40px'>&nbsp;</td><td>
-<div class='content'>
-{{ form.cleaned_data.content|markup:form.cleaned_data.parser|safe }}
-
-{% if form.cleaned_data.tag_string %}
-<div class='tags'><p>{% trans "Tags" %}: {{ form.cleaned_data.tag_string|tags|safe }}
-</p></div>
-{% endif %}
-<p>[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='{% url userauth.views.viewProfile user.username %}'>{{ user.username }}</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
-</div>
-</td>
-<td width='40px'>&nbsp;</td><td>
-</table>
-</div>
-{% endif %}
-
-{# }}} #}
 
 <div class='page_content'>
 <h3>{% trans "Adding new topic" %}</h3>
-<form method="POST" action="{% url blogs.views.addTopic %}">{% csrf_token %}
+<form method="POST" action="{% url blogs.views.addPost %}">{% csrf_token %}
 <table id='blog_topic'>
     {{form}}
     <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Preview" %}"></td></tr>

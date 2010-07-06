@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 
 class Blog(models.Model):
-    name = models.SlugField(max_length = 32)
+    name = models.SlugField(max_length = 32, unique = True)
     desc = models.CharField(max_length = 48, default = _("Blog description"))
     active = models.BooleanField(default = False, editable = False)
     owner = models.ForeignKey(User)
