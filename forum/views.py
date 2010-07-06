@@ -19,8 +19,10 @@ def index(request):
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
+    forum = Forum.objects.get(pk = forum_id)
     return {
-        'forum': Forum.objects.get(pk = forum_id),
+        'forum': forum, 
+        'post_list': Post.objects.filter(forum = forum, reply_to = None),
         'form': PostForm(),
     }
 
@@ -38,23 +40,24 @@ def thread(request, post_id):
     return {'post': post, 'tree': tree(post)}
 
 @rr('forum/reply.html')
-def reply(request, forum_id = None, post_id = None):
+def reply(request, post_id = None):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit = False)
-            if forum_id:
-                post.forum = Forum.objects.get(pk = forum_id)
-                redirect = reverse(forum, args = [forum_id])
-            else:
+            if post_id:
                 post.reply_to = Post.objects.get(pk = post_id)
-                redirect = reverse(thread, args = [post.reply_to.pk])
+                forum = post.reply_to.forum
+            else:
+                forum = Forum.objects.get(pk = request.POST['forum_id'])
+            post.forum = forum
             post.owner = request.user
             post.save()
+            redirect = reverse("forum.views.forum", args = [forum.pk])
             return HttpResponseRedirect(redirect)
     else:
         form = PostForm()
-    return {'form': form}
+    return { 'form': form }
 
 @rr('forum/forum_create.html')
 def forum_create(request):

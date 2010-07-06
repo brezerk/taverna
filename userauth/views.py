@@ -144,7 +144,6 @@ def openidFinish(request):
         try:
             profile = Profile.objects.get(openid_hash = openid_hash)
             username = profile.user.username
-            password = profile.user.password
             user = authenticate(username=username)
             if user is not None:
                 login(request, user)

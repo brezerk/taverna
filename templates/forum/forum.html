@@ -5,7 +5,7 @@
 
 <table id="forum_posts">
  <tr><td class=title><td><td>
-{% for post in forum.post_set.all %}
+{% for post in post_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td><a href="{% url forum.views.thread post.pk %}">{{post.title}}</a><td>{{post.created|timesince}} {% trans "ago" %}<td>{{post.owner}}
 </tr>
@@ -13,7 +13,14 @@
 </table>
 
 {% if user.profile.is_karma_good %}
-<a href="{% url forum.views.reply forum.pk %}">{% trans "Post new topic" %}</a>
+<form action="{% url forum.views.reply %}" method=post>
+<input type=hidden name="forum_id" value="{{forum.pk}}">
+{% csrf_token %}
+<table>
+{{form}}
+<tr><td><td><input type=submit value="{% trans "Post new topic" %}"</input>
+</table>
+</form>
 {% endif %}
 
 {% endblock %}
