@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block title %}{% trans "User profile" %} :. {{ user_info.username }}{% endblock %}
+{% block title %}{% trans "User profile" %} :. {{ user_profile.get_visible_name }}{% endblock %}
 
 {% block menubox %}
 <div class='actionbox'>
@@ -32,7 +32,7 @@
 
 {% block content %}
 
-<h3>{% trans "User's insformation" %} {{ user_info.username }}</h3>
+<h3>{% trans "User's insformation" %} {{ user_profile.get_visible_name }}</h3>
 <table border='0' width='100%'>
     <tr><td valign='top'>
 <table border='0' width='100%'>
@@ -47,8 +47,10 @@
     {% if user_profile.jabber %}
     <tr><td>Jabber: <a href='{{ user_profile.jabber }}'>{{ user_profile.jabber }}</a></td></tr>
     {% endif %}
+    {% if user_info.email %}
     {% if user.username == user_info.username or user.is_staff %}
     <tr><td>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> ({% trans "is avalible only for you and site moderators" %})</td></tr>
+    {% endif %}
     {% endif %}
     {% if user_profile.location %}
     <tr><td>{% trans "City" %}: {{ user_profile.location }}</td></tr>
@@ -57,7 +59,9 @@
     <tr><td>{{ user_profile.sign|linebreaksbr }}</td></tr>
 </table>
     </td><td width='160px' valign='top'>
-    <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
+    {% if user_profile.photo %}
+        <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
+    {% endif %}
     </td></tr>
 </table>
 <h3>{% trans "User messags"%}:</h3>

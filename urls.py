@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     (r'^blogs/users/$', 'blogs.views.viewBlogsUserList'),
     (r'^blogs/users/(?P<page>\w+)/$', 'blogs.views.viewBlogsUserList'),
     (r'^blog-addtopic.html$', 'blogs.views.addTopic'),
-    (r'^blog-settings.html$', 'blogs.views.editBlog'),
+    (r'^blog/libsettings-0.so$', 'blogs.views.editBlog'),
     (r'^(.+)/(?P<post>\w+)$', 'blogs.views.viewPost'),
 
     (r'^forums.html$', 'forum.views.index'),
@@ -25,10 +25,9 @@ urlpatterns = patterns('',
     (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
 
-    (r'^logout.so$', 'userauth.views.logoutUser'),
-    (r'^(?P<username>\w+)/profile.html$', 'userauth.views.viewProfile'),
-    (r'^profile-edit.html$', 'userauth.views.editProfile'),
-    (r'^(?P<username>\w+)/edit/$', 'userauth.views.editProfile'),
+    (r'^pam/liblogout.so$', 'userauth.views.logoutUser'),
+    (r'^pam/libprofile-0.so.(?P<userid>\d+)$', 'userauth.views.viewProfile'),
+    (r'^pam/libprofile-edit-0.so$', 'userauth.views.editProfile'),
 
     (r'^login/$', 'userauth.views.openidChalange'),
     (r'^login/finish/$', 'userauth.views.openidFinish'),
@@ -38,4 +37,4 @@ urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
-settings.LOGIN_URL = "/login.html"
+settings.LOGIN_URL = "/login/"

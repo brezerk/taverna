@@ -7,12 +7,12 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User)
     openid_hash = models.CharField(blank = True, null = True, max_length = 33)
-    visible_name = models.SlugField(blank = True, null = True, max_length = 32)
+    visible_name = models.SlugField(blank = False, null = True, max_length = 33)
     karma = models.IntegerField(editable = False, default = 0)
-    jabber = models.CharField(blank = True, null = True, max_length = 32)
+    jabber = models.EmailField(blank = True, null = True, max_length = 32)
     website = models.CharField(blank = True, null = True, max_length = 32)
     location = models.CharField(blank = True, null = True, max_length = 32)
-    sign = models.CharField(blank = True, null = True, max_length = 256)
+    sign = models.TextField(blank = True, null = True, max_length = 256)
     photo = models.CharField(blank = True, null = True, max_length = 33)
 
     def __unicode__(self):
@@ -20,3 +20,9 @@ class Profile(models.Model):
 
     def is_karma_good(self):
         return self.karma > 10
+
+    def get_visible_name(self):
+        if self.visible_name:
+            return self.visible_name
+        else:
+            return self.user.username

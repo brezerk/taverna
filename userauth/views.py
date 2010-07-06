@@ -21,78 +21,12 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-import re
-import cracklib
-import hashlib
-
-import openid
+from hashlib import md5
 
 from openid.store import filestore
 from openid.consumer import consumer
 
 from django.template.defaultfilters import slugify
-
-class ProfileForm(forms.Form):
-    first_name = forms.CharField(required=False, max_length=32)
-    last_name = forms.CharField(required=False, max_length=32)
-    email = forms.EmailField(required=True, max_length=32)
-    jabber = forms.EmailField(required=False, max_length=32)
-    location = forms.CharField(required=False, max_length=32)
-    website = forms.CharField(required=False, max_length=32)
-    sign = forms.CharField(required=False, max_length=256, widget=forms.Textarea(attrs={'rows':'4'}))
-    rnewpassword = forms.CharField(required=False, max_length=32, widget=forms.PasswordInput)
-    newpassword = forms.CharField(required=False, max_length=32, widget=forms.PasswordInput)
-    password = forms.CharField(required=True, max_length=32, widget=forms.PasswordInput)
-    user = None
-
-    def setUser(self, user):
-        self.user = user
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        try:
-            if User.objects.filter(email__exact=email).exclude(username=self.user.username):
-                raise forms.ValidationError(_("E-Mail already exists."))
-        except User.DoesNotExist:
-            pass
-        return email
-
-    def clean_password(self):
-        password = self.cleaned_data['password']
-        if not self.user.check_password(password):
-            raise forms.ValidationError(_("Current password is wrong."))
-        return password
-
-    def clean_newpassword(self):
-        newpassword = self.cleaned_data['newpassword']
-        rnewpassword = self.cleaned_data['rnewpassword']
-        if newpassword:
-            if newpassword != rnewpassword:
-                raise forms.ValidationError(_("Passwords do not match."))
-            try:
-                cracklib.VeryFascistCheck(newpassword)
-            except ValueError:
-                raise forms.ValidationError(_("Password is too simple."))
-        return newpassword
-
-    def save(self):
-        first_name = self.cleaned_data['first_name']
-        last_name = self.cleaned_data['last_name']
-        email = self.cleaned_data['email']
-        jabber = self.cleaned_data['jabber']
-        website = self.cleaned_data['website']
-        sign = self.cleaned_data['sign']
-        location = self.cleaned_data['location']
-
-        User.objects.filter(username=self.user.username).update(first_name=first_name,last_name=last_name,email=email)
-        mailhash = hashlib.md5(email).hexdigest()
-        Profile.objects.filter(user=self.user).update(jabber=jabber, website=website, sign=sign, location=location, photo=mailhash)
-
-        newpassword = self.cleaned_data['newpassword']
-
-        if newpassword:
-           self.user.set_password(newpassword)
-           self.user.save()
 
 def logoutUser(request):
     logout(request)
@@ -100,9 +34,9 @@ def logoutUser(request):
 
 @login_required()
 @rr ('userauth/profile.html')
-def viewProfile(request, username):
+def viewProfile(request, userid):
     try:
-        user_info = User.objects.get(username__exact=username)
+        user_info = User.objects.get(id__exact=userid)
         user_profile = Profile.objects.get(user=user_info)
         try:
             user_blog = Blog.objects.get(owner=user_info)
@@ -118,23 +52,43 @@ def viewProfile(request, username):
 @login_required()
 @rr ('userauth/settings.html')
 def editProfile(request):
+
+    profile = request.user.get_profile()
+
+    class SettingsForm(forms.ModelForm):
+        class Meta:
+            model = Profile
+            if profile.visible_name:
+                exclude = ('user', 'openid_hash', 'photo', 'visible_name')
+            else:
+                exclude = ('user', 'openid_hash', 'photo')
+
+        def save(self, **args):
+            profile = super(SettingsForm, self).save(commit = False, **args)
+            if request.POST['email']:
+                mailhash = md5(request.POST['email']).hexdigest()
+                profile.photo = mailhash
+                profile.save()
+
+    class UserSettingsForm(forms.ModelForm):
+        class Meta:
+            model = User
+            exclude = ('username', 'password', 'is_staff',
+                       'is_active', 'is_superuser', 'groups',
+                       'user_permissions', 'last_login', 'date_joined')
+
     if request.method == 'POST':
-        form = ProfileForm(request.POST)
-        form.setUser(request.user)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("userauth.views.viewProfile", args=[request.user.username]))
+        formProfile = SettingsForm(request.POST, instance=profile)
+        formUser = UserSettingsForm(request.POST, instance=request.user)
+        if formUser.is_valid() and formProfile.is_valid():
+            formUser.save()
+            formProfile.save()
+            return HttpResponseRedirect(reverse("userauth.views.viewProfile",
+                                        args=[request.user.id]))
     else:
-        profile = Profile.objects.get(user=request.user)
-        form = ProfileForm({'first_name': request.user.first_name,
-                            'last_name': request.user.last_name,
-                            'email': request.user.email,
-                            'jabber': profile.jabber,
-                            'website': profile.website,
-                            'location': profile.location,
-                            'sign': profile.sign,
-                          })
-    return {'form': form}
+        formProfile = SettingsForm(instance=profile)
+        formUser = UserSettingsForm(instance=request.user)
+    return {'formProfile': formProfile, 'formUser': formUser}
 
 @rr ('userauth/openid.html')
 def openidChalange(request):
@@ -183,7 +137,7 @@ def openidFinish(request):
     response = c.complete(request_args, return_to)
 
     if response.status == consumer.SUCCESS:
-        openid_hash=hashlib.md5(response.getDisplayIdentifier()).hexdigest()
+        openid_hash=md5(response.getDisplayIdentifier()).hexdigest()
 
         try:
             profile = Profile.objects.get(openid_hash = openid_hash)
