@@ -18,11 +18,11 @@ urlpatterns = patterns('',
     (r'^blog/libsettings-0.so$', 'blogs.views.editBlog'),
     (r'^blog/libpost-0.so.(?P<postid>\d+)$', 'blogs.views.viewPost'),
 
-    (r'^forums.html$', 'forum.views.index'),
+    (r'^forums/$', 'forum.views.index'),
     (r'^forums/thread/(?P<post_id>\d+).html$', 'forum.views.thread'),
     (r'^forums/reply/(?P<forum_id>\d+).html$', 'forum.views.reply'),
     (r'^forums/thread/reply/(?P<post_id>\d+).html$', 'forum.views.reply'),
-    (r'^forums/(?P<forum_id>\d+).html$', 'forum.views.forum'),
+    (r'^forums/libforum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
 
     (r'^pam/liblogout.so$', 'userauth.views.logoutUser'),

@@ -6,11 +6,7 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-{% if blog_info.desc %}
-<a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ blog_info.desc }}
-{% else %}
 {% trans "Forum list" %}
-{% endif %}
 </td>
 
 <td align='right'>
