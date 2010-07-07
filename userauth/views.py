@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django import forms
+from django.forms import Form, ModelForm, CharField
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -34,11 +34,11 @@ def logout(request):
 
 @login_required()
 @rr ('userauth/profile.html')
-def profile_view(request, userid):
+def profile_view(request, user_id):
     try:
-        user_info = User.objects.get(id__exact=userid)
+        user_info = User.objects.get(pk = user_id)
         try:
-            user_blog = Blog.objects.get(owner=user_info)
+            user_blog = Blog.objects.get(owner = user_info)
         except Blog.DoesNotExist:
             user_blog = None
         return {'user_info': user_info,
@@ -53,7 +53,7 @@ def profile_edit(request):
 
     profile = request.user.get_profile()
 
-    class SettingsForm(forms.ModelForm):
+    class SettingsForm(ModelForm):
         class Meta:
             model = Profile
             if profile.visible_name:
@@ -69,10 +69,10 @@ def profile_edit(request):
             profile.save()
 
             blog = Blog.objects.get(owner = request.user.id)
-            blog.name = request.POST['visible_name']
+            blog.name = profile.visible_name
             blog.save()
 
-    class UserSettingsForm(forms.ModelForm):
+    class UserSettingsForm(ModelForm):
         class Meta:
             model = User
             exclude = ('username', 'password', 'is_staff',
@@ -80,16 +80,16 @@ def profile_edit(request):
                        'user_permissions', 'last_login', 'date_joined')
 
     if request.method == 'POST':
-        formProfile = SettingsForm(request.POST, instance=profile)
-        formUser = UserSettingsForm(request.POST, instance=request.user)
+        formProfile = SettingsForm(request.POST, instance = profile)
+        formUser = UserSettingsForm(request.POST, instance = request.user)
         if formUser.is_valid() and formProfile.is_valid():
             formUser.save()
             formProfile.save()
             return HttpResponseRedirect(reverse("userauth.views.profile_view",
-                                        args=[request.user.id]))
+                                        args = [request.user.id]))
     else:
-        formProfile = SettingsForm(instance=profile)
-        formUser = UserSettingsForm(instance=request.user)
+        formProfile = SettingsForm(instance = profile)
+        formUser = UserSettingsForm(instance = request.user)
     return {'formProfile': formProfile, 'formUser': formUser}
 
 @rr ('userauth/openid.html')
@@ -97,8 +97,8 @@ def openid_chalange(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect("/")
 
-    class OpenidForm(forms.Form):
-        openid = forms.CharField(required=True, max_length=32)
+    class OpenidForm(Form):
+        openid = CharField(required = True, max_length = 32)
 
     form = None
 

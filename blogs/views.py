@@ -39,7 +39,7 @@ def settings(request):
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse(blog_view, args = [blog.id]))
+            return HttpResponseRedirect(reverse("blogs.views.view", args = [blog.id]))
     return {'form': form}
 
 @login_required()
@@ -78,8 +78,8 @@ def post_add(request):
         if 'submit' in request.POST:
             if form.is_valid():
                 if request.POST['submit']==_("Save"):
-                    postid = form.save()
-                    return HttpResponseRedirect(reverse(post_view, args = [postid]))
+                    post_id = form.save()
+                    return HttpResponseRedirect(reverse(post_view, args = [post_id]))
     return {
         'form': form,
         'preview': preview,
@@ -87,24 +87,24 @@ def post_add(request):
         'dont_strip': True}
 
 @rr('blog/blog.html')
-def post_view(request, postid):
+def post_view(request, post_id):
     blog_posts = None
     blog_info = None
     try:
-        blog_posts = Post.objects.filter(id = postid)
+        blog_posts = Post.objects.filter(pk = post_id)
         blog_info = blog_posts[0].blog
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
-    return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(id = postid), 'dont_strip': True }
+    return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(pk = post_id), 'dont_strip': True }
 
 @rr('blog/blog.html')
-def view(request, blogid):
+def view(request, blog_id):
     #FIXME: use paginator for posts view!!!
     blog_posts = None
     blog_info = None
     try:
-        blog_info = Blog.objects.get(id=blogid)
-        blog_posts = Post.objects.filter(blog=blog_info).order_by('-created')[:10]
+        blog_info = Blog.objects.get(pk = blog_id)
+        blog_posts = Post.objects.filter(blog = blog_info).order_by('-created')[:10]
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 

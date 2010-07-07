@@ -22,7 +22,7 @@ urlpatterns = patterns('',
 #    (r'^blogs/users/(?P<page>\w+)/$', 'blogs.views.viewBlogsUserList'),
     (r'^blog/libpost-new-1.so$', 'blogs.views.post_add'),
     (r'^blog/libsettings-0.so$', 'blogs.views.settings'),
-    (r'^blog/libpost-0.so.(?P<postid>\d+)$', 'blogs.views.post_view'),
+    (r'^blog/libpost-0.so.(?P<post_id>\d+)$', 'blogs.views.post_view'),
 
     (r'^libforum-1.so$', 'forum.views.index'),
     (r'^libforum-1/(?P<forum_id>\d+).so$', 'forum.views.forum'),
@@ -39,13 +39,13 @@ urlpatterns = patterns('',
     (r'^forum_create/$', 'forum.views.forum_create'),
 
     (r'^pam/liblogout.so$', 'userauth.views.logout'),
-    (r'^pam/libprofile-0.so.(?P<userid>\d+)$', 'userauth.views.profile_view'),
+    (r'^pam/libprofile-0.so.(?P<user_id>\d+)$', 'userauth.views.profile_view'),
     (r'^pam/libprofile-edit-0.so$', 'userauth.views.profile_edit'),
 
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 
-    (r'^blog/libblog-0.so.(?P<blogid>\d+)$', 'blogs.views.view'), # WARNING: this one MUST be last
+    (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blogs.views.view'), # WARNING: this one MUST be last
     url(r'^blog/librss-0.so.(?P<blog_id>\d+)$', RssBlog(), name='rss_blog'),
     url(r'^blog/libatom-0.so.(?P<blog_id>\d+)$', AtomBlog(), name='atom_blog'),
 
