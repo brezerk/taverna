@@ -1,0 +1,43 @@
+
+ == Blogs ==
+
+ Edit posts: 
+     1. User can edit own posts and all users with good carma, can edit public blog posts;
+     2. Record edit actions and display them in the bottom of the post;
+
+ == General ==
+
+ Sitemap:
+     1. Sitemap implementation;
+
+ Vote system:
+     1. Any user can voite in forum and blogs and commetns;
+     2. Define and balance privileges karma requirements;
+
+ == Forums ==
+
+ RSS\Atom:
+     1. Add rss\atom feeds for frums's topics and topic's comments;
+
+ Redesing:
+     1. Redesing look&feel for forums comments;
+     2. Opium, plz. remove this f*cking topic creation form from the topics view... :)
+     3. Use JavaScript to display edit form for comments (Yes, Like in LOR)
+
+ == Library ==
+
+ Base implemetation:
+    1. Discuss library functionary. I have some ideas for this... :]
+
+ == Admin ===
+
+ Redesign:
+    1. redesign django admin pages;
+    2. reorganize django admin pages;
+
+ == Have fun ==
+
+ Have fun:
+    1. Have fun;
+    2. Have some profit :P
+
