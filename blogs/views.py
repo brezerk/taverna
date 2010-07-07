@@ -19,7 +19,7 @@ from django.conf import settings
 
 @login_required()
 @rr('blog/settings.html')
-def editBlog(request):
+def settings(request):
 
     try:
         blog = Blog.objects.get(owner = request.user)
@@ -44,7 +44,7 @@ def editBlog(request):
 
 @login_required()
 @rr('blog/add_post.html')
-def addPost(request):
+def post_add(request):
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.id]).order_by('name').order_by('-owner__id')
 
     class PostForm(forms.ModelForm):
@@ -87,7 +87,7 @@ def addPost(request):
         'dont_strip': True}
 
 @rr('blog/blog.html')
-def viewPost(request, postid):
+def post_view(request, postid):
     blog_posts = None
     blog_info = None
     try:
@@ -98,7 +98,7 @@ def viewPost(request, postid):
     return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(id = postid), 'dont_strip': True }
 
 @rr('blog/blog.html')
-def viewBlog(request, blogid):
+def view(request, blogid):
     #FIXME: use paginator for posts view!!!
     blog_posts = None
     blog_info = None
@@ -117,19 +117,19 @@ def index(request):
     return { 'blog_posts': blog_posts }
 
 @rr('blog/blog_list.html')
-def viewBlogsList(request):
+def list(request):
     public_blogs = Blog.objects.filter(owner = 1)
 
     user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
     return { 'public_blogs': public_blogs, 'user_blogs': user_blogs }
 
 @rr('blog/blog_list.html')
-def viewBlogsPublicList(request):
+def list_public(request):
     public_blogs = Blog.objects.filter(owner = 1)
     return { 'public_blogs': public_blogs }
 
 @rr('blog/blog_list.html')
-def viewBlogsUserList(request):
+def list_users(request):
     #FIXME: Use paginator for posts view!!!
     user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
     return { 'user_blogs': user_blogs }

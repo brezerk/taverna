@@ -26,14 +26,14 @@
         <td width='300'>&nbsp;</td>
         <td align='center'>
             [<a href='{% url blogs.views.index %}'>{% trans "Traker" %}</a>] 
-            [<a href='{% url blogs.views.viewBlogsList %}'>{% trans "Blogs" %}</a>:<a href='{% url blogs.views.viewBlogsPublicList %}'>{% trans "public" %}</a>|<a href='{% url blogs.views.viewBlogsUserList %}'>{% trans "user's" %}</a>] 
+            [<a href='{% url blogs.views.list %}'>{% trans "Blogs" %}</a>:<a href='{% url blogs.views.list_public %}'>{% trans "public" %}</a>|<a href='{% url blogs.views.list_users %}'>{% trans "user's" %}</a>] 
             [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
             [<a href='/Library/'>{% trans "Library" %}</a>]</td>
         <td width='300' align='right'>
         {% if user.is_authenticated %}
-            {% trans "Welcome" %}, <a href='{% url userauth.views.viewProfile user.id %}'>{{ user.profile.get_visible_name }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]
+            {% trans "Welcome" %}, <a href='{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}</a> [<span class='minus'><a href="{% url userauth.views.logout %}">x</a></span>]
         {% else %}
-            [<a href='{% url userauth.views.openidChalange %}'>{% trans "Log In"%}</a>]
+            [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
         {% endif %}
         </td>
     </tr>

@@ -28,13 +28,13 @@ from openid.consumer import consumer
 
 from django.template.defaultfilters import slugify
 
-def logoutUser(request):
+def logout(request):
     logout(request)
     return HttpResponseRedirect("/")
 
 @login_required()
 @rr ('userauth/profile.html')
-def viewProfile(request, userid):
+def profile_view(request, userid):
     try:
         user_info = User.objects.get(id__exact=userid)
         try:
@@ -49,7 +49,7 @@ def viewProfile(request, userid):
 
 @login_required()
 @rr ('userauth/settings.html')
-def editProfile(request):
+def profile_edit(request):
 
     profile = request.user.get_profile()
 
@@ -93,7 +93,7 @@ def editProfile(request):
     return {'formProfile': formProfile, 'formUser': formUser}
 
 @rr ('userauth/openid.html')
-def openidChalange(request):
+def openid_chalange(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect("/")
 
@@ -124,7 +124,7 @@ def openidChalange(request):
     return {'form': form}
 
 @rr ('userauth/openid.html')
-def openidFinish(request):
+def openid_finish(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect("/")
 

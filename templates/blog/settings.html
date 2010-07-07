@@ -12,7 +12,7 @@
     {% trans "Blog's list" %}
 </td>
 <td align='right'>
-[<a href='{% url userauth.views.viewProfile user.id %}'>{% trans "Cancel" %}</a>]
+[<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
 </td>
 </tr>
 </table>
@@ -23,7 +23,7 @@
 
 <h3>{% trans "My blog settings" %}</h3>
 
-<form method="POST" action="{% url blogs.views.editBlog %}">{% csrf_token %}
+<form method="POST" action="{% url blogs.views.settings %}">{% csrf_token %}
 <table>
     {{form}}
     <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Save" %}"></td></tr>

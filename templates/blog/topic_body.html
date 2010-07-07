@@ -4,10 +4,10 @@
 <div class='news'>
 <h3>
 
-<a href='{% url blogs.views.viewBlog post.blog.id %}'>{{ post.blog.name }}</a>
+<a href='{% url blogs.views.view post.blog.id %}'>{{ post.blog.name }}</a>
 → <a href='
 {% if post.id %}
-{% url blogs.views.viewPost post.id %}'>{{ post.title }}
+{% url blogs.views.post_view post.id %}'>{{ post.title }}
 {% else %}
 {% url blogs.views.viewBlog post.blog.id %}'>{{ post.title }}
 {% endif %}
@@ -31,9 +31,9 @@
 {% endif %}
 <p>[<span class='plus'><a href=''>▲</a></span>] {{ post.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='
 {% if post.owner %}
-{% url userauth.views.viewProfile post.owner.id %}'>{{ post.owner.profile.get_visible_name }}
+{% url userauth.views.profile_view post.owner.id %}'>{{ post.owner.profile.get_visible_name }}
 {% else %}
-{% url userauth.views.viewProfile user.id %}'>{{ user.profile.get_visible_name }}
+{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}
 {% endif %}
 </a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
 </div>
