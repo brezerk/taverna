@@ -116,8 +116,8 @@ def openid_chalange(request):
             return {'form': form, 'error': error}
 
         if auth_request.shouldSendRedirect():
-            trust_root = getViewURL(request, openidChalange)
-            redirect_to = getViewURL(request, openidFinish)
+            trust_root = getViewURL(request, openid_chalange)
+            redirect_to = getViewURL(request, openid_finish)
             return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
     else:
         form = OpenidForm()
