@@ -16,7 +16,7 @@ class PostForm(forms.ModelForm):
 
 @rr('forum/index.html')
 def index(request):
-    return {'forums': Forum.objects.all()}
+    return {'forums': Forum.objects.all().order_by('name')}
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
