@@ -193,6 +193,8 @@ a:hover {
     text-align: justify;
 }
 
+h1, h2, h3, h4, h5 { margin: 1pt; padding: 1pt; }
+
 form table { width: 600px; }
 
 #blog_topic { width: 100%; }

@@ -9,7 +9,7 @@
 {% if post.id %}
 {% url blogs.views.post_view post.id %}'>{{ post.title }}
 {% else %}
-{% url blogs.views.viewBlog post.blog.id %}'>{{ post.title }}
+{% url blogs.views.post_view post.blog.id %}'>{{ post.title }}
 {% endif %}
 </a></h3>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>

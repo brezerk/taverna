@@ -39,7 +39,7 @@ def settings(request):
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse(viewBlog, args = [blog.id]))
+            return HttpResponseRedirect(reverse(blog_view, args = [blog.id]))
     return {'form': form}
 
 @login_required()
@@ -79,7 +79,7 @@ def post_add(request):
             if form.is_valid():
                 if request.POST['submit']==_("Save"):
                     postid = form.save()
-                    return HttpResponseRedirect(reverse(viewPost, args = [postid]))
+                    return HttpResponseRedirect(reverse(post_view, args = [postid]))
     return {
         'form': form,
         'preview': preview,

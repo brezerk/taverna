@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from blogs import models as blog_models
+from django.conf import settings
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
@@ -17,6 +18,7 @@ class Post(models.Model):
     text = models.TextField(_("Text"))
     reply_to = models.ForeignKey('Post', editable = False, blank = True, null = True, related_name = 'reply_')
     thread = models.ForeignKey('Post', editable = False, blank = True, null = True, related_name = 'thread_')
+    parser = models.IntegerField(choices = settings.PARSER_ENGINES, default = 0)
     blog = models.ForeignKey(blog_models.Post, editable = False, blank = True, null = True)
     rating = models.IntegerField(editable = False, default = 0)
     created = models.DateTimeField(editable = False, auto_now_add = True)
