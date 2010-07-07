@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% include "forum/post.inc.html" %}
 
+{% block content %}
 <form method=post>
 {% csrf_token %}
 <table>

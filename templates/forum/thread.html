@@ -5,17 +5,13 @@
 
 <div class=thread>
 
-{% if post.forum %}
 <h1><a href="{% url forum.views.forum post.forum.pk %}">{{post.forum.name}}</a> :: <a>{{post.title}}</a></h1>
-{% endif %}
 
-{{post.text}}
+{% include "forum/post.inc.html" %}
 
-<ul>
-{% for s in tree %}
-{{s|safe}}
+{% for post in thread %}
+{% include "forum/post.inc.html" %}
 {% endfor %}
-</ul>
 
 </div>
 

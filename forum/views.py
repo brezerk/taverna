@@ -28,16 +28,9 @@ def forum(request, forum_id):
 
 @rr('forum/thread.html')
 def thread(request, post_id):
-    def tree(post):
-        yield render_to_string('forum/post.include.html', {'post': post})
-        for child in post.post_set.all():
-            for r in tree(child):
-                yield r
-            yield '</ul>'
-        yield '</li>'
-
     post = Post.objects.get(pk = post_id)
-    return {'post': post, 'tree': tree(post)}
+    thread = Post.objects.filter(thread = post)[1:]
+    return {'post': post, 'thread': thread}
 
 @rr('forum/reply.html')
 def reply(request, post_id = None):
@@ -47,17 +40,24 @@ def reply(request, post_id = None):
             post = form.save(commit = False)
             if post_id:
                 post.reply_to = Post.objects.get(pk = post_id)
-                forum = post.reply_to.forum
+                post.thread = post.reply_to.thread
+                post.forum = post.reply_to.forum
             else:
-                forum = Forum.objects.get(pk = request.POST['forum_id'])
-            post.forum = forum
+                post.forum = Forum.objects.get(pk = request.POST['forum_id'])
             post.owner = request.user
             post.save()
-            redirect = reverse("forum.views.forum", args = [forum.pk])
+            if not post_id:
+                post.thread = post
+                post.save()
+            redirect = reverse("forum.views.forum", args = [post.forum.pk])
             return HttpResponseRedirect(redirect)
     else:
         form = PostForm()
-    return { 'form': form }
+    if post_id:
+        post = Post.objects.get(id = post_id)
+    else:
+        post = None
+    return { 'form': form, 'post': post}
 
 @rr('forum/forum_create.html')
 def forum_create(request):

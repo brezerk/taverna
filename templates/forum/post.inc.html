@@ -1,12 +1,9 @@
 {% load i18n %}
 
-<li>
-
-<div>
-<h4>{{post.owner}}</h4>
+<div class=post>
+<h5>{{post.title}}</h5>
 <p>{{post.text}}</p>
-<pre>{{post.created}}</pre>
+<small>{{post.owner.profile.get_visible_name}} @ {{post.created}}</small>
 <a href="{% url forum.views.reply post.pk %}">{% trans "Reply" %}</a>
 </div>
 
-<ul>
