@@ -223,33 +223,6 @@ label, th {
     width: 220px;
 }
 
-.recaptcha {
-    background-color: #606060;
-    margin-bottom: 2px;
-}
-
-#recaptcha_response_field {
-    background-color: #606060;
-    color: #e8e8e8;
-    border: 1px solid #a8a8a8;
-}
-
-.errorlist {
-    margin: 0px;
-    padding: 0px;
-    margin-left: 20px;
-}
-
-.errorlist ul {
-    margin: 0px;
-    padding: 0px;
-}
-
-.errorlist li {
-    margin: 0px;
-    padding: 0px;
-}
-
 .theader {
     width: 100%;
     border-collapse: collapse;
@@ -263,3 +236,6 @@ label, th {
     border: 1px solid #3f3f3f;
     background-color: #3f3f3f;
 }
+
+.normal { }
+.dark { background-color: #232323; }

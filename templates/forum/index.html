@@ -10,7 +10,6 @@
 </td>
 
 <td align='right'>
-    [<a href='/{{user_info.username}}/'>RSS</a>]
 {% if user.is_authenticated %}
     {% if user.profile.can_create_forum %}
     [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
@@ -26,7 +25,7 @@
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
 <tr class='theader'><th width='220px'>{% trans "Forum name" %}</th><th>{% trans "Description" %}</th></tr>
 {% for forum in forums %}
-<tr>
+<tr class="{% cycle "noraml" "dark" %}">
     <td width='210px'><a href="{% url forum.views.forum forum.id %}">{{forum.name}}</a></td>
     <td>{{forum.description}}</td>
 </tr>

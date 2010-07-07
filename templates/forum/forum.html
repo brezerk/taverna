@@ -6,8 +6,8 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a> :. 
-<a href='{% url forum.views.forum forum.id %}'>{{ forum.name }} - {{ forum.description }}</a>
+<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a> : 
+<a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }} - {{ forum.description }}</a>
 </td>
 
 <td align='right'>
@@ -25,16 +25,19 @@
 
 {% block content %}
 
-<table id="forum_posts">
- <tr><td class=title><td><td>
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Date" %}</th><th width='240px'>{% trans "Author" %}</th></tr>
 {% for post in post_list %}
-<tr class="{% cycle "odd" "even" %}">
- <td><a href="{% url forum.views.thread post.pk %}">{{post.title}}</a><td>{{post.created|timesince}} {% trans "ago" %}<td>{{post.owner}}
+<tr class="{% cycle "normal" "dark" %}">
+ <td><a href="{% url forum.views.thread post.pk %}">{{post.title}}</a></td>
+ <td>{{post.created|timesince}} {% trans "ago" %}</td>
+ <td>{{post.owner.profile.get_visible_name}}</td>
 </tr>
 {% endfor %}
 </table>
 
 {% if user.profile.can_create_forum %}
+<p>
 <form action="{% url forum.views.reply %}" method=post>
 <input type=hidden name="forum_id" value="{{forum.pk}}">
 {% csrf_token %}
@@ -43,6 +46,7 @@
 <tr><td><td><input type=submit value="{% trans "Post new topic" %}"</input>
 </table>
 </form>
+</p>
 {% endif %}
 
 {% endblock %}
