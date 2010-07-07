@@ -65,13 +65,12 @@ def reply(request, post_id = None):
 @login_required()
 @rr('forum/forum_create.html')
 def forum_create(request):
-    if request.method == 'GET':
-        return {'form': ForumForm()}
-    form = ForumForm(request.POST)
-    if request.user.profile.can_create_forum() and form.is_valid():
-        forum = form.save(commit = False)
-        forum.owner = request.user
-        forum.save()
-        return HttpResponseRedirect(reverse(index))
-
+    if request.method == 'POST':
+        form = ForumForm(request.POST)
+        if request.user.profile.can_create_forum() and form.is_valid():
+            forum = form.save(commit = False)
+            forum.owner = request.user
+            forum.save()
+            return HttpResponseRedirect(reverse(index))
+    return {'form': ForumForm()}
 
