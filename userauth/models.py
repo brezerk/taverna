@@ -18,8 +18,11 @@ class Profile(models.Model):
     def __unicode__(self):
         return self.user.username
 
-    def is_karma_good(self):
-        return self.karma > 5
+    def can_create_forum(self):
+        return self.karma > 15
+
+    def can_comment(self):
+        return self.karma > 0
 
     def get_visible_name(self):
         if self.visible_name:

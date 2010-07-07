@@ -14,7 +14,7 @@
     [<a href='/{{user_info.username}}/'>RSS</a>]
 
 {% if user.is_authenticated %}
-    {% if user.profile.is_karma_good %}
+    {% if user.profile.can_create_forum %}
     [<a href='{% url forum.views.reply forum.pk %}'>{% trans "Post new topic" %}</a>]
     {% endif %}
 {% endif %}
@@ -34,7 +34,7 @@
 {% endfor %}
 </table>
 
-{% if user.profile.is_karma_good %}
+{% if user.profile.can_create_forum %}
 <form action="{% url forum.views.reply %}" method=post>
 <input type=hidden name="forum_id" value="{{forum.pk}}">
 {% csrf_token %}

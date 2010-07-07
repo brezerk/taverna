@@ -135,7 +135,7 @@ def openid_finish(request):
     store = getOpenIDStore("/tmp/taverna_openid", "c_")
     c = consumer.Consumer(request.session, store)
 
-    return_to = getViewURL(request, openidFinish)
+    return_to = getViewURL(request, openid_finish)
     response = c.complete(request_args, return_to)
 
     if response.status == consumer.SUCCESS:

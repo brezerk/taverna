@@ -4,6 +4,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 class ForumForm(forms.ModelForm):
     class Meta:
@@ -32,6 +33,7 @@ def thread(request, post_id):
     thread = Post.objects.filter(thread = post)[1:]
     return {'post': post, 'thread': thread}
 
+@login_required()
 @rr('forum/reply.html')
 def reply(request, post_id = None):
     if request.method == 'POST':
@@ -53,18 +55,20 @@ def reply(request, post_id = None):
             return HttpResponseRedirect(redirect)
     else:
         form = PostForm()
+
     if post_id:
         post = Post.objects.get(id = post_id)
     else:
         post = None
     return { 'form': form, 'post': post}
 
+@login_required()
 @rr('forum/forum_create.html')
 def forum_create(request):
     if request.method == 'GET':
         return {'form': ForumForm()}
     form = ForumForm(request.POST)
-    if request.user.profile.is_karma_good() and form.is_valid():
+    if request.user.profile.can_create_forum() and form.is_valid():
         forum = form.save(commit = False)
         forum.owner = request.user
         forum.save()
