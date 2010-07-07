@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
+from django.core.urlresolvers import reverse
 
 from django.conf import settings
 
@@ -12,6 +13,9 @@ class Blog(models.Model):
     owner = models.ForeignKey(User)
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("blogs.views.view", args = [self.id])
 
 class Tag(models.Model):
     name = models.CharField(max_length = 32, unique = True)
@@ -35,6 +39,9 @@ class Post(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("blogs.views.post_view", args = [self.id])
 
 class BlogPostVote(models.Model):
     post = models.ForeignKey(Post)

@@ -4,13 +4,17 @@ from django.core.urlresolvers import reverse
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+from taverna.blogs.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     (r'^$', 'blogs.views.index'),
-
+    url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
+    url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
     (r'^blogs/$', 'blogs.views.list'),
     (r'^blogs/public/$', 'blogs.views.list_public'),
     (r'^blogs/users/$', 'blogs.views.list_users'),
@@ -42,6 +46,8 @@ urlpatterns = patterns('',
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 
     (r'^blog/libblog-0.so.(?P<blogid>\d+)$', 'blogs.views.view'), # WARNING: this one MUST be last
+    url(r'^blog/librss-0.so.(?P<blog_id>\d+)$', RssBlog(), name='rss_blog'),
+    url(r'^blog/libatom-0.so.(?P<blog_id>\d+)$', AtomBlog(), name='atom_blog'),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

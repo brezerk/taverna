@@ -14,7 +14,11 @@
 </td>
 
 <td align='right'>
-    [<a href='/{{user_info.username}}/'>RSS</a>]
+{% if blog_info.desc %}
+    [<a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
+{% else %}
+    [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
+{% endif %}
 {% if user.is_authenticated %}
     {% if blog_info.owner = user or blog_info.owner.id = 1 or not blog_info %}
     [<a href='{% url blogs.views.post_add %}'>{% trans "Add topic" %}</a>]
