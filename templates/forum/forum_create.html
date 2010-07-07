@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block title %}{% trans "Forum" %} - {% trans "New forum creation" %}{% endblock %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+    <tr>
+        <td>
+            {% trans "New forum creation" %}
+        </td>
+        <td align='right'>
+            [<a href='{% url forum.views.index %}'>{% trans "Cancel" %}</a>]
+        </td>
+    </tr>
+</table>
+</div>
+{% endblock %}
+
 {% block content %}
+
+<h3>{% trans "Create forum" %}</h3>
 
 <form method=post>
 {% csrf_token %}
-<caption>{% trans "Create forum" %}</caption>
 <table>
 {{form}}
 <tr><td><td colspan=2><input type=submit value="{% trans "Add" %}">
