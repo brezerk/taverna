@@ -14,7 +14,7 @@ class Forum(models.Model):
 class Post(models.Model):
     owner = models.ForeignKey(User, editable = False, related_name = 'forum_post')
     forum = models.ForeignKey(Forum, editable = False)
-    title = models.CharField(_("Title"), max_length = 64)
+    title = models.CharField(_("Title"), max_length = 64, blank = True)
     text = models.TextField(_("Text"))
     reply_to = models.ForeignKey('Post', editable = False, blank = True, null = True, related_name = 'reply_')
     thread = models.ForeignKey('Post', editable = False, blank = True, null = True, related_name = 'thread_')
