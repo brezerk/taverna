@@ -3,7 +3,7 @@
 
 <div class=post>
 <h5>{{post.title}}</h5>
-<p>{{post.text}}</p>
+<p>{{post.text|markup:post.parser|safe}}</p>
 <small>{{post.owner.profile.get_visible_name}} @ {{post.created}}</small>
 <a href="{% url forum.views.reply post.pk %}">{% trans "Reply" %}</a>
 </div>
