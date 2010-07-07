@@ -17,9 +17,9 @@
     {% endif %}
 [<a href='/{{user.username}}/ignore/{{user_info.username}}'>{% trans "Ignore" %}</a>]
 {% else %}
-    [<a href='{% url blogs.views.addPost %}'>{% trans "Add topic" %}</a>]
+    [<a href='{% url blogs.views.post_add %}'>{% trans "Add topic" %}</a>]
     {% if user_blog %}
-        [<a href='{% url blogs.views.editBlog %}'>{% trans "Blog settings" %}</a>]
+        [<a href='{% url blogs.views.settings %}'>{% trans "Blog settings" %}</a>]
     {% endif %}
 [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit profile" %}</a>]
 {% endif %}
@@ -65,7 +65,7 @@
 </table>
 <h3>{% trans "User messags"%}:</h3>
 <ul>
-    <li><a href='{% url blogs.views.viewBlog user_blog.id %}'>{% trans "Blogs" %}</a>
+    <li><a href='{% url blogs.views.view user_blog.id %}'>{% trans "Blogs" %}</a>
     <li><a href='/{{ user_info.username }}/comments/blog'>{% trans "Blog's comments" %}</a>
     <li><a href='/{{ user_info.username }}/forum'>{% trans "Forum" %}</a>
     <li><a href='/{{ user_info.username }}/comments/forum'>{% trans "Forum's comments" %}</a>

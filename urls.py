@@ -10,13 +10,14 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     (r'^$', 'blogs.views.index'),
-    (r'^blogs/$', 'blogs.views.viewBlogsList'),
-    (r'^blogs/public/$', 'blogs.views.viewBlogsPublicList'),
-    (r'^blogs/users/$', 'blogs.views.viewBlogsUserList'),
-    (r'^blogs/users/(?P<page>\w+)/$', 'blogs.views.viewBlogsUserList'),
-    (r'^blog/libpost-new-1.so$', 'blogs.views.addPost'),
-    (r'^blog/libsettings-0.so$', 'blogs.views.editBlog'),
-    (r'^blog/libpost-0.so.(?P<postid>\d+)$', 'blogs.views.viewPost'),
+    (r'^blogs/$', 'blogs.views.list'),
+    (r'^blogs/public/$', 'blogs.views.list_public'),
+    (r'^blogs/users/$', 'blogs.views.list_users'),
+# FIXME: reserved for paginator;
+#    (r'^blogs/users/(?P<page>\w+)/$', 'blogs.views.viewBlogsUserList'),
+    (r'^blog/libpost-new-1.so$', 'blogs.views.post_add'),
+    (r'^blog/libsettings-0.so$', 'blogs.views.settings'),
+    (r'^blog/libpost-0.so.(?P<postid>\d+)$', 'blogs.views.post_view'),
 
     (r'^forums/$', 'forum.views.index'),
     (r'^forums/thread/(?P<post_id>\d+).html$', 'forum.views.thread'),
@@ -32,7 +33,7 @@ urlpatterns = patterns('',
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 
-    (r'^blog/libblog-0.so.(?P<blogid>\d+)$', 'blogs.views.viewBlog'), # WARNING: this one MUST be last
+    (r'^blog/libblog-0.so.(?P<blogid>\d+)$', 'blogs.views.view'), # WARNING: this one MUST be last
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

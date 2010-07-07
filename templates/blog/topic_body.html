@@ -4,10 +4,10 @@
 <div class='news'>
 <h3>
 
-<a href='{% url blogs.views.viewBlog post.blog.id %}'>{{ post.blog.name }}</a>
+<a href='{% url blogs.views.view post.blog.id %}'>{{ post.blog.name }}</a>
 → <a href='
 {% if post.id %}
-{% url blogs.views.viewPost post.id %}'>{{ post.title }}
+{% url blogs.views.post_view post.id %}'>{{ post.title }}
 {% else %}
 {% url blogs.views.viewBlog post.blog.id %}'>{{ post.title }}
 {% endif %}

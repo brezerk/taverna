@@ -28,7 +28,7 @@
 
 <div class='page_content'>
 <h3>{% trans "Adding new topic" %}</h3>
-<form method="POST" action="{% url blogs.views.addPost %}">{% csrf_token %}
+<form method="POST" action="{% url blogs.views.post_add %}">{% csrf_token %}
 <table id='blog_topic'>
     {{form}}
     <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Preview" %}"></td></tr>
