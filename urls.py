@@ -25,12 +25,12 @@ urlpatterns = patterns('',
     (r'^forums/libforum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
 
-    (r'^pam/liblogout.so$', 'userauth.views.logoutUser'),
-    (r'^pam/libprofile-0.so.(?P<userid>\d+)$', 'userauth.views.viewProfile'),
-    (r'^pam/libprofile-edit-0.so$', 'userauth.views.editProfile'),
+    (r'^pam/liblogout.so$', 'userauth.views.logout'),
+    (r'^pam/libprofile-0.so.(?P<userid>\d+)$', 'userauth.views.view'),
+    (r'^pam/libprofile-edit-0.so$', 'userauth.views.edit'),
 
-    (r'^login/$', 'userauth.views.openidChalange'),
-    (r'^login/finish/$', 'userauth.views.openidFinish'),
+    (r'^login/$', 'userauth.views.openid_chalange'),
+    (r'^login/finish/$', 'userauth.views.openid_finish'),
 
     (r'^blog/libblog-0.so.(?P<blogid>\d+)$', 'blogs.views.viewBlog'), # WARNING: this one MUST be last
 
