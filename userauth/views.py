@@ -28,7 +28,7 @@ from openid.consumer import consumer
 
 from django.template.defaultfilters import slugify
 
-def logout(request):
+def openid_logout(request):
     logout(request)
     return HttpResponseRedirect("/")
 

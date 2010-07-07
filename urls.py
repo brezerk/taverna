@@ -38,7 +38,7 @@ urlpatterns = patterns('',
     (r'^forums/libforum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum_create/$', 'forum.views.forum_create'),
 
-    (r'^pam/liblogout.so$', 'userauth.views.logout'),
+    (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
     (r'^pam/libprofile-0.so.(?P<user_id>\d+)$', 'userauth.views.profile_view'),
     (r'^pam/libprofile-edit-0.so$', 'userauth.views.profile_edit'),
 
