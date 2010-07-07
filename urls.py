@@ -26,8 +26,8 @@ urlpatterns = patterns('',
     (r'^forum_create/$', 'forum.views.forum_create'),
 
     (r'^pam/liblogout.so$', 'userauth.views.logout'),
-    (r'^pam/libprofile-0.so.(?P<userid>\d+)$', 'userauth.views.view'),
-    (r'^pam/libprofile-edit-0.so$', 'userauth.views.edit'),
+    (r'^pam/libprofile-0.so.(?P<userid>\d+)$', 'userauth.views.profile_view'),
+    (r'^pam/libprofile-edit-0.so$', 'userauth.views.profile_edit'),
 
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),

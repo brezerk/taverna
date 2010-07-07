@@ -31,9 +31,9 @@
 {% endif %}
 <p>[<span class='plus'><a href=''>▲</a></span>] {{ post.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='
 {% if post.owner %}
-{% url userauth.views.viewProfile post.owner.id %}'>{{ post.owner.profile.get_visible_name }}
+{% url userauth.views.profile_view post.owner.id %}'>{{ post.owner.profile.get_visible_name }}
 {% else %}
-{% url userauth.views.viewProfile user.id %}'>{{ user.profile.get_visible_name }}
+{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}
 {% endif %}
 </a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
 </div>

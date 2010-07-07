@@ -34,7 +34,7 @@ def logout(request):
 
 @login_required()
 @rr ('userauth/profile.html')
-def view(request, userid):
+def profile_view(request, userid):
     try:
         user_info = User.objects.get(id__exact=userid)
         try:
@@ -49,7 +49,7 @@ def view(request, userid):
 
 @login_required()
 @rr ('userauth/settings.html')
-def edit(request):
+def profile_edit(request):
 
     profile = request.user.get_profile()
 

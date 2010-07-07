@@ -11,7 +11,7 @@
 <td width='300'>{% trans "User profile" %}</td>
 
 <td align='right'>
-[<a href='{% url userauth.views.viewProfile user.id %}'>{% trans "Cancel" %}</a>]
+[<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
 </td>
 </tr>
 </table>
@@ -21,7 +21,7 @@
 {% block content %}
 
 <h3>{% trans "Edit profile" %} {{ user.profile.get_visible_name }}</h3>
-<form method="POST" action="{% url userauth.views.editProfile %}">{% csrf_token %}
+<form method="POST" action="{% url userauth.views.profile_edit %}">{% csrf_token %}
 <table border='0' width='600px'>
 {{ formUser }}
 {{ formProfile }}

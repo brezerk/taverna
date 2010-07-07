@@ -31,9 +31,9 @@
             [<a href='/Library/'>{% trans "Library" %}</a>]</td>
         <td width='300' align='right'>
         {% if user.is_authenticated %}
-            {% trans "Welcome" %}, <a href='{% url userauth.views.viewProfile user.id %}'>{{ user.profile.get_visible_name }}</a> [<span class='minus'><a href="{% url userauth.views.logoutUser %}">x</a></span>]
+            {% trans "Welcome" %}, <a href='{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}</a> [<span class='minus'><a href="{% url userauth.views.logout %}">x</a></span>]
         {% else %}
-            [<a href='{% url userauth.views.openidChalange %}'>{% trans "Log In"%}</a>]
+            [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
         {% endif %}
         </td>
     </tr>
