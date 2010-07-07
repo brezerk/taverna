@@ -85,7 +85,7 @@ def profile_edit(request):
         if formUser.is_valid() and formProfile.is_valid():
             formUser.save()
             formProfile.save()
-            return HttpResponseRedirect(reverse("userauth.views.viewProfile",
+            return HttpResponseRedirect(reverse("userauth.views.profile_view",
                                         args=[request.user.id]))
     else:
         formProfile = SettingsForm(instance=profile)
@@ -116,8 +116,8 @@ def openid_chalange(request):
             return {'form': form, 'error': error}
 
         if auth_request.shouldSendRedirect():
-            trust_root = getViewURL(request, openidChalange)
-            redirect_to = getViewURL(request, openidFinish)
+            trust_root = getViewURL(request, openid_chalange)
+            redirect_to = getViewURL(request, openid_finish)
             return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
     else:
         form = OpenidForm()
@@ -135,7 +135,7 @@ def openid_finish(request):
     store = getOpenIDStore("/tmp/taverna_openid", "c_")
     c = consumer.Consumer(request.session, store)
 
-    return_to = getViewURL(request, openidFinish)
+    return_to = getViewURL(request, openid_finish)
     response = c.complete(request_args, return_to)
 
     if response.status == consumer.SUCCESS:
@@ -166,7 +166,7 @@ def openid_finish(request):
             if user is not None:
                 login(request, auth)
 
-            return HttpResponseRedirect(reverse("userauth.views.editProfile"))
+            return HttpResponseRedirect(reverse("userauth.views.profile_edit"))
     else:
         error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
 
