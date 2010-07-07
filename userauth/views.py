@@ -85,7 +85,7 @@ def profile_edit(request):
         if formUser.is_valid() and formProfile.is_valid():
             formUser.save()
             formProfile.save()
-            return HttpResponseRedirect(reverse("userauth.views.viewProfile",
+            return HttpResponseRedirect(reverse("userauth.views.profile_view",
                                         args=[request.user.id]))
     else:
         formProfile = SettingsForm(instance=profile)
@@ -166,7 +166,7 @@ def openid_finish(request):
             if user is not None:
                 login(request, auth)
 
-            return HttpResponseRedirect(reverse("userauth.views.editProfile"))
+            return HttpResponseRedirect(reverse("userauth.views.profile_edit"))
     else:
         error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
 
