@@ -8,6 +8,9 @@
  Paginator:
      1. Use paginator for post view;
 
+ Comments:
+     1. Integrate blog comments with forum module;
+
  == General ==
 
  Sitemap:
@@ -30,6 +33,12 @@
  Tags:
      1. Reate tags from post title example: [php][sux][LiveJornal] bla-bla-bla
      2. View search results for selected tag;
+
+ Comments:
+     1. Integrate blog comments with forum module;
+
+ Paginator:
+     1. Use paginator for forum and comments view;
 
  == Library ==
 
