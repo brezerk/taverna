@@ -98,8 +98,19 @@ def post_view(request, post_id):
     return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(pk = post_id), 'dont_strip': True }
 
 @rr('blog/blog.html')
-def view(request, blog_id):
+def tags_search(request, tag_id):
     #FIXME: use paginator for posts view!!!
+    blog_posts = None
+    try:
+        blog_posts = Post.objects.filter(tags = tag_id).order_by('-created')[:10]
+    except (Blog.DoesNotExist, Post.DoesNotExist):
+        return HttpResponseRedirect("/")
+
+    return {'blog_posts': blog_posts }
+
+@rr('blog/blog.html')
+def view(request, blog_id):
+#FIXME: use paginator for posts view!!!
     blog_posts = None
     blog_info = None
     try:

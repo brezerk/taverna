@@ -5,8 +5,8 @@
      1. User can edit own posts and all users with good carma, can edit public blog posts;
      2. Record edit actions and display them in the bottom of the post;
 
- Tags view:
-     1. View search results for selected tag;
+ Paginator:
+     1. Use paginator for post view;
 
  == General ==
 

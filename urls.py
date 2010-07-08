@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     (r'^blog/libpost-new-1.so$', 'blogs.views.post_add'),
     (r'^blog/libsettings-0.so$', 'blogs.views.settings'),
     (r'^blog/libpost-0.so.(?P<post_id>\d+)$', 'blogs.views.post_view'),
+    (r'^blog/libtag-0.so.(?P<tag_id>\d+)$', 'blogs.views.tags_search'),
 
     (r'^libforum-1.so$', 'forum.views.index'),
     (r'^libforum-1/(?P<forum_id>\d+).so$', 'forum.views.forum'),
