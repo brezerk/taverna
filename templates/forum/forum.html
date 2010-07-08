@@ -6,8 +6,8 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a> : 
-<a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }} - {{ forum.description }}</a>
+<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
+<a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a> {{ forum.description }}
 </td>
 
 <td align='right'>
