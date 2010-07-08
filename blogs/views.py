@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django import forms
+from django.forms import ModelForm, CharField, ModelChoiceField
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -28,7 +28,7 @@ def settings(request):
         blog.owner = request.user
         blog.save()
 
-    class BlogForm(forms.ModelForm):
+    class BlogForm(ModelForm):
         class Meta:
             model = Blog
             exclude = ('owner', 'name')
@@ -39,17 +39,17 @@ def settings(request):
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("blogs.views.view", args = [blog.id]))
+            return HttpResponseRedirect(reverse("blogs.views.view", args = [blog.pk]))
     return {'form': form}
 
 @login_required()
 @rr('blog/add_post.html')
 def post_add(request):
-    user_blogs = Blog.objects.filter(owner__in = [1, request.user.id]).order_by('name').order_by('-owner__id')
+    user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
-    class PostForm(forms.ModelForm):
-        tag_string = forms.CharField()
-        blog = forms.ModelChoiceField(queryset = user_blogs,
+    class PostForm(ModelForm):
+        tag_string = CharField()
+        blog = ModelChoiceField(queryset = user_blogs,
             initial = user_blogs[0],
             label = _("Post to"))
         class Meta:
@@ -66,7 +66,7 @@ def post_add(request):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
-            return post.id
+            return post.pk
 
     form = PostForm()
     preview = None
