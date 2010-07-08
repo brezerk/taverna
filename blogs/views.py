@@ -66,7 +66,7 @@ def post_add(request):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
-            return post.pk
+            return post.blog.pk
 
     form = PostForm()
     preview = None
@@ -79,7 +79,7 @@ def post_add(request):
             if form.is_valid():
                 if request.POST['submit']==_("Save"):
                     post_id = form.save()
-                    return HttpResponseRedirect(reverse(post_view, args = [post_id]))
+                    return HttpResponseRedirect(reverse(view, args = [post_id]))
     return {
         'form': form,
         'preview': preview,
