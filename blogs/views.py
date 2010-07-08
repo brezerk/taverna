@@ -7,7 +7,8 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField
 
-#from django.contrib.auth import authenticate, login
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blogs.models import Blog, Post, Tag
@@ -107,22 +108,34 @@ def tags_search(request, tag_id):
     return {'blog_posts': blog_posts }
 
 @rr('blog/blog.html')
-def view(request, blog_id):
-#FIXME: use paginator for posts view!!!
+def view(request, blog_id, page = 1):
     blog_posts = None
     blog_info = None
     try:
         blog_info = Blog.objects.get(pk = blog_id)
-        blog_posts = Post.objects.filter(blog = blog_info).order_by('-created')[:10]
+        posts = Post.objects.filter(blog = blog_info).order_by('-created')
+        paginator = Paginator(posts, 10)
+
+        try:
+            blog_posts = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            blog_posts = paginator.page(paginator.num_pages)
+
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
     return {'blog_posts': blog_posts, 'blog_info': blog_info }
 
 @rr('blog/blog.html')
-def index(request):
-    #FIXME: Use paginator for posts view!!!
-    blog_posts = Post.objects.order_by('-created')[:10]
+def index(request, page = 1):
+    posts = Post.objects.order_by('-created')
+    paginator = Paginator(posts, 10)
+
+    try:
+        blog_posts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        blog_posts = paginator.page(paginator.num_pages)
+
     return { 'blog_posts': blog_posts }
 
 @rr('blog/blog_list.html')

@@ -19,6 +19,11 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     (r'^$', 'blogs.views.index'),
+    (r'^blog/libblog-(?P<page>\d+).so$', 'blogs.views.index'),
+
+    (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blogs.views.view'),
+    (r'^blog/libblog-(?P<page>\d+).so.(?P<blog_id>\d+)$', 'blogs.views.view'),
+
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
     (r'^blogs/$', 'blogs.views.list'),
@@ -52,7 +57,6 @@ urlpatterns = patterns('',
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 
-    (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blogs.views.view'), # WARNING: this one MUST be last
     url(r'^blog/librss-0.so.(?P<blog_id>\d+)$', RssBlog(), name='rss_blog'),
     url(r'^blog/libatom-0.so.(?P<blog_id>\d+)$', AtomBlog(), name='atom_blog'),
 

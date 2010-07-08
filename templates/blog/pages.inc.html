@@ -1,0 +1,29 @@
+{% load i18n %}
+
+{% if blog_posts.paginator.num_pages > 1 %}
+<div class='pages'>[{% trans "Page" %} 
+{% if blog_posts.has_previous %}
+<a href='{% url blogs.views.index blog_posts.previous_page_number %}'>←</a>
+{% else %}
+←
+{% endif %}
+{% for page in blog_posts.paginator.page_range %}
+    {% if blog_posts.number == page %}
+        <b>{{page}}</b>
+    {% else %}
+        <a href='
+        {% if blog_info.desc %}
+            {% url blogs.views.view page blog_info.pk %}
+        {% else %}
+            {% url blogs.views.index page %}
+        {% endif %}
+        '>{{page}}</a>
+    {% endif %}
+{% endfor %}
+{% if blog_posts.has_next %}
+<a href='{% url blogs.views.index blog_posts.next_page_number %}'>→</a>
+{% else %}
+→
+{% endif %}
+]</div>
+{% endif %}

@@ -239,3 +239,7 @@ label, th {
 
 .normal { }
 .dark { background-color: #232323; }
+
+.pages {
+    text-align: center;
+}

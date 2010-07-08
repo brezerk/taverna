@@ -36,13 +36,19 @@
 
 {% block content %}
 
-{% if blog_posts %}
-    {% for post in blog_posts %}
+{% include 'blog/pages.inc.html' %}
+
+{% if blog_posts.object_list %}
+    {% for post in blog_posts.object_list %}
         {% include 'blog/topic_body.html' %}
     {% endfor %}
 {% else %}
-    {% trans "No blog topics in current user blog :]" %}
+    {% for post in blog_posts %}
+        {% include 'blog/topic_body.html' %}
+    {% endfor %}
 {% endif %}
+
+{% include 'blog/pages.inc.html' %}
 
 {% endblock %}
 

@@ -6,7 +6,7 @@
      2. Record edit actions and display them in the bottom of the post;
 
  Paginator:
-     1. Use paginator for post view;
+     1. Use paginator for post comments view;
 
  Comments:
      1. Integrate blog comments with forum module;
