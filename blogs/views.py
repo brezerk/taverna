@@ -15,8 +15,6 @@ from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from django.conf import settings
-
 @login_required()
 @rr('blog/settings.html')
 def settings(request):
