@@ -5,6 +5,9 @@
      1. User can edit own posts and all users with good carma, can edit public blog posts;
      2. Record edit actions and display them in the bottom of the post;
 
+ Tags view:
+     1. View search results for selected tag;
+
  == General ==
 
  Sitemap:
@@ -23,6 +26,10 @@
      1. Redesing look&feel for forums comments;
      2. Opium, plz. remove this f*cking topic creation form from the topics view... :)
      3. Use JavaScript to display edit form for comments (Yes, Like in LOR)
+
+ Tags:
+     1. Reate tags from post title example: [php][sux][LiveJornal] bla-bla-bla
+     2. View search results for selected tag;
 
  == Library ==
 

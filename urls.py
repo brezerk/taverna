@@ -6,8 +6,14 @@ from django.core.urlresolvers import reverse
 from django.contrib import admin
 
 from taverna.blogs.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
+from taverna.blogs.sitemaps import BlogSitemap
 
 admin.autodiscover()
+
+
+sitemaps = {
+    'blog': BlogSitemap,
+}
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
@@ -48,6 +54,8 @@ urlpatterns = patterns('',
     (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blogs.views.view'), # WARNING: this one MUST be last
     url(r'^blog/librss-0.so.(?P<blog_id>\d+)$', RssBlog(), name='rss_blog'),
     url(r'^blog/libatom-0.so.(?P<blog_id>\d+)$', AtomBlog(), name='atom_blog'),
+
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

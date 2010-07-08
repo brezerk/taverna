@@ -26,12 +26,11 @@
 {% block content %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Date" %}</th><th width='240px'>{% trans "Author" %}</th></tr>
+<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Date" %}</th></tr>
 {% for post in post_list %}
 <tr class="{% cycle "normal" "dark" %}">
- <td><a href="{% url forum.views.thread post.pk %}">{{post.title}}</a></td>
+ <td><a href="{% url forum.views.thread post.pk %}">{{post.title}}</a> [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]</td>
  <td>{{post.created|timesince}} {% trans "ago" %}</td>
- <td>{{post.owner.profile.get_visible_name}}</td>
 </tr>
 {% endfor %}
 </table>
