@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField
 
-from django.contrib.auth import authenticate, login
+#from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blogs.models import Blog, Post, Tag
