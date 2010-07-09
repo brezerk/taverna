@@ -41,6 +41,7 @@ urlpatterns = patterns('',
     (r'^libforum-1/posting.so$', 'forum.views.reply'),
     (r'^libforum-1/reply-(?P<post_id>\d+).so$', 'forum.views.reply'),
     (r'^libforum-1/thread-(?P<post_id>\d+).so$', 'forum.views.thread'),
+    (r'^libforum-1/topic-create.so.(?P<forum_id>\d+)$', 'forum.views.topic_create'),
     (r'^libforum-1/create.so$', 'forum.views.forum_create'),
 
     (r'^forums/$', 'forum.views.index'),

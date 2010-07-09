@@ -15,7 +15,7 @@ Reply to:
 <h4>{{post.title}}</h4>
 <p>{{post.text|markup:post.parser|safe}}</p>
 <small>{{post.owner.profile.get_visible_name}} @ {{post.created}}</small>
-{% if user.profile.can_comment %}
+{% if user.profile.can_create_comment %}
 <a href="{% url forum.views.reply post.pk %}">{% trans "Reply" %}</a>
 {% endif %}
 </div>

@@ -21,8 +21,11 @@ class Profile(models.Model):
     def can_create_forum(self):
         return self.karma > 15
 
-    def can_comment(self):
-        return self.karma > 0
+    def can_create_topic(self):
+        return self.karma > 10
+
+    def can_create_comment(self):
+        return self.karma > 1
 
     def get_visible_name(self):
         if self.visible_name:

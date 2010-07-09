@@ -14,8 +14,8 @@
     [<a href='/{{user_info.username}}/'>RSS</a>]
 
 {% if user.is_authenticated %}
-    {% if user.profile.can_create_forum %}
-    [<a href='{% url forum.views.reply forum.pk %}'>{% trans "Post new topic" %}</a>]
+    {% if user.profile.can_create_topic %}
+    [<a href='{% url forum.views.topic_create forum.pk %}'>{% trans "Post new topic" %}</a>]
     {% endif %}
 {% endif %}
 </td>
@@ -37,19 +37,6 @@
 </tr>
 {% endfor %}
 </table>
-
-{% if user.profile.can_create_forum %}
-<p>
-<form action="{% url forum.views.reply %}" method=post>
-<input type=hidden name="forum_id" value="{{forum.pk}}">
-{% csrf_token %}
-<table>
-{{form}}
-<tr><td><td><input type=submit value="{% trans "Post new topic" %}"</input>
-</table>
-</form>
-</p>
-{% endif %}
 
 {% endblock %}
 

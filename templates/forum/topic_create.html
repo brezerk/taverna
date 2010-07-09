@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<form method=post>
+<input type=hidden name="forum_id" value="{{forum.pk}}">
+{% csrf_token %}
+<table>
+{{form}}
+<tr><td><td><input type=submit value="{% trans "Post new topic" %}"</input>
+</table>
+</form>
+{% endblock %}
