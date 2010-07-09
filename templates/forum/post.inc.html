@@ -1,8 +1,18 @@
 {% load i18n %}
 {% load markup %}
 
-<div class=post>
-<h5>{{post.title}}</h5>
+<div class=post id="post_{{post.pk}}">
+{% if post.reply_to %}
+<h5>
+Reply to: 
+{% if post.reply_to = startpost %}
+{% trans "Start post" %}
+{% else %}
+<a href="#post_{{post.reply_to.pk}}">{{post.reply_to.owner.profile.get_visible_name}}</a>
+{% endif %}
+</h5>
+{% endif %}
+<h4>{{post.title}}</h4>
 <p>{{post.text|markup:post.parser|safe}}</p>
 <small>{{post.owner.profile.get_visible_name}} @ {{post.created}}</small>
 {% if user.profile.can_comment %}

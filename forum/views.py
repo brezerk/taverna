@@ -23,15 +23,15 @@ def forum(request, forum_id):
     forum = Forum.objects.get(pk = forum_id)
     return {
         'forum': forum, 
-        'post_list': Post.objects.filter(forum = forum, reply_to = None),
+        'thread_list': Post.objects.filter(forum = forum, reply_to = None),
         'form': PostForm(),
     }
 
 @rr('forum/thread.html')
 def thread(request, post_id):
-    post = Post.objects.get(pk = post_id)
-    thread = Post.objects.filter(thread = post)[1:]
-    return {'post': post, 'thread': thread}
+    startpost = Post.objects.get(pk = post_id)
+    thread = Post.objects.filter(thread = startpost)[1:]
+    return {'startpost': startpost, 'thread': thread}
 
 @login_required()
 @rr('forum/reply.html')

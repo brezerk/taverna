@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% block content %}
-
 <div class=thread>
 
-<h1><a href="{% url forum.views.forum post.forum.pk %}">{{post.forum.name}}</a> :: <a>{{post.title}}</a></h1>
-
+<h1><a href="{% url forum.views.forum startpost.forum.pk %}">{{startpost.forum.name}}</a> :: <a>{{startpost.title}}</a></h1>
+{% with startpost as post %}
 {% include "forum/post.inc.html" %}
-
+{% endwith %}
 {% for post in thread %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
 
 </div>
-
 {% endblock %}
