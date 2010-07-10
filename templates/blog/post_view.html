@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{% with 1 as dont_strip %}
+{% include 'blog/topic_body.html' %}
+{% endwith %}
+
+{% endblock %}

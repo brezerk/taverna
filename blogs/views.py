@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField
-
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from django.contrib.auth.models import User
@@ -85,16 +84,9 @@ def post_add(request):
         'tags': tags,
         'dont_strip': True}
 
-@rr('blog/blog.html')
+@rr('blog/post_view.html')
 def post_view(request, post_id):
-    blog_posts = None
-    blog_info = None
-    try:
-        blog_posts = Post.objects.filter(pk = post_id)
-        blog_info = blog_posts[0].blog
-    except (Blog.DoesNotExist, Post.DoesNotExist):
-        return HttpResponseRedirect("/")
-    return { 'blog_info': blog_info, 'blog_posts': Post.objects.filter(pk = post_id), 'dont_strip': True }
+    return { 'post': get_object_or_404(Post, pk = post_id) }
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id):
