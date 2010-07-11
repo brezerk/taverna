@@ -12,9 +12,6 @@
  Paginator:
      * Use paginator for post comments view;
 
- Comments:
-     * Integrate blog comments with forum module;
-
  == General ==
 
  Sitemap:
