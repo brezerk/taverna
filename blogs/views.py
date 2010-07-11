@@ -14,12 +14,7 @@ from taverna.blogs.models import Blog, Post, Tag
 from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-import forum
-
-class CommentForm(ModelForm):
-    class Meta:
-        exclude = ('title', )
-        model = forum.models.Post
+from forum.views import PostForm as CommentForm
 
 @login_required()
 def post_comment(request, post_id):
