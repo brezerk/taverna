@@ -7,4 +7,16 @@
 {% include 'blog/topic_body.html' %}
 {% endwith %}
 
+{% for post in post.post_set.all %}
+{% include "forum/post.inc.html" %}
+{% endfor %}
+
+<table>
+<form action="{% url blogs.views.post_comment post.pk %}" method=post>
+{% csrf_token %}
+{{comment_form}}
+<tr><td><td><input type=submit value="{% trans "Send" %}">
+</form>
+</table>
+
 {% endblock %}

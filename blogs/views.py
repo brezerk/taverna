@@ -14,6 +14,22 @@ from taverna.blogs.models import Blog, Post, Tag
 from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+import forum
+
+class CommentForm(ModelForm):
+    class Meta:
+        exclude = ('title', )
+        model = forum.models.Post
+
+@login_required()
+def post_comment(request, post_id):
+    form = CommentForm(request.POST)
+    if form.is_valid() and request.user.profile.can_create_comment():
+        comment = form.save(commit = False)
+        comment.blog_post = Post.objects.get(pk = post_id)
+        comment.owner = request.user
+        comment.save()
+        return HttpResponseRedirect(reverse('blogs.views.post_view', args = [post_id]))
 
 @login_required()
 @rr('blog/settings.html')
@@ -86,7 +102,7 @@ def post_add(request):
 
 @rr('blog/post_view.html')
 def post_view(request, post_id):
-    return { 'post': get_object_or_404(Post, pk = post_id) }
+    return { 'post': get_object_or_404(Post, pk = post_id), 'comment_form': CommentForm() }
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id):

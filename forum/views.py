@@ -49,11 +49,16 @@ def reply(request, post_id):
         if form.is_valid():
             post = form.save(commit = False)
             post.reply_to = reply_to
+            post.blog_post = reply_to.blog_post
             post.thread = post.reply_to.thread
             post.forum = post.reply_to.forum
             post.owner = request.user
             post.save()
-            return HttpResponseRedirect(reverse("forum.views.forum", args = [post.forum.pk]))
+            if post.forum is None:
+                redirect = reverse("blogs.views.post_view", args = [post.blog_post.pk])
+            else:
+                redirect = reverse("forum.views.forum", args = [post.forum.pk])
+            return HttpResponseRedirect(redirect)
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}

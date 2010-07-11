@@ -1,9 +1,13 @@
 
  == Blogs ==
 
+ Application:
+     * Rename it to "blog"
+
  Edit posts: 
      * User can edit own posts and all users with good carma, can edit public blog posts;
      * Record edit actions and display them in the bottom of the post;
+     * Make something like ----cut----
 
  Paginator:
      * Use paginator for post comments view;

@@ -13,13 +13,13 @@ class Forum(models.Model):
 
 class Post(models.Model):
     owner = models.ForeignKey(User, editable = False, related_name = 'forum_post')
-    forum = models.ForeignKey(Forum, editable = False)
+    forum = models.ForeignKey(Forum, editable = False, null = True)
     title = models.CharField(_("Title"), max_length = 64, blank = True)
     text = models.TextField(_("Text"))
     reply_to = models.ForeignKey('Post', editable = False, blank = True, null = True, related_name = 'reply_')
     thread = models.ForeignKey('Post', editable = False, blank = True, null = True, related_name = 'thread_')
     parser = models.IntegerField(choices = settings.PARSER_ENGINES, default = 0)
-    blog = models.ForeignKey(blog_models.Post, editable = False, blank = True, null = True)
+    blog_post = models.ForeignKey(blog_models.Post, editable = False, blank = True, null = True)
     rating = models.IntegerField(editable = False, default = 0)
     created = models.DateTimeField(editable = False, auto_now_add = True)
     class Meta:
