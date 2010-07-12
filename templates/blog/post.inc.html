@@ -6,11 +6,7 @@
 
 <a href='{% url blog.views.view post.blog.id %}'>{{ post.blog.name }}</a>
 → <a href='
-{% if post.id %}
 {% url blog.views.post_view post.id %}'>{{ post.title }}
-{% else %}
-{% url blog.views.post_view post.blog.id %}'>{{ post.title }}
-{% endif %}
 </a></h3>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr><td width='40px'>&nbsp;</td><td>
@@ -35,7 +31,9 @@
 {% else %}
 {% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}
 {% endif %}
-</a></span> | <a href=''>{% trans "Comments" %}: 0</a></p>
+</a></span> | <a href='
+{% url blog.views.post_view post.id %}
+'>{% trans "Comments" %}: {{ post.post_set.all.count }}</a></p>
 </div>
 </td>
 <td width='40px'>&nbsp;</td><td>
