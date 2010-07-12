@@ -31,8 +31,13 @@
 <p style='text-align: center'>
 {% trans "Messages are sorted by the add date in reverse order" %}
 </p>
-{% for post in thread %}
+
+{% include "forum/pages.inc.html" %}
+
+{% for post in thread.object_list %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
+
+{% include "forum/pages.inc.html" %}
 
 {% endblock %}

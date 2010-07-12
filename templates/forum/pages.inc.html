@@ -1,26 +1,39 @@
 {% load i18n %}
 
-{% if comments.paginator.num_pages > 1 %}
+
+{% if thread.paginator.num_pages > 1 %}
 <div class='pages'>[{% trans "Page" %} 
-{% if comments.has_previous %}
+{% if thread.has_previous %}
 <a href='
-        {%url blog.views.post_view comments.previous_page_number post.pk %}
+        {% if startpost %}
+            {%url forum.views.thread thread.previous_page_number startpost.pk %}
+        {% else %}
+            {%url blog.views.post_view thread.previous_page_number post.pk %}
+        {% endif %}
 '>←</a>
 {% else %}
 ←
 {% endif %}
-{% for page in comments.paginator.page_range %}
-    {% if comments.number == page %}
+{% for page in thread.paginator.page_range %}
+    {% if thread.number == page %}
         <b>{{page}}</b>
     {% else %}
         <a href='
-        {%url blog.views.post_view page post.pk %}
+        {% if startpost %}
+            {%url forum.views.thread page startpost.pk %}
+        {% else %}
+            {%url blog.views.post_view page post.pk %}
+        {% endif %}
         '>{{page}}</a>
     {% endif %}
 {% endfor %}
-{% if comments.has_next %}
+{% if thread.has_next %}
 <a href='
-        {%url blog.views.post_view comments.next_page_number post.pk %}
+        {% if startpost %}
+            {%url forum.views.thread thread.next_page_number startpost.pk %}
+        {% else %}
+            {%url blog.views.post_view thread.next_page_number post.pk %}
+        {% endif %}
 '>→</a>
 {% else %}
 →

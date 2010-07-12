@@ -101,11 +101,11 @@ def post_view(request, post_id, page = 1):
     paginator = Paginator(post.post_set.all(), 5)
 
     try:
-        comments = paginator.page(page)
+        thread = paginator.page(page)
     except (EmptyPage, InvalidPage):
-        comments = paginator.page(paginator.num_pages)
+        thread = paginator.page(paginator.num_pages)
 
-    return { 'post': post, 'comments': comments, 'comment_form': CommentForm() }
+    return { 'post': post, 'thread': thread, 'comment_form': CommentForm() }
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id, page = 1):

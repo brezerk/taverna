@@ -29,7 +29,7 @@
      * View search results for selected tag;
 
  Paginator:
-     * Use paginator for forum and comments view;
+     * Use paginator for forums list view;
 
  == Library ==
 

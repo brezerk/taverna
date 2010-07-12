@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 class ForumForm(forms.ModelForm):
     class Meta:
@@ -33,9 +34,15 @@ def forum(request, forum_id):
     }
 
 @rr('forum/thread.html')
-def thread(request, post_id):
+def thread(request, post_id, page = 1):
     startpost = Post.objects.get(pk = post_id)
-    thread = Post.objects.filter(thread = startpost)[1:]
+    paginator = Paginator(Post.objects.filter(thread = startpost)[1:], 5)
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
     return {'startpost': startpost, 'thread': thread}
 
 @login_required()
