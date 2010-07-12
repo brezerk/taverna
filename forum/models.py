@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
-from blogs import models as blog_models
+from blog import models as blog_models
 from django.conf import settings
 
 class Forum(models.Model):

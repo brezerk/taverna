@@ -2,7 +2,7 @@ from django.contrib.syndication.views import Feed
 from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
-from taverna.blogs.models import Blog, Post, Tag
+from taverna.blog.models import Blog, Post, Tag
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 

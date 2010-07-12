@@ -27,7 +27,7 @@ def index(request):
 def forum(request, forum_id):
     forum = Forum.objects.get(pk = forum_id)
     return {
-        'forum': forum, 
+        'forum': forum,
         'thread_list': Post.objects.filter(forum = forum, reply_to = None).order_by('-created'),
         'form': PostForm(),
     }
@@ -55,7 +55,7 @@ def reply(request, post_id):
             post.owner = request.user
             post.save()
             if post.forum is None:
-                redirect = reverse("blogs.views.post_view", args = [post.blog_post.pk])
+                redirect = reverse("blog.views.post_view", args = [post.blog_post.pk])
             else:
                 redirect = reverse("forum.views.forum", args = [post.forum.pk])
             return HttpResponseRedirect(redirect)

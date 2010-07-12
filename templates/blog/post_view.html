@@ -11,7 +11,7 @@
 {% include "forum/post.inc.html" %}
 {% endfor %}
 
-<form action="{% url blogs.views.post_comment post.pk %}" method=post>
+<form action="{% url blog.views.post_comment post.pk %}" method=post>
 <table>
 {% csrf_token %}
 {{comment_form}}

@@ -1,13 +1,10 @@
 
  == Blogs ==
 
- Application:
-     * Rename it to "blog"
-
  Edit posts: 
      * User can edit own posts and all users with good carma, can edit public blog posts;
      * Record edit actions and display them in the bottom of the post;
-     * Make something like ----cut----
+     * Make something like ----cut---- (brezerk: WTF IS THIS? O.o)
 
  Paginator:
      * Use paginator for post comments view;
@@ -15,7 +12,7 @@
  == General ==
 
  Sitemap:
-     * Sitemap implementation;
+     * Sitemap implementation (brezerk: done, need discusss);
 
  Voite system:
      * Any user can voite in forum and blogs and commetns;

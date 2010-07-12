@@ -102,7 +102,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sitemaps',
     'forum',
-    'blogs',
+    'blog',
     'userauth',
     'parsers',
 )

@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from django.contrib.auth.models import User
 from userauth.models import Profile
-from taverna.blogs.models import Blog, Post, Tag
+from taverna.blog.models import Blog, Post, Tag
 from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -24,7 +24,7 @@ def post_comment(request, post_id):
         comment.blog_post = Post.objects.get(pk = post_id)
         comment.owner = request.user
         comment.save()
-        return HttpResponseRedirect(reverse('blogs.views.post_view', args = [post_id]))
+        return HttpResponseRedirect(reverse(post_view, args = [post_id]))
 
 @login_required()
 @rr('blog/settings.html')
@@ -48,7 +48,7 @@ def settings(request):
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("blogs.views.view", args = [blog.pk]))
+            return HttpResponseRedirect(reverse(view, args = [blog.pk]))
     return {'form': form}
 
 @login_required()
@@ -105,7 +105,7 @@ def tags_search(request, tag_id, page = 1):
     blog_posts = None
     try:
         posts = Post.objects.filter(tags = tag_id).order_by('-created')[:10]
-        paginator = Paginator(posts, 1)
+        paginator = Paginator(posts, 10)
 
         tag = Tag.objects.get(pk=tag_id);
 

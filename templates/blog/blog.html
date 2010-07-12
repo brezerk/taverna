@@ -10,7 +10,7 @@
 {% trans "Search results for tag:" %} {{ tag.name }}
 {% else %}
     {% if blog_info %}
-        <a href='{% url blogs.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blogs.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
+        <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
     {% else %}
         {% trans "Blog's traker" %}
     {% endif %}
@@ -25,9 +25,9 @@
 {% endif %}
 {% if user.is_authenticated %}
     {% if blog_info.owner = user or blog_info.owner.id = 1 or not blog_info %}
-    [<a href='{% url blogs.views.post_add %}'>{% trans "Add topic" %}</a>]
+    [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
     {% if blog_info.owner = user %}
-    [<a href='{% url blogs.views.settings %}'>{% trans "Blog settings" %}</a>]
+    [<a href='{% url blog.views.settings %}'>{% trans "Blog settings" %}</a>]
     {% endif %}
     {% endif %}
 {% endif %}

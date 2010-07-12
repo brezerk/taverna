@@ -43,7 +43,7 @@ def tags(value):
             first = False
         else:
             value = value + ", "
-        value = value + "<a href='/blogs/tag/" + tag + "'>" + tag + "</a>"
+        value = value + "<a href='/'>" + tag + "</a>"
     return value
 
 @register.filter
@@ -51,7 +51,7 @@ def strippost(value, post):
     if len(value) > 382:
         value = value[:382]
         value = markup(value, post.parser)
-        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('blogs.views.post_view', args=[post.id]), _("Read full post"))
+        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('blog.views.post_view', args=[post.id]), _("Read full post"))
     else:
         value = markup(value, post.parser)
     return value

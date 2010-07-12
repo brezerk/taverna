@@ -1,5 +1,5 @@
 from django.contrib import admin
-from taverna.blogs.models import Blog, Post, Tag
+from taverna.blog.models import Blog, Post, Tag
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('name', 'desc', 'active', 'owner',)

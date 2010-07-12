@@ -5,8 +5,8 @@ from django.core.urlresolvers import reverse
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-from taverna.blogs.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
-from taverna.blogs.sitemaps import BlogSitemap
+from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
+from taverna.blog.sitemaps import BlogSitemap
 
 admin.autodiscover()
 
@@ -18,23 +18,23 @@ sitemaps = {
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
-    (r'^$', 'blogs.views.index'),
-    (r'^blog/libblog-(?P<page>\d+).so$', 'blogs.views.index'),
+    (r'^$', 'blog.views.index'),
+    (r'^blog/libblog-(?P<page>\d+).so$', 'blog.views.index'),
 
-    (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blogs.views.view'),
-    (r'^blog/libblog-(?P<page>\d+).so.(?P<blog_id>\d+)$', 'blogs.views.view'),
+    (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blog.views.view'),
+    (r'^blog/libblog-(?P<page>\d+).so.(?P<blog_id>\d+)$', 'blog.views.view'),
 
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
-    (r'^blogs/$', 'blogs.views.list'),
-    (r'^blogs/public/$', 'blogs.views.list_public'),
-    (r'^blogs/users/$', 'blogs.views.list_users'),
-    (r'^blog/libpost-new-1.so$', 'blogs.views.post_add'),
-    (r'^blog/libsettings-0.so$', 'blogs.views.settings'),
-    (r'^blog/libpost-0.so.(?P<post_id>\d+)$', 'blogs.views.post_view'),
-    (r'^blog/libtag-0.so.(?P<tag_id>\d+)$', 'blogs.views.tags_search'),
-    (r'^blog/libtag-(?P<page>\d+).so.(?P<tag_id>\d+)$', 'blogs.views.tags_search'),
-    (r'^blog/libcomment.so.(?P<post_id>\d+)$', 'blogs.views.post_comment'),
+    (r'^blogs/$', 'blog.views.list'),
+    (r'^blogs/public/$', 'blog.views.list_public'),
+    (r'^blogs/users/$', 'blog.views.list_users'),
+    (r'^blog/libpost-new-1.so$', 'blog.views.post_add'),
+    (r'^blog/libsettings-0.so$', 'blog.views.settings'),
+    (r'^blog/libpost-0.so.(?P<post_id>\d+)$', 'blog.views.post_view'),
+    (r'^blog/libtag-0.so.(?P<tag_id>\d+)$', 'blog.views.tags_search'),
+    (r'^blog/libtag-(?P<page>\d+).so.(?P<tag_id>\d+)$', 'blog.views.tags_search'),
+    (r'^blog/libcomment.so.(?P<post_id>\d+)$', 'blog.views.post_comment'),
 
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum.so.(?P<forum_id>\d+)$', 'forum.views.forum'),

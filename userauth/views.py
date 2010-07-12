@@ -13,7 +13,7 @@ from django.forms import Form, ModelForm, CharField
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from userauth.models import Profile
-from blogs.models import Blog
+from blog.models import Blog
 from util import rr, getViewURL, getOpenIDStore
 
 from django.utils.translation import ugettext as _
