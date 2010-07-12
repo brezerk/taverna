@@ -61,10 +61,14 @@ def reply(request, post_id):
             post.forum = post.reply_to.forum
             post.owner = request.user
             post.save()
+
+            paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], 5)
+            last_page = paginator.num_pages
+
             if post.forum is None:
-                redirect = "%s#post_%s" % (reverse("blog.views.post_view", args = [post.blog_post.pk]), post.pk)
+                redirect = "%s#post_%s" % (reverse("blog.views.post_view", args = [last_page, post.blog_post.pk]), post.pk)
             else:
-                redirect = "%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), post.pk)
+                redirect = "%s#post_%s" % (reverse("forum.views.thread", args = [last_page, post.thread.pk]), post.pk)
             return HttpResponseRedirect(redirect)
     else:
         form = PostForm()
