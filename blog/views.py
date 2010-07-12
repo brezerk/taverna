@@ -24,8 +24,8 @@ def post_comment(request, post_id):
         comment.blog_post = Post.objects.get(pk = post_id)
         comment.owner = request.user
         comment.save()
-
-        paginator = Paginator(Post.objects.get(pk = post_id).post_set.all(), 5)
+        from django.conf import settings
+        paginator = Paginator(Post.objects.get(pk = post_id).post_set.all(), settings.PAGE_LIMITATIONS["BLOG_COMMENTS"])
         last_page = paginator.num_pages
 
         return HttpResponseRedirect("%s#post_%s" % ( reverse(post_view, args = [last_page, post_id]), comment.pk) )
@@ -102,7 +102,8 @@ def post_add(request):
 @rr('blog/post_view.html')
 def post_view(request, post_id, page = 1):
     post = Post.objects.get(pk = post_id)
-    paginator = Paginator(post.post_set.all(), 5)
+    from django.conf import settings
+    paginator = Paginator(post.post_set.all(), settings.PAGE_LIMITATIONS["BLOG_COMMENTS"])
 
     try:
         thread = paginator.page(page)
@@ -113,11 +114,11 @@ def post_view(request, post_id, page = 1):
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id, page = 1):
-    #FIXME: use paginator for posts view!!!
     blog_posts = None
     try:
         posts = Post.objects.filter(tags = tag_id).order_by('-created')
-        paginator = Paginator(posts, 10)
+        from django.conf import settings
+        paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
         tag = Tag.objects.get(pk=tag_id);
 
@@ -137,7 +138,8 @@ def view(request, blog_id, page = 1):
     try:
         blog_info = Blog.objects.get(pk = blog_id)
         posts = Post.objects.filter(blog = blog_info).order_by('-created')
-        paginator = Paginator(posts, 10)
+        from django.conf import settings
+        paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
         try:
             blog_posts = paginator.page(page)
@@ -152,7 +154,9 @@ def view(request, blog_id, page = 1):
 @rr('blog/blog.html')
 def index(request, page = 1):
     posts = Post.objects.order_by('-created')
-    paginator = Paginator(posts, 10)
+
+    from django.conf import settings
+    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     try:
         blog_posts = paginator.page(page)

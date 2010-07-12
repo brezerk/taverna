@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<form action="{% url blog.views.post_comment post.pk %}" method=post>
+<table>
+{% csrf_token %}
+{{comment_form}}
+<tr><td>&nbsp;</td><td><input type=submit value="{% trans "Send" %}"></td></tr>
+</table>
+</form>

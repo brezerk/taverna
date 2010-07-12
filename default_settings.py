@@ -113,3 +113,10 @@ PARSER_ENGINES = (
     (2, 'Markdown'),
 )
 
+# Limit posts per page for blog, forums. e.t.c.
+PAGE_LIMITATIONS = {
+    'BLOG_POSTS': 10,
+    'BLOG_COMMENTS': 10,
+    'FORUM_COMMENTS': 10,
+}
+

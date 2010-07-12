@@ -36,7 +36,8 @@ def forum(request, forum_id):
 @rr('forum/thread.html')
 def thread(request, post_id, page = 1):
     startpost = Post.objects.get(pk = post_id)
-    paginator = Paginator(Post.objects.filter(thread = startpost)[1:], 5)
+    from django.conf import settings
+    paginator = Paginator(Post.objects.filter(thread = startpost)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
     try:
         thread = paginator.page(page)
@@ -62,7 +63,8 @@ def reply(request, post_id):
             post.owner = request.user
             post.save()
 
-            paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], 5)
+            from django.conf import settings
+            paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
             last_page = paginator.num_pages
 
             if post.forum is None:
