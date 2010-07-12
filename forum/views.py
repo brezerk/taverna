@@ -55,7 +55,7 @@ def reply(request, post_id):
             post.owner = request.user
             post.save()
             if post.forum is None:
-                redirect = reverse("blog.views.post_view", args = [post.blog_post.pk])
+                redirect = "%s#post_%s" % (reverse("blog.views.post_view", args = [post.blog_post.pk]), post.pk)
             else:
                 redirect = "%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), post.pk)
             return HttpResponseRedirect(redirect)
