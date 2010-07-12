@@ -11,12 +11,12 @@
 {% include "forum/post.inc.html" %}
 {% endfor %}
 
-<table>
 <form action="{% url blogs.views.post_comment post.pk %}" method=post>
+<table>
 {% csrf_token %}
 {{comment_form}}
-<tr><td><td><input type=submit value="{% trans "Send" %}">
-</form>
+<tr><td>&nbsp;</td><td><input type=submit value="{% trans "Send" %}"></td></tr>
 </table>
+</form>
 
 {% endblock %}
