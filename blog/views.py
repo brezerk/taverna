@@ -24,7 +24,11 @@ def post_comment(request, post_id):
         comment.blog_post = Post.objects.get(pk = post_id)
         comment.owner = request.user
         comment.save()
-        return HttpResponseRedirect(reverse(post_view, args = [post_id]))
+
+        paginator = Paginator(Post.objects.get(pk = post_id).post_set.all(), 5)
+        last_page = paginator.num_pages
+
+        return HttpResponseRedirect("%s#post_%s" % ( reverse(post_view, args = [last_page, post_id]), comment.pk) )
 
 @login_required()
 @rr('blog/settings.html')
