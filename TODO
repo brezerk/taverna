@@ -2,12 +2,9 @@
  == Blogs ==
 
  Edit posts: 
-     * User can edit own posts and all users with good carma, can edit public blog posts;
+     * User can edit own posts;
      * Record edit actions and display them in the bottom of the post;
      * Make something like ----cut---- (brezerk: WTF IS THIS? O.o)
-
- Paginator:
-     * Use paginator for post comments view;
 
  == General ==
 
@@ -30,9 +27,6 @@
  Tags:
      * Reate tags from post title example: [php][sux][LiveJornal] bla-bla-bla
      * View search results for selected tag;
-
- Comments:
-     * Integrate blog comments with forum module;
 
  Paginator:
      * Use paginator for forum and comments view;
