@@ -203,9 +203,6 @@ form table { width: 600px; }
 #forum_posts tr.even { background-color: #332; }
 #forum_posts td.title { width: 60%; }
 
-.thread p,h4 { margin: 0; padding: 0; }
-.thread div { margin: 1pt; padding: 5pt; background-color: #444; }
-
 input, select, textarea {
     width: 100%;
     background-color: #606060;

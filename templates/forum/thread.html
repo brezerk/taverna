@@ -1,15 +1,38 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block content %}
-<div class=thread>
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td>
+<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
+<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> →
+<a href='{% url forum.views.thread startpost.forum.pk %}'>{{ startpost.title }}</a>
+</td>
 
-<h1><a href="{% url forum.views.forum startpost.forum.pk %}">{{startpost.forum.name}}</a> :: <a>{{startpost.title}}</a></h1>
+<td align='right'>
+    [<a href='/{{user_info.username}}/'>RSS</a>]
+
+{% if user.is_authenticated %}
+    {% if user.profile.can_create_topic %}
+    [<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
+    {% endif %}
+{% endif %}
+</td>
+</tr>
+</table>
+{% endblock %}
+
+{% block content %}
+
 {% with startpost as post %}
 {% include "forum/post.inc.html" %}
 {% endwith %}
+<p style='text-align: center'>
+{% trans "Messages are sorted by the add date in reverse order" %}
+</p>
 {% for post in thread %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
 
-</div>
 {% endblock %}

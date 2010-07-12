@@ -4,7 +4,11 @@
 <div class="post" id="post_{{post.pk}}">
 <table border='0px'>
 <tr><td>
+{% if post.blog_post %}
 [<a href='{% url blog.views.post_view post.blog_post.pk %}#post_{{ post.pk }}'>#</a>]
+{% else %}
+[<a href='{% url forum.views.thread startpost.forum.pk %}#post_{{ post.pk }}'>#</a>]
+{% endif %}
 {% if post.reply_to %}
 {% trans "Reply to:" %}
 {% if post.reply_to = startpost %}
@@ -15,7 +19,7 @@
 {% endif %}
 </td></tr>
 <tr><td>
-<h3>{{post.title}}</h3>
+<b>{{post.title}}</b>
 {{post.text|markup:post.parser|safe}}
 <small><span class='plus'><a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}</small>
 {% if user.profile.can_create_comment %}
