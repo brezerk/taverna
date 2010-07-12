@@ -7,7 +7,7 @@
 <tr>
 <td>
 {% if blog_info.desc %}
-<a href='{% url blogs.views.index %}'>{% trans "Blog" %}</a> :. {{ blog_info.desc }}
+<a href='{% url blogs.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blogs.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
 {% else %}
 {% trans "Blog's traker" %}
 {% endif %}
@@ -40,11 +40,7 @@
 
 {% if blog_posts.object_list %}
     {% for post in blog_posts.object_list %}
-        {% include 'blog/topic_body.html' %}
-    {% endfor %}
-{% else %}
-    {% for post in blog_posts %}
-        {% include 'blog/topic_body.html' %}
+        {% include 'blog/post.inc.html' %}
     {% endfor %}
 {% endif %}
 

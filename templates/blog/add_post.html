@@ -22,7 +22,7 @@
 
 {% if form.cleaned_data %}
 {% with form.cleaned_data as post %}
-    {% include 'blog/topic_body.html' %}
+    {% include 'blog/post.inc.html' %}
 {% endwith %}
 {% endif %}
 

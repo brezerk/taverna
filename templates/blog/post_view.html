@@ -4,7 +4,7 @@
 {% block content %}
 
 {% with 1 as dont_strip %}
-{% include 'blog/topic_body.html' %}
+{% include "blog/post.inc.html" %}
 {% endwith %}
 
 {% for post in post.post_set.all %}
