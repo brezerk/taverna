@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     (r'^blog/libsettings-0.so$', 'blogs.views.settings'),
     (r'^blog/libpost-0.so.(?P<post_id>\d+)$', 'blogs.views.post_view'),
     (r'^blog/libtag-0.so.(?P<tag_id>\d+)$', 'blogs.views.tags_search'),
+    (r'^blog/libtag-(?P<page>\d+).so.(?P<tag_id>\d+)$', 'blogs.views.tags_search'),
     (r'^blog/libcomment.so.(?P<post_id>\d+)$', 'blogs.views.post_comment'),
 
     (r'^forum.so$', 'forum.views.index'),

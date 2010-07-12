@@ -6,10 +6,14 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-{% if blog_info.desc %}
-<a href='{% url blogs.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blogs.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
+{% if tag %}
+{% trans "Search results for tag:" %} {{ tag.name }}
 {% else %}
-{% trans "Blog's traker" %}
+    {% if blog_info %}
+        <a href='{% url blogs.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blogs.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
+    {% else %}
+        {% trans "Blog's traker" %}
+    {% endif %}
 {% endif %}
 </td>
 

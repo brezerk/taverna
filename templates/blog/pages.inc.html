@@ -3,7 +3,17 @@
 {% if blog_posts.paginator.num_pages > 1 %}
 <div class='pages'>[{% trans "Page" %} 
 {% if blog_posts.has_previous %}
-<a href='{% url blogs.views.index blog_posts.previous_page_number %}'>←</a>
+<a href='
+        {% if tag %}
+            {% url blogs.views.tags_search blog_posts.previous_page_number tag.pk %}
+        {% else %}
+            {% if blog_info %}
+                {% url blogs.views.view blog_posts.previous_page_number blog_info.pk %}
+            {% else %}
+                {% url blogs.views.index blog_posts.previous_page_number %}
+            {% endif %}
+        {% endif %}
+'>←</a>
 {% else %}
 ←
 {% endif %}
@@ -12,16 +22,30 @@
         <b>{{page}}</b>
     {% else %}
         <a href='
-        {% if blog_info.desc %}
-            {% url blogs.views.view page blog_info.pk %}
+        {% if tag %}
+            {% url blogs.views.tags_search page tag.pk %}
         {% else %}
-            {% url blogs.views.index page %}
+            {% if blog_info %}
+                {% url blogs.views.view page blog_info.pk %}
+            {% else %}
+                {% url blogs.views.index page %}
+            {% endif %}
         {% endif %}
         '>{{page}}</a>
     {% endif %}
 {% endfor %}
 {% if blog_posts.has_next %}
-<a href='{% url blogs.views.index blog_posts.next_page_number %}'>→</a>
+<a href='
+        {% if tag %}
+            {% url blogs.views.tags_search blog_posts.next_page_number tag.pk %}
+        {% else %}
+            {% if blog_info %}
+                {% url blogs.views.view blog_posts.next_page_number blog_info.pk %}
+            {% else %}
+                {% url blogs.views.index blog_posts.next_page_number %}
+            {% endif %}
+        {% endif %}
+'>→</a>
 {% else %}
 →
 {% endif %}

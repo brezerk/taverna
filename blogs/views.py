@@ -100,15 +100,23 @@ def post_view(request, post_id):
     return { 'post': get_object_or_404(Post, pk = post_id), 'comment_form': CommentForm() }
 
 @rr('blog/blog.html')
-def tags_search(request, tag_id):
+def tags_search(request, tag_id, page = 1):
     #FIXME: use paginator for posts view!!!
     blog_posts = None
     try:
-        blog_posts = Post.objects.filter(tags = tag_id).order_by('-created')[:10]
-    except (Blog.DoesNotExist, Post.DoesNotExist):
+        posts = Post.objects.filter(tags = tag_id).order_by('-created')[:10]
+        paginator = Paginator(posts, 1)
+
+        tag = Tag.objects.get(pk=tag_id);
+
+        try:
+            blog_posts = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            blog_posts = paginator.page(paginator.num_pages)
+    except (Tag.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
-    return {'blog_posts': blog_posts }
+    return {'blog_posts': blog_posts, 'tag': tag }
 
 @rr('blog/blog.html')
 def view(request, blog_id, page = 1):

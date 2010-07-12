@@ -24,7 +24,7 @@ class Post(models.Model):
     created = models.DateTimeField(editable = False, auto_now_add = True)
     class Meta:
         ordering = ('created', )
-    
+
 class ForumVote(models.Model):
     forum = models.ForeignKey(Forum)
     user = models.ForeignKey(User)
