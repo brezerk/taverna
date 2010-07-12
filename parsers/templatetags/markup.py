@@ -55,3 +55,11 @@ def strippost(value, post):
     else:
         value = markup(value, post.parser)
     return value
+
+@register.filter
+def pg(value, paginator):
+    for page in paginator.page_range:
+        if value in paginator.page(page).object_list:
+            return page
+
+    return 0;
