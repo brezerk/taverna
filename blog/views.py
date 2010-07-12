@@ -96,15 +96,23 @@ def post_add(request):
         'dont_strip': True}
 
 @rr('blog/post_view.html')
-def post_view(request, post_id):
-    return { 'post': get_object_or_404(Post, pk = post_id), 'comment_form': CommentForm() }
+def post_view(request, post_id, page = 1):
+    post = Post.objects.get(pk = post_id)
+    paginator = Paginator(post.post_set.all(), 5)
+
+    try:
+        comments = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        comments = paginator.page(paginator.num_pages)
+
+    return { 'post': post, 'comments': comments, 'comment_form': CommentForm() }
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id, page = 1):
     #FIXME: use paginator for posts view!!!
     blog_posts = None
     try:
-        posts = Post.objects.filter(tags = tag_id).order_by('-created')[:10]
+        posts = Post.objects.filter(tags = tag_id).order_by('-created')
         paginator = Paginator(posts, 10)
 
         tag = Tag.objects.get(pk=tag_id);

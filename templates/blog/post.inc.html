@@ -35,13 +35,18 @@
 {% else %}
 {% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}
 {% endif %}
-</a></span> | <a href='
+</a></span> 
+
+{% if not dont_show_comment_count %}
+| <a href='
 {% if post.id %}
 {% url blog.views.post_view post.id %}
 {% else %}
 {% url blog.views.post_view post.blog.id %}
 {% endif %}
-'>{% trans "Comments" %}: {{ post.post_set.all.count }}</a></p>
+'>{% trans "Comments" %}: {{ post.post_set.all.count }}</a>
+{% endif %}
+</p>
 </div>
 </td>
 <td width='40px'>&nbsp;</td>

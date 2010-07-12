@@ -1,0 +1,29 @@
+{% load i18n %}
+
+{% if comments.paginator.num_pages > 1 %}
+<div class='pages'>[{% trans "Page" %} 
+{% if comments.has_previous %}
+<a href='
+        {%url blog.views.post_view comments.previous_page_number post.pk %}
+'>←</a>
+{% else %}
+←
+{% endif %}
+{% for page in comments.paginator.page_range %}
+    {% if comments.number == page %}
+        <b>{{page}}</b>
+    {% else %}
+        <a href='
+        {%url blog.views.post_view page post.pk %}
+        '>{{page}}</a>
+    {% endif %}
+{% endfor %}
+{% if comments.has_next %}
+<a href='
+        {%url blog.views.post_view comments.next_page_number post.pk %}
+'>→</a>
+{% else %}
+→
+{% endif %}
+]</div>
+{% endif %}

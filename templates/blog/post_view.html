@@ -27,14 +27,20 @@
 {% block content %}
 
 {% with 1 as dont_strip %}
+{% with 1 as dont_show_comment_count %}
 {% include "blog/post.inc.html" %}
 {% endwith %}
+{% endwith %}
+
+{% include "forum/pages.inc.html" %}
 
 <div class='news'>
-{% for post in post.post_set.all %}
+{% for post in comments.object_list %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
 </div>
+
+{% include "forum/pages.inc.html" %}
 
 <form action="{% url blog.views.post_comment post.pk %}" method=post>
 <table>
