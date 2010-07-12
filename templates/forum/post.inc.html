@@ -1,22 +1,27 @@
 {% load i18n %}
 {% load markup %}
 
-<div class=post id="post_{{post.pk}}">
+<div class="post" id="post_{{post.pk}}">
+<table border='0px'>
+<tr><td>
+[<a href='{% url blog.views.post_view post.blog_post.pk %}#post_{{ post.pk }}'>#</a>]
 {% if post.reply_to %}
-<h5>
-Reply to: 
+{% trans "Reply to:" %}
 {% if post.reply_to = startpost %}
 {% trans "Start post" %}
 {% else %}
-<a href="#post_{{post.reply_to.pk}}">{{post.reply_to.owner.profile.get_visible_name}}</a>
+<a href="#post_{{post.reply_to.pk}}" onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} {{post.reply_to.created|date:"d.m.Y H:i:s"}}
 {% endif %}
-</h5>
 {% endif %}
-<h4>{{post.title}}</h4>
-<p>{{post.text|markup:post.parser|safe}}</p>
-<small>{{post.owner.profile.get_visible_name}} @ {{post.created}}</small>
+</td></tr>
+<tr><td>
+<h3>{{post.title}}</h3>
+{{post.text|markup:post.parser|safe}}
+<small><span class='plus'><a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}</small>
 {% if user.profile.can_create_comment %}
-<a href="{% url forum.views.reply post.pk %}">{% trans "Reply" %}</a>
+<br><a href="{% url forum.views.reply post.pk %}">[{% trans "Reply on this message" %}]</a>
 {% endif %}
+</td></tr>
+</table>
 </div>
 

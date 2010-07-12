@@ -30,9 +30,11 @@
 {% include "blog/post.inc.html" %}
 {% endwith %}
 
+<div class='news'>
 {% for post in post.post_set.all %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
+</div>
 
 <form action="{% url blog.views.post_comment post.pk %}" method=post>
 <table>

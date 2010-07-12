@@ -243,3 +243,10 @@ label, th {
 .pages {
     text-align: center;
 }
+
+.post {
+    background-color: #232323;
+    border: 1px solid #141414;
+    margin-bottom: 5px;
+}
+
