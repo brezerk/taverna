@@ -7,6 +7,8 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
+from django.utils.html import strip_tags
+
 class ForumForm(forms.ModelForm):
     class Meta:
         model = Forum
@@ -90,6 +92,7 @@ def topic_create(request, forum_id):
             post.owner = request.user
             post.save()
             post.thread = post
+            post.title = strip_tags(post.title)
             post.save()
             return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
     else:
