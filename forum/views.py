@@ -109,3 +109,9 @@ def forum_create(request):
             return HttpResponseRedirect(reverse(index))
     return {'form': ForumForm()}
 
+@rr('forum/tag_search.html')
+def tags_search(request, tag_name):
+    return {
+        'thread_list': Post.objects.filter(title__contains = tag_name, reply_to = None).order_by('-created'),
+        'search_tag': tag_name,
+    }

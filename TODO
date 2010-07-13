@@ -24,8 +24,7 @@
      * Use JavaScript to display edit form for comments (Yes, Like in LOR)
 
  Tags:
-     * Reate tags from post title example: [php][sux][LiveJornal] bla-bla-bla
-     * View search results for selected tag;
+     * Use paginator for result view
 
  Paginator:
      * Use paginator for forums list view;

@@ -5,6 +5,7 @@ from django.utils.html import linebreaks
 from taverna.parsers.engines.phpBB.postmarkup import render_bbcode
 import markdown
 import string
+import re
 
 from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape
@@ -47,11 +48,23 @@ def tags(value):
     return value
 
 @register.filter
+def forumtags(value):
+    tag_list = re.split('\[(.*?)\]', value.title)
+    tag_string = ""
+    for tag in tag_list:
+        if tag:
+           if tag != tag_list[-1]:
+               tag_string = tag_string + u"[<a href='/forum/tagsearch.so/%s'>%s</a>]" % (tag, tag)
+
+    tag_string = tag_string + u"<a href='%s'>%s</a>" % (reverse('forum.views.thread', args=[value.pk]), tag_list[-1])
+    return tag_string
+
+@register.filter
 def strippost(value, post):
     if len(value) > 382:
         value = value[:382]
         value = markup(value, post.parser)
-        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('blog.views.post_view', args=[post.id]), _("Read full post"))
+        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('blog.views.post_view', args=[post.pk]), _("Read full post"))
     else:
         value = markup(value, post.parser)
     return value

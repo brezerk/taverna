@@ -45,6 +45,7 @@ urlpatterns = patterns('',
     (r'^forum/thread-(?P<page>\d+).so.(?P<post_id>\d+)$', 'forum.views.thread'),
     (r'^forum/createtopic.so.(?P<forum_id>\d+)$', 'forum.views.topic_create'),
     (r'^forum/createforum.so$', 'forum.views.forum_create'),
+    (r'^forum/tagsearch.so/(?P<tag_name>.*)$', 'forum.views.tags_search'),
 
     (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
     (r'^pam/libprofile-0.so.(?P<user_id>\d+)$', 'userauth.views.profile_view'),

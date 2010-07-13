@@ -7,18 +7,11 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
-<a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a> {{ forum.description }}
+<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → {% trans "Search results for tag" %}: {{ search_tag }}
 </td>
 
 <td align='right'>
-    [<a href='/{{user_info.username}}/'>RSS</a>]
-
-{% if user.is_authenticated %}
-    {% if user.profile.can_create_topic %}
-    [<a href='{% url forum.views.topic_create forum.pk %}'>{% trans "Post new topic" %}</a>]
-    {% endif %}
-{% endif %}
+    [<a href='/{{user_info.username}}/'>{% trans "Back" %}</a>]
 </td>
 </tr>
 </table>
@@ -27,13 +20,14 @@
 {% block content %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Date" %}</th></tr>
+<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Forum" %}</th><th width='240px'>{% trans "Date" %}</th></tr>
 {% for post in thread_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
   {{post|forumtags|safe}} 
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
  </td>
+ <td><a href='{% url forum.views.forum post.forum.pk %}'>{{post.forum.name}}</a></td>
  <td>{{post.created|timesince}} {% trans "ago" %}</td>
 </tr>
 {% endfor %}
