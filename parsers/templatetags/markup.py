@@ -20,7 +20,7 @@ register = template.Library()
 def markup(value, parser):
 
     if parser == 1:
-        value = render_bbcode(value)
+        value = "<p>" + render_bbcode(value) + "</p>"
         return value
     elif parser == 2:
         value = markdown.markdown(value)

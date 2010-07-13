@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 
 from taverna.parsers.templatetags.markup import markup
 
+from django.core.paginator import Paginator
+
 class RssBlogTraker(Feed):
     title = _("Last 10 blogs topics")
     link = "/"
@@ -49,3 +51,39 @@ class RssBlog(Feed):
 class AtomBlog(RssBlog):
     feed_type = Atom1Feed
     subtitle = RssBlog.description
+
+class RssBlogComments(Feed):
+    link = ""
+    description = ""
+    title = ""
+
+    paginator = None
+
+    def get_object(self, request, post_id):
+        return get_object_or_404(Post, pk=post_id)
+
+    def items(self, obj):
+        self.title = obj.title
+        self.description = markup(obj.content, obj.parser)
+        self.paginator = Paginator(obj.post_set.all(), 10)
+        return obj.post_set.all().order_by('-created')[:10]
+
+    def item_title(self, item):
+        if item.title:
+            return item.title
+        else:
+            return item.blog_post.title
+
+    def item_description(self, item):
+        return item.text
+
+    def item_link(self, item):
+        for page in self.paginator.page_range:
+            if item in self.paginator.page(page).object_list:
+                return "%s#post_%s" % (reverse("blog.views.post_view", args=[page, item.blog_post.pk]), item.pk)
+
+        return reverse("blog.views.post_view", args=[item.blog_post.pk])
+
+class AtomBlogComments(RssBlogComments):
+    feed_type = Atom1Feed
+    subtitle = RssBlogComments.description

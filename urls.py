@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
+from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog, RssBlogComments, AtomBlogComments
 from taverna.blog.sitemaps import BlogSitemap
 from taverna.forum.feeds import RssForum, AtomForum
 
@@ -41,6 +41,7 @@ urlpatterns = patterns('',
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     url(r'^forum/librss-0.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
+    url(r'^forum/libatom-0.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_traker'),
     (r'^forum-(?P<page>\d+).so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum/posting.so$', 'forum.views.reply'),
     (r'^forum/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
@@ -60,6 +61,9 @@ urlpatterns = patterns('',
 
     url(r'^blog/librss-0.so.(?P<blog_id>\d+)$', RssBlog(), name='rss_blog'),
     url(r'^blog/libatom-0.so.(?P<blog_id>\d+)$', AtomBlog(), name='atom_blog'),
+
+    url(r'^blog/comments/librss-0.so.(?P<post_id>\d+)$', RssBlogComments(), name='rss_blog_comments'),
+    url(r'^blog/comments/libatom-0.so.(?P<post_id>\d+)$', AtomBlogComments(), name='atom_blog_comments'),
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 
