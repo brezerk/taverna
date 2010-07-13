@@ -27,11 +27,20 @@ def index(request):
     return {'forums': Forum.objects.all().order_by('name')}
 
 @rr('forum/forum.html')
-def forum(request, forum_id):
+def forum(request, forum_id, page = 1):
     forum = Forum.objects.get(pk = forum_id)
+    from django.conf import settings
+    paginator = Paginator(Post.objects.filter(reply_to = None).order_by('-created'),
+                                              settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        posts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        posts = paginator.page(paginator.num_pages)
+
     return {
         'forum': forum,
-        'thread_list': Post.objects.filter(forum = forum, reply_to = None).order_by('-created'),
+        'thread': posts,
         'form': PostForm(),
     }
 
@@ -113,8 +122,18 @@ def forum_create(request):
     return {'form': ForumForm()}
 
 @rr('forum/tag_search.html')
-def tags_search(request, tag_name):
+def tags_search(request, tag_name, page = 1):
+    from django.conf import settings
+    paginator = Paginator(Post.objects.filter(title__contains = tag_name,
+                                              reply_to = None).order_by('-created'),
+                                              settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        posts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        posts = paginator.page(paginator.num_pages)
+
     return {
-        'thread_list': Post.objects.filter(title__contains = tag_name, reply_to = None).order_by('-created'),
+        'thread': posts,
         'search_tag': tag_name,
     }

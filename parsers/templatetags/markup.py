@@ -54,7 +54,7 @@ def forumtags(value):
     for tag in tag_list:
         if tag:
            if tag != tag_list[-1]:
-               tag_string = tag_string + u"[<a href='/forum/tagsearch.so/%s'>%s</a>]" % (tag, tag)
+               tag_string = tag_string + u"[<a href='/forum/tagsearch-0.so/%s'>%s</a>]" % (tag, tag)
 
     tag_string = tag_string + u"<a href='%s'>%s</a>" % (reverse('forum.views.thread', args=[value.pk]), tag_list[-1])
     return tag_string

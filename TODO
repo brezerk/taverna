@@ -23,12 +23,6 @@
  Redesing:
      * Use JavaScript to display edit form for comments (Yes, Like in LOR)
 
- Tags:
-     * Use paginator for result view
-
- Paginator:
-     * Use paginator for forums list view;
-
  == Library ==
 
  Test integration:

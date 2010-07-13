@@ -32,13 +32,13 @@
 {% trans "Messages are sorted by the add date in reverse order" %}
 </p>
 
-{% include "forum/pages.inc.html" %}
+{% include "forum/comments.pages.inc.html" %}
 
 {% for post in thread.object_list %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
 
-{% include "forum/pages.inc.html" %}
+{% include "forum/comments.pages.inc.html" %}
 
 <script lang='text/javascript'>
     highlightOnLoad();

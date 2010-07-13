@@ -5,10 +5,10 @@
 <div class='pages'>[{% trans "Page" %} 
 {% if thread.has_previous %}
 <a href='
-        {% if search_tag %}
-            {%url forum.views.tags_search thread.previous_page_number search_tag %}
+        {% if startpost %}
+            {%url forum.views.thread thread.previous_page_number startpost.pk %}
         {% else %}
-            {%url forum.views.forum thread.previous_page_number forum.pk %}
+            {%url blog.views.post_view thread.previous_page_number post.pk %}
         {% endif %}
 '>←</a>
 {% else %}
@@ -19,20 +19,20 @@
         <b>{{page}}</b>
     {% else %}
         <a href='
-        {% if search_tag %}
-            {%url forum.views.tags_search page search_tag %}
+        {% if startpost %}
+            {%url forum.views.thread page startpost.pk %}
         {% else %}
-            {%url forum.views.forum page forum.pk %}
+            {%url blog.views.post_view page post.pk %}
         {% endif %}
         '>{{page}}</a>
     {% endif %}
 {% endfor %}
 {% if thread.has_next %}
 <a href='
-        {% if search_tag %}
-            {%url forum.views.tags_search thread.next_page_number search_tag %}
+        {% if startpost %}
+            {%url forum.views.thread thread.next_page_number startpost.pk %}
         {% else %}
-            {%url forum.views.forum thread.next_page_number forum.pk %}
+            {%url blog.views.post_view thread.next_page_number post.pk %}
         {% endif %}
 '>→</a>
 {% else %}
