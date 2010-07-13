@@ -1,9 +1,28 @@
+{% extends "base.html" %}
 {% load i18n %}
 
-<form action="{% url blog.views.post_comment post.pk %}" method=post>
+{% block title %}{% trans "Adding new topic" %}{% endblock %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td width='300'>{% trans "Adding new topic" %}</td>
+
+<td align='right'>
+[<a href='{% url blog.views.post_view post_id %}'>{% trans "Cancel" %}</a>]
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+<form action="{% url blog.views.post_comment post_id %}" method=post>
 <table>
 {% csrf_token %}
-{{comment_form}}
+{{form}}
 <tr><td>&nbsp;</td><td><input type=submit value="{% trans "Send" %}"></td></tr>
 </table>
 </form>
+{% endblock %}

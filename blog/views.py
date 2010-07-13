@@ -17,18 +17,22 @@ from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
 
 @login_required()
+@rr('blog/reply.html')
 def post_comment(request, post_id):
-    form = CommentForm(request.POST)
-    if form.is_valid() and request.user.profile.can_create_comment():
-        comment = form.save(commit = False)
-        comment.blog_post = Post.objects.get(pk = post_id)
-        comment.owner = request.user
-        comment.save()
-        from django.conf import settings
-        paginator = Paginator(Post.objects.get(pk = post_id).post_set.all(), settings.PAGE_LIMITATIONS["BLOG_COMMENTS"])
-        last_page = paginator.num_pages
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid() and request.user.profile.can_create_comment():
+            comment = form.save(commit = False)
+            comment.blog_post = Post.objects.get(pk = post_id)
+            comment.owner = request.user
+            comment.save()
+            from django.conf import settings
+            paginator = Paginator(Post.objects.get(pk = post_id).post_set.all(), settings.PAGE_LIMITATIONS["BLOG_COMMENTS"])
+            last_page = paginator.num_pages
 
-        return HttpResponseRedirect("%s#post_%s" % ( reverse(post_view, args = [last_page, post_id]), comment.pk) )
+            return HttpResponseRedirect("%s#post_%s" % ( reverse(post_view, args = [last_page, post_id]), comment.pk) )
+    else:
+        return {'form': CommentForm(), 'post_id': post_id}
 
 @login_required()
 @rr('blog/settings.html')

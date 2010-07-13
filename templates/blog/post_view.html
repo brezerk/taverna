@@ -12,11 +12,8 @@
             [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
 
 {% if user.is_authenticated %}
-    {% if blog_info.owner = user or blog_info.owner.id = 1 or not blog_info %}
-    [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
-    {% if blog_info.owner = user %}
-    [<a href='{% url blog.views.settings %}'>{% trans "Blog settings" %}</a>]
-    {% endif %}
+    {% if user.profile.can_create_comment %}
+    [<a href='{% url blog.views.post_comment post.pk %}'>{% trans "Add comment" %}</a>]
     {% endif %}
 {% endif %}
    
