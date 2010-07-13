@@ -7,7 +7,7 @@ from django.contrib import admin
 
 from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog, RssBlogComments, AtomBlogComments
 from taverna.blog.sitemaps import BlogSitemap
-from taverna.forum.feeds import RssForum, AtomForum
+from taverna.forum.feeds import RssForum, AtomForum, RssForumComments, AtomForumComments
 
 admin.autodiscover()
 
@@ -40,13 +40,20 @@ urlpatterns = patterns('',
 
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
+
     url(r'^forum/librss-0.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
     url(r'^forum/libatom-0.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_traker'),
+
+
     (r'^forum-(?P<page>\d+).so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum/posting.so$', 'forum.views.reply'),
     (r'^forum/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
     (r'^forum/thread-0.so.(?P<post_id>\d+)$', 'forum.views.thread'),
     (r'^forum/thread-(?P<page>\d+).so.(?P<post_id>\d+)$', 'forum.views.thread'),
+
+    url(r'^forum/thread/librss-0.so.(?P<post_id>\d+)$', RssForumComments(), name='rss_forum_comments'),
+    url(r'^forum/thread/libatom-0.so.(?P<post_id>\d+)$', AtomForumComments(), name='atom_forum_comments'),
+
     (r'^forum/createtopic.so.(?P<forum_id>\d+)$', 'forum.views.topic_create'),
     (r'^forum/createforum.so$', 'forum.views.forum_create'),
     (r'^forum/tagsearch-0.so/(?P<tag_name>.*)$', 'forum.views.tags_search'),

@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 
 from taverna.parsers.templatetags.markup import markup
 
+from django.core.paginator import Paginator
+
 class RssForum(Feed):
     link = ""
     description = ""
@@ -31,3 +33,41 @@ class RssForum(Feed):
 class AtomForum(RssForum):
     feed_type = Atom1Feed
     subtitle = RssForum.description
+
+class RssForumComments(Feed):
+    link = ""
+    description = ""
+    title = ""
+
+    paginator = None
+
+    def get_object(self, request, post_id):
+        return get_object_or_404(Post, pk=post_id)
+
+    def items(self, obj):
+        self.title = obj.title
+        self.description = markup(obj.text, obj.parser)
+
+        comments = Post.objects.filter(thread = obj)[1:]
+        self.paginator = Paginator(comments, 10)
+        return Post.objects.filter(thread = obj).order_by('-created')[:10]
+
+    def item_title(self, item):
+        if item.title:
+            return item.title
+        else:
+            return item.thread.title
+
+    def item_description(self, item):
+        return item.text
+
+    def item_link(self, item):
+        for page in self.paginator.page_range:
+            if item in self.paginator.page(page).object_list:
+                return "%s#post_%s" % (reverse("forum.views.thread", args=[page, item.thread.pk]), item.pk)
+
+        return reverse("forum.views.thread", args=[item.thread.pk])
+
+class AtomForumComments(RssForumComments):
+    feed_type = Atom1Feed
+    subtitle = RssForumComments.description
