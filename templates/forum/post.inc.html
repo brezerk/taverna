@@ -19,7 +19,11 @@
     {% if post.reply_to in thread.object_list %}
         #post_{{post.reply_to.pk}}
     {% else %}
-        {% url blog.views.post_view post.reply_to|pg:thread.paginator post.blog_post.pk %}#post_{{post.reply_to.pk}}
+        {% if post.blog_post %}
+            {% url blog.views.post_view post.reply_to|pg:thread.paginator post.blog_post.pk %}#post_{{post.reply_to.pk}}
+        {% else %}
+            {% url forum.views.thread post.reply_to|pg:thread.paginator startpost.forum.pk %}#post_{{post.reply_to.pk}}
+        {% endif %}
     {% endif %}
 " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} {{post.reply_to.created|date:"d.m.Y H:i:s"}}
 {% endif %}
