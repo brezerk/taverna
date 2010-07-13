@@ -32,8 +32,16 @@
 
  == Library ==
 
- Base implemetation:
-     * Discuss library functionary. I have some ideas for this... :]
+ Test integration:
+     * I found some simple wiki engines, which can be used for library
+       implementation;
+      
+       Please, test it;
+
+       Here some of them:
+            * django-simple-wiki  ( http://code.google.com/p/django-simple-wiki/ )
+            * django-pad          ( http://code.google.com/p/django-pad/ )
+            * sf-django-wiki      ( https://launchpad.net/sf-django-wiki/ )
 
  == Admin ===
 
