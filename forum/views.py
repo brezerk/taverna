@@ -124,7 +124,7 @@ def forum_create(request):
 @rr('forum/tag_search.html')
 def tags_search(request, tag_name, page = 1):
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(title__contains = tag_name,
+    paginator = Paginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
                                               reply_to = None).order_by('-created'),
                                               settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from blog import models as blog_models
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
@@ -10,6 +11,10 @@ class Forum(models.Model):
     owner = models.ForeignKey(User, editable = False)
     rating = models.IntegerField(editable = False, default = 0)
     created = models.DateTimeField(editable = False, auto_now_add = True)
+
+    def get_absolute_url(self):
+        return reverse("forum.views.forum", args = [self.pk])
+
 
 class Post(models.Model):
     owner = models.ForeignKey(User, editable = False, related_name = 'forum_post')
@@ -24,6 +29,10 @@ class Post(models.Model):
     created = models.DateTimeField(editable = False, auto_now_add = True)
     class Meta:
         ordering = ('created', )
+
+    def get_absolute_url(self):
+        return reverse("forum.views.thread", args = [self.pk])
+
 
 class ForumVote(models.Model):
     forum = models.ForeignKey(Forum)

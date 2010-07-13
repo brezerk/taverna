@@ -7,6 +7,7 @@ from django.contrib import admin
 
 from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
 from taverna.blog.sitemaps import BlogSitemap
+from taverna.forum.feeds import RssForum, AtomForum
 
 admin.autodiscover()
 
@@ -39,6 +40,7 @@ urlpatterns = patterns('',
 
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
+    url(r'^forum/librss-0.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
     (r'^forum-(?P<page>\d+).so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum/posting.so$', 'forum.views.reply'),
     (r'^forum/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),

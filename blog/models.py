@@ -15,7 +15,7 @@ class Blog(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("blogs.views.view", args = [self.id])
+        return reverse("blog.views.view", args = [self.pk])
 
 class Tag(models.Model):
     name = models.CharField(max_length = 32, unique = True)
@@ -41,7 +41,7 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("blogs.views.post_view", args = [self.id])
+        return reverse("blog.views.post_view", args = [self.pk])
 
 class BlogPostVote(models.Model):
     post = models.ForeignKey(Post)

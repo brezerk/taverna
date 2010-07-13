@@ -12,7 +12,7 @@
 </td>
 
 <td align='right'>
-    [<a href='/{{user_info.username}}/'>RSS</a>]
+    [<a href='{% url rss_forum_traker forum.pk %}'>RSS</a>]
 
 {% if user.is_authenticated %}
     {% if user.profile.can_create_topic %}
