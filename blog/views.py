@@ -156,6 +156,26 @@ def view(request, blog_id, page = 1):
     return {'blog_posts': blog_posts, 'blog_info': blog_info }
 
 @rr('blog/blog.html')
+def view_all(request, user_id, page = 1):
+    blog_posts = None
+    blog_info = None
+    try:
+        posts_owner = User.objects.get(pk = user_id)
+        posts = Post.objects.filter(owner = user_id).order_by('-created')
+        from django.conf import settings
+        paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+
+        try:
+            blog_posts = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            blog_posts = paginator.page(paginator.num_pages)
+
+    except (Blog.DoesNotExist, Post.DoesNotExist):
+        return HttpResponseRedirect("/")
+
+    return {'blog_posts': blog_posts, 'posts_owner': posts_owner}
+
+@rr('blog/blog.html')
 def index(request, page = 1):
     posts = Post.objects.order_by('-created')
 

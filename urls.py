@@ -25,6 +25,9 @@ urlpatterns = patterns('',
     (r'^blog/libblog-0.so.(?P<blog_id>\d+)$', 'blog.views.view'),
     (r'^blog/libblog-(?P<page>\d+).so.(?P<blog_id>\d+)$', 'blog.views.view'),
 
+    (r'^blog/all/libblog-0.so.(?P<user_id>\d+)$', 'blog.views.view_all'),
+    (r'^blog/all/libblog-(?P<page>\d+).so.(?P<user_id>\d+)$', 'blog.views.view_all'),
+
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
     (r'^blogs/$', 'blog.views.list'),

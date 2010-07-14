@@ -10,7 +10,11 @@
             {% if blog_info %}
                 {% url blog.views.view blog_posts.previous_page_number blog_info.pk %}
             {% else %}
-                {% url blog.views.index blog_posts.previous_page_number %}
+                {% if posts_owner %}
+                    {% url blog.views.view_all blog_posts.previous_page_number posts_owner.pk %}
+                {% else %}
+                    {% url blog.views.index blog_posts.previous_page_number %}
+                {% endif %}
             {% endif %}
         {% endif %}
 '>←</a>
@@ -28,7 +32,11 @@
             {% if blog_info %}
                 {% url blog.views.view page blog_info.pk %}
             {% else %}
-                {% url blog.views.index page %}
+                {% if posts_owner %}
+                    {% url blog.views.view_all page posts_owner.pk %}
+                {% else %}
+                    {% url blog.views.index page %}
+                {% endif %}
             {% endif %}
         {% endif %}
         '>{{page}}</a>
@@ -42,7 +50,11 @@
             {% if blog_info %}
                 {% url blog.views.view blog_posts.next_page_number blog_info.pk %}
             {% else %}
-                {% url blog.views.index blog_posts.next_page_number %}
+                {% if posts_owner %}
+                    {% url blog.views.view_all blog_posts.next_page_number posts_owner.pk %}
+                {% else %}
+                    {% url blog.views.index blog_posts.next_page_number %}
+                {% endif %}
             {% endif %}
         {% endif %}
 '>→</a>

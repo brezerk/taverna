@@ -12,7 +12,11 @@
     {% if blog_info %}
         <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
     {% else %}
-        {% trans "Blog's traker" %}
+        {% if posts_owner %}
+            {% trans "Blog topics of user:" %} {{ posts_owner.profile.get_visible_name }}
+        {% else %}
+            {% trans "Blog's traker" %}
+        {% endif %}
     {% endif %}
 {% endif %}
 </td>
