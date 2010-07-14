@@ -47,7 +47,7 @@
 {% include 'blog/pages.inc.html' %}
 
 {% if blog_posts.object_list %}
-    {% for post in blog_posts.object_list %}
+    {% for startpost in blog_posts.object_list %}
         {% include 'blog/post.inc.html' %}
     {% endfor %}
 {% endif %}

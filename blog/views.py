@@ -10,29 +10,13 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from django.contrib.auth.models import User
 from userauth.models import Profile
-from taverna.blog.models import Blog, Post, Tag
+from taverna.blog.models import Blog, Tag
+from taverna.forum.models import Post
+
 from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
-
-@login_required()
-@rr('blog/reply.html')
-def post_comment(request, post_id):
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid() and request.user.profile.can_create_comment():
-            comment = form.save(commit = False)
-            comment.blog_post = Post.objects.get(pk = post_id)
-            comment.owner = request.user
-            comment.save()
-            from django.conf import settings
-            paginator = Paginator(Post.objects.get(pk = post_id).post_set.all(), settings.PAGE_LIMITATIONS["BLOG_COMMENTS"])
-            last_page = paginator.num_pages
-
-            return HttpResponseRedirect("%s#post_%s" % ( reverse(post_view, args = [last_page, post_id]), comment.pk) )
-    else:
-        return {'form': CommentForm(), 'post_id': post_id}
 
 @login_required()
 @rr('blog/settings.html')
@@ -76,6 +60,8 @@ def post_add(request):
             post = super(PostForm, self).save(commit = False, **args)
             post.owner = request.user
             post.save()
+            post.thread = post
+            post.save()
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:
                     post.tags.add(Tag.objects.get(name = name))
@@ -102,19 +88,6 @@ def post_add(request):
         'preview': preview,
         'tags': tags,
         'dont_strip': True}
-
-@rr('blog/post_view.html')
-def post_view(request, post_id, page = 1):
-    post = Post.objects.get(pk = post_id)
-    from django.conf import settings
-    paginator = Paginator(post.post_set.all(), settings.PAGE_LIMITATIONS["BLOG_COMMENTS"])
-
-    try:
-        thread = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        thread = paginator.page(paginator.num_pages)
-
-    return { 'post': post, 'thread': thread, 'comment_form': CommentForm() }
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id, page = 1):
@@ -177,7 +150,7 @@ def view_all(request, user_id, page = 1):
 
 @rr('blog/blog.html')
 def index(request, page = 1):
-    posts = Post.objects.order_by('-created')
+    posts = Post.objects.exclude(blog = None).order_by('-created')
 
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])

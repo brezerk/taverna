@@ -16,11 +16,12 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
+        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('title', )
+        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
 
 @rr('forum/index.html')
 def index(request):
@@ -30,7 +31,7 @@ def index(request):
 def forum(request, forum_id, page = 1):
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(reply_to = None).order_by('-created'),
+    paginator = Paginator(Post.objects.filter(reply_to = None,forum = forum).order_by('-created'),
                                               settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
@@ -44,19 +45,6 @@ def forum(request, forum_id, page = 1):
         'form': PostForm(),
     }
 
-@rr('forum/thread.html')
-def thread(request, post_id, page = 1):
-    startpost = Post.objects.get(pk = post_id)
-    from django.conf import settings
-    paginator = Paginator(Post.objects.filter(thread = startpost)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
-
-    try:
-        thread = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        thread = paginator.page(paginator.num_pages)
-
-    return {'startpost': startpost, 'thread': thread}
-
 @login_required()
 @rr('forum/reply.html')
 def reply(request, post_id):
@@ -68,9 +56,9 @@ def reply(request, post_id):
         if form.is_valid():
             post = form.save(commit = False)
             post.reply_to = reply_to
-            post.blog_post = reply_to.blog_post
+#            post.blog = reply_to.blog
             post.thread = post.reply_to.thread
-            post.forum = post.reply_to.forum
+#            post.forum = post.reply_to.forum
             post.owner = request.user
             post.save()
 
@@ -78,11 +66,7 @@ def reply(request, post_id):
             paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
             last_page = paginator.num_pages
 
-            if post.forum is None:
-                redirect = "%s#post_%s" % (reverse("blog.views.post_view", args = [last_page, post.blog_post.pk]), post.pk)
-            else:
-                redirect = "%s#post_%s" % (reverse("forum.views.thread", args = [last_page, post.thread.pk]), post.pk)
-            return HttpResponseRedirect(redirect)
+            return HttpResponseRedirect("%s#post_%s" % (reverse("forum.views.thread_view", args = [last_page, post.thread.pk]), post.pk))
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
@@ -137,3 +121,17 @@ def tags_search(request, tag_name, page = 1):
         'thread': posts,
         'search_tag': tag_name,
     }
+
+# FIXME: remove old thread
+@rr('blog/post_view.html')
+def thread_view(request, post_id, page = 1):
+    startpost = Post.objects.get(pk = post_id)
+    from django.conf import settings
+    paginator = Paginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return { 'startpost': startpost, 'thread': thread, 'comment_form': PostForm() }

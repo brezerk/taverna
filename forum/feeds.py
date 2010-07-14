@@ -34,7 +34,8 @@ class AtomForum(RssForum):
     feed_type = Atom1Feed
     subtitle = RssForum.description
 
-class RssForumComments(Feed):
+
+class RssComments(Feed):
     link = ""
     description = ""
     title = ""
@@ -48,9 +49,12 @@ class RssForumComments(Feed):
         self.title = obj.title
         self.description = markup(obj.text, obj.parser)
 
-        comments = Post.objects.filter(thread = obj)[1:]
-        self.paginator = Paginator(comments, 10)
-        return Post.objects.filter(thread = obj).order_by('-created')[:10]
+        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk)
+
+        self.paginator = Paginator(thread_list, 10)
+
+
+        return thread_list.order_by('-created')[:10]
 
     def item_title(self, item):
         if item.title:
@@ -64,10 +68,11 @@ class RssForumComments(Feed):
     def item_link(self, item):
         for page in self.paginator.page_range:
             if item in self.paginator.page(page).object_list:
-                return "%s#post_%s" % (reverse("forum.views.thread", args=[page, item.thread.pk]), item.pk)
+                return "%s#post_%s" % (reverse("forum.views.thread_view", args=[page, item.thread.pk]), item.pk)
 
-        return reverse("forum.views.thread", args=[item.thread.pk])
+        return reverse("blog.views.view", args=[item.blog.pk])
 
-class AtomForumComments(RssForumComments):
+class AtomComments(RssComments):
     feed_type = Atom1Feed
-    subtitle = RssForumComments.description
+    subtitle = RssComments.description
+

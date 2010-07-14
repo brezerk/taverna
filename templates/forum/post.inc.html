@@ -5,11 +5,7 @@
 
 <table border='0px'>
 <tr><td>
-{% if post.blog_post %}
-[<a href='{% url blog.views.post_view post.blog_post.pk %}#post_{{ post.pk }}'>#</a>]
-{% else %}
-[<a href='{% url forum.views.thread startpost.forum.pk %}#post_{{ post.pk }}'>#</a>]
-{% endif %}
+[<a href='{% url forum.views.thread_view startpost.pk %}#post_{{ post.pk }}'>#</a>]
 {% if post.reply_to %}
 {% trans "Reply to:" %}
 {% if post.reply_to = startpost %}
@@ -19,11 +15,7 @@
     {% if post.reply_to in thread.object_list %}
         #post_{{post.reply_to.pk}}
     {% else %}
-        {% if post.blog_post %}
-            {% url blog.views.post_view post.reply_to|pg:thread.paginator post.blog_post.pk %}#post_{{post.reply_to.pk}}
-        {% else %}
-            {% url forum.views.thread post.reply_to|pg:thread.paginator startpost.forum.pk %}#post_{{post.reply_to.pk}}
-        {% endif %}
+        {% url forum.views.thread_view post.reply_to|pg:thread.paginator startpost.pk %}#post_{{post.reply_to.pk}}
     {% endif %}
 " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} {{post.reply_to.created|date:"d.m.Y H:i:s"}}
 {% endif %}

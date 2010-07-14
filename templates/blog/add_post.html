@@ -21,7 +21,7 @@
 {% block content %}
 
 {% if form.cleaned_data %}
-{% with form.cleaned_data as post %}
+{% with form.cleaned_data as startpost %}
     {% include 'blog/post.inc.html' %}
 {% endwith %}
 {% endif %}

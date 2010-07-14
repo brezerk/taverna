@@ -3,35 +3,48 @@
 
 <div class='news'>
 <h3>
+{% if startpost.blog %}
 
-<a href='{% url blog.views.view post.blog.id %}'>{{ post.blog.name }}</a>
+<a href='{% url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name }}</a>
 → <a href='
-{% if post.id %}
-{% url blog.views.post_view post.id %}'>{{ post.title }}
+{% if startpost.id %}
+{% url forum.views.thread_view startpost.id %}
 {% else %}
-{% url blog.views.post_view post.blog.id %}'>{{ post.title }}
+{% url blog.views.view startpost.blog.pk %}
 {% endif %}
+'>{{ startpost.title }}
 </a></h3>
+
+{% else %}
+
+<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a>
+→ <a href='{% url forum.views.thread_view startpost.pk %}'>{{ startpost.title }}
+</a></h3>
+
+{% endif %}
+
+
+
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr><td width='40px'>&nbsp;</td><td>
 <div class='content'>
 {% if dont_strip %}
-{{ post.content|markup:post.parser|safe }}
+{{ startpost.text|markup:startpost.parser|safe }}
 {% else %}
-{{ post.content|strippost:post|safe }}
+{{ startpost.text|strippost:startpost|safe }}
 {% endif %}
-{% if post.tags.all.0 %}
+{% if startpost.tags.all.0 %}
 <div class='tags'><p>{% trans "Tags" %}: 
-{% for tag in post.tags.all %}{% if not forloop.first %}, {% endif %}<a href='{% url blog.views.tags_search tag.pk %}'>{{ tag }}</a>{% endfor %}
+{% for tag in startpost.tags.all %}{% if not forloop.first %}, {% endif %}<a href='{% url blog.views.tags_search tag.pk %}'>{{ tag }}</a>{% endfor %}
 {% endif %}
-{% if post.tag_string %}
+{% if startpost.tag_string %}
 <div class='tags'><p>{% trans "Tags" %}: 
-{{ post.tag_string|tags|safe }}
+{{ startpost.tag_string|tags|safe }}
 </p></div>
 {% endif %}
-<p>[<span class='plus'><a href=''>▲</a></span>] {{ post.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='
-{% if post.owner %}
-{% url userauth.views.profile_view post.owner.id %}'>{{ post.owner.profile.get_visible_name }}
+<p>[<span class='plus'><a href=''>▲</a></span>] {{ startpost.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='
+{% if startpost.owner %}
+{% url userauth.views.profile_view startpost.owner.id %}'>{{ startpost.owner.profile.get_visible_name }}
 {% else %}
 {% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}
 {% endif %}
@@ -39,12 +52,12 @@
 
 {% if not dont_show_comment_count %}
 | <a href='
-{% if post.id %}
-{% url blog.views.post_view post.id %}
+{% if startpost.id %}
+{% url forum.views.thread_view startpost.id %}
 {% else %}
-{% url blog.views.post_view post.blog.id %}
+{% url blog.views.view startpost.blog.pk %}
 {% endif %}
-'>{% trans "Comments" %}: {{ post.post_set.all.count }}</a>
+'>{% trans "Comments" %}: Как их считать? :[</a>
 {% endif %}
 </p>
 </div>

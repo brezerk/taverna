@@ -5,9 +5,9 @@ from django.core.urlresolvers import reverse
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog, RssBlogComments, AtomBlogComments
+from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
 from taverna.blog.sitemaps import BlogSitemap
-from taverna.forum.feeds import RssForum, AtomForum, RssForumComments, AtomForumComments
+from taverna.forum.feeds import RssForum, AtomForum, RssComments, AtomComments
 
 admin.autodiscover()
 
@@ -18,6 +18,10 @@ sitemaps = {
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+
+
+    (r'^libthread-0.so.(?P<post_id>\d+)$', 'forum.views.thread_view'),
+    (r'^libthread-(?P<page>\d+).so.(?P<post_id>\d+)$', 'forum.views.thread_view'),
 
     (r'^$', 'blog.views.index'),
     (r'^blog/libblog-(?P<page>\d+).so$', 'blog.views.index'),
@@ -35,11 +39,8 @@ urlpatterns = patterns('',
     (r'^blogs/users/$', 'blog.views.list_users'),
     (r'^blog/libpost-new-1.so$', 'blog.views.post_add'),
     (r'^blog/libsettings-0.so$', 'blog.views.settings'),
-    (r'^blog/libpost-0.so.(?P<post_id>\d+)$', 'blog.views.post_view'),
-    (r'^blog/libpost-(?P<page>\d+).so.(?P<post_id>\d+)$', 'blog.views.post_view'),
     (r'^blog/libtag-0.so.(?P<tag_id>\d+)$', 'blog.views.tags_search'),
     (r'^blog/libtag-(?P<page>\d+).so.(?P<tag_id>\d+)$', 'blog.views.tags_search'),
-    (r'^blog/libcomment-0.so.(?P<post_id>\d+)$', 'blog.views.post_comment'),
 
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum-0.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
@@ -50,12 +51,10 @@ urlpatterns = patterns('',
 
     (r'^forum-(?P<page>\d+).so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum/posting.so$', 'forum.views.reply'),
-    (r'^forum/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
-    (r'^forum/thread-0.so.(?P<post_id>\d+)$', 'forum.views.thread'),
-    (r'^forum/thread-(?P<page>\d+).so.(?P<post_id>\d+)$', 'forum.views.thread'),
+    (r'^libreply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
 
-    url(r'^forum/thread/librss-0.so.(?P<post_id>\d+)$', RssForumComments(), name='rss_forum_comments'),
-    url(r'^forum/thread/libatom-0.so.(?P<post_id>\d+)$', AtomForumComments(), name='atom_forum_comments'),
+    url(r'^thread/librss-0.so.(?P<post_id>\d+)$', RssComments(), name='rss_comments'),
+    url(r'^thread/libatom-0.so.(?P<post_id>\d+)$', AtomComments(), name='atom_comments'),
 
     (r'^forum/createtopic.so.(?P<forum_id>\d+)$', 'forum.views.topic_create'),
     (r'^forum/createforum.so$', 'forum.views.forum_create'),
@@ -71,9 +70,6 @@ urlpatterns = patterns('',
 
     url(r'^blog/librss-0.so.(?P<blog_id>\d+)$', RssBlog(), name='rss_blog'),
     url(r'^blog/libatom-0.so.(?P<blog_id>\d+)$', AtomBlog(), name='atom_blog'),
-
-    url(r'^blog/comments/librss-0.so.(?P<post_id>\d+)$', RssBlogComments(), name='rss_blog_comments'),
-    url(r'^blog/comments/libatom-0.so.(?P<post_id>\d+)$', AtomBlogComments(), name='atom_blog_comments'),
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 

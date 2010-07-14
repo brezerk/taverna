@@ -1,5 +1,5 @@
 from django.contrib import admin
-from taverna.blog.models import Blog, Post, Tag
+from taverna.blog.models import Blog, Tag
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('name', 'desc', 'active', 'owner',)
@@ -7,11 +7,7 @@ class BlogAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner', 'blog', 'created')
-
 admin.site.register(Blog, BlogAdmin)
-admin.site.register(Post, PostAdmin)
 admin.site.register(Tag, TagAdmin)
 
 

@@ -1,5 +1,5 @@
 from django.contrib.sitemaps import Sitemap
-from taverna.blog.models import Post
+from taverna.forum.models import Post
 
 class BlogSitemap(Sitemap):
     changefreq = "always"
