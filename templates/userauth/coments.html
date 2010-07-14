@@ -20,6 +20,7 @@
 </td>
 </tr>
 </table>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -27,14 +28,21 @@
 {% include "userauth/pages.inc.html" %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th width='240px'>{% trans "Section" %}</th><th>{% trans "Topic title" %}</th><th width='240px'>{% trans "Date" %}</th></tr>
+<tr class='theader'><th width='100px'>{% trans "Section" %}</th><th width='240px'>{% trans "Seaction name" %}<th>{% trans "Topic title" %}</th><th width='180px'>{% trans "Date" %}</th></tr>
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
-    {% if post.reply_to.forum %}
+    {% if post.thread.forum %}
         {% trans "Forum" %}
     {% else %}
         {% trans "Blog" %}
+    {% endif %}
+ </td>
+ <td>
+    {% if post.thread.forum %}
+        <a href='{% url forum.views.forum post.thread.forum.pk %}'>{{ post.thread.forum.name }}</a>
+    {% else %}
+        <a href='{% url blog.views.view post.thread.blog.pk %}'>{{ post.thread.blog.name }}</a>
     {% endif %}
  </td>
  <td>
