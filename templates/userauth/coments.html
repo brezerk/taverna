@@ -46,7 +46,13 @@
     {% endif %}
  </td>
  <td>
- <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</td>
+ <a href='{% url forum.views.offset post.thread.pk post.id %}'>
+ {% if post.thread.forum %}
+ {{post.thread|forumtags|safe}}
+ {% else %}
+ {{post.thread.title}}
+ {% endif %}
+ </td>
  <td>{{post.created|date:"d.m.Y H:i"}}</td>
 </tr>
 {% endfor %}

@@ -48,7 +48,6 @@ urlpatterns = patterns('',
     url(r'^forum/librss-0.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
     url(r'^forum/libatom-0.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_traker'),
 
-
     (r'^forum-(?P<page>\d+).so.(?P<forum_id>\d+)$', 'forum.views.forum'),
     (r'^forum/posting.so$', 'forum.views.reply'),
     (r'^libreply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
