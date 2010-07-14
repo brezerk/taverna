@@ -180,7 +180,9 @@ def user_comments(request, user_id, page = 1):
     user_info = User.objects.get(pk = user_id)
 
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(owner = user_info,forum = None, blog = None).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None,
+                          blog = None).order_by('-created'),
+                          settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         thread = paginator.page(page)
@@ -189,3 +191,17 @@ def user_comments(request, user_id, page = 1):
 
     return {'thread': thread, 'user_info': user_info}
 
+@rr("userauth/coments.html")
+def notify(request, page = 1):
+    user_info = request.user
+
+    from django.conf import settings
+    paginator = Paginator(Post.objects.exclude(owner=user_info).filter(reply_to__owner = user_info,
+                          forum = None, blog = None).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return {'thread': thread}

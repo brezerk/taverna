@@ -69,6 +69,9 @@ urlpatterns = patterns('',
     (r'^pam/libcomments-0.so.(?P<user_id>\d+)$', 'userauth.views.user_comments'),
     (r'^pam/libcomments-(?P<page>\d+).so.(?P<user_id>\d+)$', 'userauth.views.user_comments'),
 
+    (r'^pam/libnotify-0.so$', 'userauth.views.notify'),
+    (r'^pam/libnotify-(?P<page>\d+).so$', 'userauth.views.notify'),
+
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 

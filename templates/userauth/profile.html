@@ -68,7 +68,7 @@
     <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>
     {% if user.username == user_info.username %}
-    <li><a href='/{{ user_info.username }}/notifyes'>{% trans "Notifyes" %}</a>
+    <li><a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>
     {% endif %}
 </ul>
 

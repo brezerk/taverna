@@ -7,8 +7,12 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
+{% if user_info %}
 {% trans "Commetns list of user" %}
 <a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a>
+{% else %}
+{% trans "Your's reply notiftes" %}
+{% endif %}
 </td>
 
 <td align='right'>
@@ -28,7 +32,7 @@
 {% include "userauth/pages.inc.html" %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th width='100px'>{% trans "Section" %}</th><th width='240px'>{% trans "Seaction name" %}<th>{% trans "Topic title" %}</th><th width='180px'>{% trans "Date" %}</th></tr>
+<tr class='theader'><th width='100px'>{% trans "Section" %}</th><th width='240px'>{% trans "Seaction name" %}<th>{% trans "Topic title" %}</th><th width='280px'>{% trans "Date" %}</th></tr>
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
@@ -46,14 +50,13 @@
     {% endif %}
  </td>
  <td>
- <a href='{% url forum.views.offset post.thread.pk post.id %}'>
- {% if post.thread.forum %}
- {{post.thread|forumtags|safe}}
- {% else %}
- {{post.thread.title}}
+ <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</a>
+ </td>
+ <td>{{post.created|date:"d.m.Y H:i"}}
+ {% if not user_info %}
+ {% trans "by" %} (<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{ post.owner.profile.get_visible_name }}</a>)
  {% endif %}
  </td>
- <td>{{post.created|date:"d.m.Y H:i"}}</td>
 </tr>
 {% endfor %}
 </table>
