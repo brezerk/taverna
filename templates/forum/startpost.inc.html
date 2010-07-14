@@ -8,7 +8,7 @@
 <a href='{% url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name }}</a>
 → <a href='
 {% if startpost.id %}
-{% url forum.views.thread_view startpost.id %}
+{% url forum.views.thread startpost.id %}
 {% else %}
 {% url blog.views.view startpost.blog.pk %}
 {% endif %}
@@ -18,7 +18,7 @@
 {% else %}
 
 <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a>
-→ <a href='{% url forum.views.thread_view startpost.pk %}'>{{ startpost.title }}
+→ <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}
 </a></h3>
 
 {% endif %}
@@ -53,7 +53,7 @@
 {% if not dont_show_comment_count %}
 | <a href='
 {% if startpost.id %}
-{% url forum.views.thread_view startpost.id %}
+{% url forum.views.thread startpost.id %}
 {% else %}
 {% url blog.views.view startpost.blog.pk %}
 {% endif %}

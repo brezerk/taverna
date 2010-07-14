@@ -5,17 +5,15 @@
 
 <table border='0px'>
 <tr><td>
-[<a href='{% url forum.views.thread_view startpost.pk %}#post_{{ post.pk }}'>#</a>]
+[<a href='{% url forum.views.thread startpost.pk %}#post_{{ post.pk }}'>#</a>]
 {% if post.reply_to %}
-{% trans "Reply to:" %}
-{% if post.reply_to = startpost %}
-{% trans "Start post" %}
-{% else %}
+{% if post.reply_to != startpost %}
+{% trans "Reply to" %}
     <a href="
     {% if post.reply_to in thread.object_list %}
         #post_{{post.reply_to.pk}}
     {% else %}
-        {% url forum.views.thread_view post.reply_to|pg:thread.paginator startpost.pk %}#post_{{post.reply_to.pk}}
+        {% url forum.views.thread post.reply_to|pg:thread.paginator startpost.pk %}#post_{{post.reply_to.pk}}
     {% endif %}
 " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} {{post.reply_to.created|date:"d.m.Y H:i:s"}}
 {% endif %}

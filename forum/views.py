@@ -66,7 +66,7 @@ def reply(request, post_id):
             paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
             last_page = paginator.num_pages
 
-            return HttpResponseRedirect("%s#post_%s" % (reverse("forum.views.thread_view", args = [last_page, post.thread.pk]), post.pk))
+            return HttpResponseRedirect("%s#post_%s" % (reverse("forum.views.thread", args = [last_page, post.thread.pk]), post.pk))
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
@@ -124,7 +124,7 @@ def tags_search(request, tag_name, page = 1):
 
 # FIXME: remove old thread
 @rr('blog/post_view.html')
-def thread_view(request, post_id, page = 1):
+def thread(request, post_id, page = 1):
     startpost = Post.objects.get(pk = post_id)
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])

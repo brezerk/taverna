@@ -4,7 +4,7 @@
 {% if thread.paginator.num_pages > 1 %}
 <div class='pages'>[{% trans "Page" %} 
 {% if thread.has_previous %}
-<a href='{%url forum.views.thread_view thread.previous_page_number startpost.pk %}'>←</a>
+<a href='{%url forum.views.thread thread.previous_page_number startpost.pk %}'>←</a>
 {% else %}
 ←
 {% endif %}
@@ -12,11 +12,11 @@
     {% if thread.number == page %}
         <b>{{page}}</b>
     {% else %}
-        <a href='{%url forum.views.thread_view page startpost.pk %}'>{{page}}</a>
+        <a href='{%url forum.views.thread page startpost.pk %}'>{{page}}</a>
     {% endif %}
 {% endfor %}
 {% if thread.has_next %}
-<a href='{%url forum.views.thread_view thread.next_page_number startpost.pk %}'>→</a>
+<a href='{%url forum.views.thread thread.next_page_number startpost.pk %}'>→</a>
 {% else %}
 →
 {% endif %}

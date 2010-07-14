@@ -7,11 +7,11 @@
 <tr><td>
 {% if startpost.blog %}
    <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a>
-   → <a href='{%url forum.views.thread_view startpost.pk %}'>{{ startpost.title }}</a>
+   → <a href='{%url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
 {% else %}
 <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
 <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> →
-<a href='{% url forum.views.thread_view startpost.pk %}'>{{ startpost.title }}</a>
+<a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
 {% endif %}
 </td>
 
@@ -34,7 +34,7 @@
 
 {% with 1 as dont_strip %}
 {% with 1 as dont_show_comment_count %}
-{% include "blog/post.inc.html" %}
+{% include "forum/startpost.inc.html" %}
 {% endwith %}
 {% endwith %}
 

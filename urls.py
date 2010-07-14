@@ -20,8 +20,8 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
 
-    (r'^libthread-0.so.(?P<post_id>\d+)$', 'forum.views.thread_view'),
-    (r'^libthread-(?P<page>\d+).so.(?P<post_id>\d+)$', 'forum.views.thread_view'),
+    (r'^libthread-0.so.(?P<post_id>\d+)$', 'forum.views.thread'),
+    (r'^libthread-(?P<page>\d+).so.(?P<post_id>\d+)$', 'forum.views.thread'),
 
     (r'^$', 'blog.views.index'),
     (r'^blog/libblog-(?P<page>\d+).so$', 'blog.views.index'),

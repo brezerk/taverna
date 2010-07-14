@@ -18,7 +18,7 @@ class Forum(models.Model):
 
 class Post(models.Model):
     owner = models.ForeignKey(User, editable = False, related_name = 'forum_post')
-    title = models.CharField(_("Title"), max_length = 64, blank = True)
+    title = models.CharField(_("Title"), max_length = 64, blank = True, null=False)
     text = models.TextField(_("Text"))
     reply_to = models.ForeignKey('Post', editable = True, blank = True, null = True, related_name = 'reply_')
     thread = models.ForeignKey('Post', editable = True, blank = True, null = True, related_name = 'thread_')
@@ -33,7 +33,7 @@ class Post(models.Model):
         ordering = ('created',)
 
     def get_absolute_url(self):
-        return reverse("forum.views.thread_view", args = [self.pk])
+        return reverse("forum.views.thread", args = [self.pk])
 
 
 class ForumVote(models.Model):

@@ -55,7 +55,7 @@ def post_add(request):
             label = _("Post to"))
         class Meta:
             model = Post
-            exclude = ('tags', )
+            exclude = ('tags', 'reply_to', 'thread')
         def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
             post.owner = request.user
@@ -134,7 +134,7 @@ def view_all(request, user_id, page = 1):
     blog_info = None
     try:
         posts_owner = User.objects.get(pk = user_id)
-        posts = Post.objects.filter(owner = user_id).order_by('-created')
+        posts = Post.objects.exclude(blog = None).filter(owner = user_id).order_by('-created')
         from django.conf import settings
         paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 

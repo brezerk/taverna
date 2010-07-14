@@ -56,7 +56,7 @@ def forumtags(value):
            if tag != tag_list[-1]:
                tag_string = tag_string + u"[<a href='/forum/tagsearch-0.so/%s'>%s</a>]" % (tag, tag)
 
-    tag_string = tag_string + u"<a href='%s'>%s</a>" % (reverse('forum.views.thread_view', args=[value.pk]), tag_list[-1])
+    tag_string = tag_string + u"<a href='%s'>%s</a>" % (reverse('forum.views.thread', args=[value.pk]), tag_list[-1])
     return tag_string
 
 @register.filter
@@ -64,7 +64,7 @@ def strippost(value, post):
     if len(value) > 382:
         value = value[:382]
         value = markup(value, post.parser)
-        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('forum.views.thread_view', args=[post.pk]), _("Read full post"))
+        value = value + " ... <p>>>> <a href='%s'>%s</a></p>" % (reverse('forum.views.thread', args=[post.pk]), _("Read full post"))
     else:
         value = markup(value, post.parser)
     return value
