@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markup %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td>
+{% trans "Commetns list of user" %}
+<a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a>
+</td>
+
+<td align='right'>
+{% if user.is_authenticated %}
+    {% if user.profile.can_create_topic %}
+    [<a href='{% url forum.views.topic_create 1 %}'>{% trans "Post new topic" %}</a>]
+    {% endif %}
+{% endif %}
+</td>
+</tr>
+</table>
+{% endblock %}
+
+{% block content %}
+
+{% include "userauth/pages.inc.html" %}
+
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='240px'>{% trans "Section" %}</th><th>{% trans "Topic title" %}</th><th width='240px'>{% trans "Date" %}</th></tr>
+{% for post in thread.object_list %}
+<tr class="{% cycle "odd" "even" %}">
+ <td>
+    {% if post.reply_to.forum %}
+        {% trans "Forum" %}
+    {% else %}
+        {% trans "Blog" %}
+    {% endif %}
+ </td>
+ <td>
+ <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</td>
+ <td>{{post.created|date:"d.m.Y H:i"}}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% include "userauth/pages.inc.html" %}
+{% endblock %}
+

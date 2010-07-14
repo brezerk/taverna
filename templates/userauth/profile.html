@@ -65,10 +65,8 @@
 </table>
 <h3>{% trans "User messags"%}:</h3>
 <ul>
-    <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Blog's topics" %}</a>
-    <li><a href='/{{ user_info.username }}/comments/blog'>{% trans "Blog's comments" %}</a>
-    <li><a href='/{{ user_info.username }}/forum'>{% trans "Forum's topics" %}</a>
-    <li><a href='/{{ user_info.username }}/comments/forum'>{% trans "Forum's comments" %}</a>
+    <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
+    <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>
     {% if user.username == user_info.username %}
     <li><a href='/{{ user_info.username }}/notifyes'>{% trans "Notifyes" %}</a>
     {% endif %}

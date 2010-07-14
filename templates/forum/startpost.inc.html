@@ -14,13 +14,17 @@
 {% endif %}
 '>{{ startpost.title }}
 </a></h3>
-
+{% if posts_owner %}
+<small>&nbsp;{% trans "Blog" %}</small>
+{% endif %}
 {% else %}
 
 <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a>
 → <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}
 </a></h3>
-
+{% if posts_owner %}
+<small>&nbsp;{% trans "Forum" %}</small>
+{% endif %}
 {% endif %}
 
 

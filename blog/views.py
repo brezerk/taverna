@@ -44,7 +44,7 @@ def settings(request):
     return {'form': form}
 
 @login_required()
-@rr('blog/add_post.html')
+@rr('blog/post_add.html')
 def post_add(request):
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
@@ -134,7 +134,7 @@ def view_all(request, user_id, page = 1):
     blog_info = None
     try:
         posts_owner = User.objects.get(pk = user_id)
-        posts = Post.objects.exclude(blog = None).filter(owner = user_id).order_by('-created')
+        posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
         from django.conf import settings
         paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 

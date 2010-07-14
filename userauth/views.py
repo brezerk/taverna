@@ -14,6 +14,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from blog.models import Blog
+from forum.models import Post
+
 from util import rr, getViewURL, getOpenIDStore
 
 from django.utils.translation import ugettext as _
@@ -26,6 +28,7 @@ from hashlib import md5
 from openid.store import filestore
 from openid.consumer import consumer
 
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 
 def openid_logout(request):
@@ -171,4 +174,18 @@ def openid_finish(request):
         error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
 
     return {'from': form, 'error': error}
+
+@rr("userauth/coments.html")
+def user_comments(request, user_id, page = 1):
+    user_info = User.objects.get(pk = user_id)
+
+    from django.conf import settings
+    paginator = Paginator(Post.objects.filter(owner = user_info,forum = None, blog = None).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return {'thread': thread, 'user_info': user_info}
 

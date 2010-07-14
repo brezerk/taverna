@@ -50,7 +50,8 @@ def tags(value):
 @register.filter
 def forumtags(value):
     tag_list = re.split('\[(.*?)\]', value.title)
-    tag_string = ""
+    tag_string = u"&nbsp;<a href='%s'>▹</a>&nbsp;" % (reverse('forum.views.thread', args=[value.pk]))
+
     for tag in tag_list:
         if tag:
            if tag != tag_list[-1]:

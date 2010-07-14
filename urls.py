@@ -61,9 +61,14 @@ urlpatterns = patterns('',
     (r'^forum/tagsearch-0.so/(?P<tag_name>.*)$', 'forum.views.tags_search'),
     (r'^forum/tagsearch-(?P<page>\d+).so/(?P<tag_name>.*)$', 'forum.views.tags_search'),
 
+    (r'^liboffset-(?P<root_id>\d+).so.(?P<offset_id>.*)$', 'forum.views.offset'),
+
     (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
     (r'^pam/libprofile-0.so.(?P<user_id>\d+)$', 'userauth.views.profile_view'),
     (r'^pam/libprofile-edit-0.so$', 'userauth.views.profile_edit'),
+
+    (r'^pam/libcomments-0.so.(?P<user_id>\d+)$', 'userauth.views.user_comments'),
+    (r'^pam/libcomments-(?P<page>\d+).so.(?P<user_id>\d+)$', 'userauth.views.user_comments'),
 
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
