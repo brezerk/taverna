@@ -113,7 +113,8 @@ PARSER_ENGINES = (
     (2, 'Markdown'),
 )
 
-# Limit posts per page for blog, forums. e.t.c.
+# Limit posts per page for blog, forums. etc.
+# Why do not use just simple prefixed names like 'PAGE_BLOG_POSTS', 'PAGE_BLOG_COMMENTS'?
 PAGE_LIMITATIONS = {
     'BLOG_POSTS': 10,
     'BLOG_COMMENTS': 10,
