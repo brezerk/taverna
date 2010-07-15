@@ -88,19 +88,18 @@ def reply(request, post_id):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            post = form.save(commit = False)
-            post.reply_to = reply_to
-#            post.blog = reply_to.blog
-            post.thread = post.reply_to.thread
-#            post.forum = post.reply_to.forum
-            post.owner = request.user
-            post.save()
+            if request.POST['submit']==_("Reply"):
+                post = form.save(commit = False)
+                post.reply_to = reply_to
+                post.thread = post.reply_to.thread
+                post.owner = request.user
+                post.save()
 
-            from django.conf import settings
-            paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
-            last_page = paginator.num_pages
+                from django.conf import settings
+                paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+                last_page = paginator.num_pages
 
-            return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), last_page, post.pk))
+                return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), last_page, post.pk))
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
@@ -114,17 +113,18 @@ def topic_create(request, forum_id):
     if request.method == 'POST':
         form = ThreadForm(request.POST)
         if form.is_valid():
-            post = form.save(commit = False)
-            post.forum = forum
-            post.owner = request.user
-            post.save()
-            post.thread = post
-            post.title = strip_tags(post.title)
-            post.save()
-            return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
+            if request.POST['submit']==_("Post new topic"):
+                post = form.save(commit = False)
+                post.forum = forum
+                post.owner = request.user
+                post.save()
+                post.thread = post
+                post.title = strip_tags(post.title)
+                post.save()
+                return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
     else:
         form = ThreadForm()
-    return {'form': form}
+    return {'form': form, 'forum': forum}
 
 
 @login_required()

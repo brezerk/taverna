@@ -2,10 +2,13 @@
 {% load markup %}
 
 <div class="post" id="post_{{post.pk}}">
-
 <table border='0px'>
 <tr><td>
-[<a href='{% url forum.views.thread startpost.pk %}#post_{{ post.pk }}'>#</a>]
+[<a href='
+{% if startpost %}
+{% url forum.views.thread startpost.pk %}#post_{{ post.pk }}
+{% endif %}
+'>#</a>]
 {% if post.reply_to %}
 {% if post.reply_to != startpost %}
 {% trans "Reply to" %}
@@ -22,10 +25,20 @@
 <tr><td>
 <b>{{post.title}}</b>
 {{post.text|markup:post.parser|safe}}
-<small><span class='plus'><a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}</small>
+<small><span class='plus'><a href='
+{% if startpost %}
+<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}
+</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}</small>
+{% else %}
+<a href=''>{{user.profile.get_visible_name}}
+</a></span> @ {%now "d.m.Y H:i:s"%}</small>
+{% endif %}
+{% if startpost %}
 {% if user.profile.can_create_comment %}
 <br><a href="{% url forum.views.reply post.pk %}">[{% trans "Reply on this message" %}]</a>
 {% endif %}
+{% endif %}
+
 </td></tr>
 </table>
 </div>

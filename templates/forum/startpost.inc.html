@@ -18,10 +18,15 @@
 <small>&nbsp;{% trans "Blog" %}</small>
 {% endif %}
 {% else %}
-
+{% if startpost.forum %}
 <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a>
-→ <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}
-</a></h3>
+→ <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
+{% else %}
+<a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a>
+→ <a href=''>{{ startpost.title }}</a>
+
+{% endif %}
+</h3>
 {% if posts_owner %}
 <small>&nbsp;{% trans "Forum" %}</small>
 {% endif %}
@@ -46,7 +51,14 @@
 {{ startpost.tag_string|tags|safe }}
 </p></div>
 {% endif %}
-<p>[<span class='plus'><a href=''>▲</a></span>] {{ startpost.rating }} [<span class='minus'><a href=''>▼</a></span>] | {% trans "Author" %}: <span class='plus'><a href='
+<p>
+{% if startpost.owner %}
+[<span class='plus'><a href=''>▲</a></span>] {{ startpost.rating }} [<span class='minus'><a href=''>▼</a></span>]
+{% else %}
+[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>]
+{% endif %}
+
+| {% trans "Author" %}: <span class='plus'><a href='
 {% if startpost.owner %}
 {% url userauth.views.profile_view startpost.owner.id %}'>{{ startpost.owner.profile.get_visible_name }}
 {% else %}
@@ -59,7 +71,9 @@
 {% if startpost.id %}
 {% url forum.views.thread startpost.id %}
 {% else %}
+{% if startpost.blog.pk %}
 {% url blog.views.view startpost.blog.pk %}
+{% endif %}
 {% endif %}
 '>{% trans "Comments" %}: Как их считать? :[</a>
 {% endif %}

@@ -2,12 +2,26 @@
 {% load i18n %}
 
 {% block content %}
+
+{% if form.cleaned_data %}
+    {% with form.cleaned_data as startpost %}
+    {% with 1 as dont_strip %}
+    {% with 1 as dont_show_comment_count %}
+        {% include 'forum/startpost.inc.html' %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% endif %}
+
 <form method=post>
-<input type=hidden name="forum_id" value="{{forum.pk}}">
 {% csrf_token %}
 <table>
 {{form}}
-<tr><td><td><input type=submit value="{% trans "Post new topic" %}"</input>
+<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Preview" %}"></td></tr>
+{% if form.cleaned_data %}
+<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Post new topic" %}"></td></tr>
+{% endif %}
 </table>
 </form>
+
 {% endblock %}
