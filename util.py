@@ -23,18 +23,6 @@ def rr(template):
         return wrapper
     return decor
 
-
-def get_offset(offset):
-    """
-    Get offset variable from GET request
-    """
-    try:
-        offset = int(offset.GET['offset'])
-    except (MultiValueDictKeyError, TypeError, ValueError):
-        offset = 1
-
-    return offset
-
 def getViewURL(req, view_name_or_obj, args=None, kwargs=None):
     relative_url = reverseURL(view_name_or_obj, args=args, kwargs=kwargs)
     full_path = req.META.get('SCRIPT_NAME', '') + relative_url

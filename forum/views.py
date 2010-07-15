@@ -1,5 +1,5 @@
 from models import *
-from util import rr, get_offset
+from util import rr
 from django import forms
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -61,7 +61,7 @@ def index(request):
 @rr('forum/forum.html')
 def forum(request, forum_id):
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
@@ -142,7 +142,7 @@ def forum_create(request):
 @rr('forum/tag_search.html')
 def tags_search(request, tag_name):
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
@@ -162,7 +162,7 @@ def tags_search(request, tag_name):
 @rr('blog/post_view.html')
 def thread(request, post_id):
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     startpost = Post.objects.get(pk = post_id)
     from django.conf import settings

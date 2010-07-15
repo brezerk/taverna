@@ -14,7 +14,7 @@ from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post
 
-from util import rr, get_offset
+from util import rr
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
@@ -146,7 +146,7 @@ def post_add(request):
 @rr('blog/blog.html')
 def tags_search(request, tag_id):
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     blog_posts = None
     try:
@@ -170,7 +170,7 @@ def view(request, blog_id):
     blog_posts = None
     blog_info = None
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     try:
         blog_info = Blog.objects.get(pk = blog_id)
@@ -193,7 +193,7 @@ def view_all(request, user_id):
     blog_posts = None
     blog_info = None
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     try:
         posts_owner = User.objects.get(pk = user_id)
@@ -215,7 +215,7 @@ def view_all(request, user_id):
 def index(request):
     posts = Post.objects.exclude(blog = None).order_by('-created')
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
@@ -243,7 +243,7 @@ def list_public(request):
 def list_users(request):
     blog_list = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
 
-    page = get_offset(request)
+    page = request.GET.get("offset", 1)
 
     from django.conf import settings
     paginator = Paginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
