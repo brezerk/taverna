@@ -7,9 +7,6 @@ from django.db import connection
 from django.conf import settings
 from openid.store.filestore import FileOpenIDStore
 from openid.store import sqlstore
-
-from django.utils.datastructures import MultiValueDictKeyError
-
 from django.core.paginator import Paginator
 
 class ExtendedPaginator(Paginator):
