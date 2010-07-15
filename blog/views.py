@@ -65,7 +65,7 @@ def post_edit(request, post_id):
             model = Post
             exclude = ('tags', 'reply_to', 'thread')
 
-        def save(self, **args)
+        def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
             post.save()
 
