@@ -10,6 +10,32 @@ from openid.store import sqlstore
 
 from django.utils.datastructures import MultiValueDictKeyError
 
+from django.core.paginator import Paginator
+
+class ExtendedPaginator(Paginator):
+
+    page_range = None
+    show_first = False
+    show_last = False
+
+    def page(self, number):
+        number = int(number)
+        if self.num_pages < 5:
+            self.page_range = range(1, self.num_pages + 1)
+        if number > 5:
+            start = number - 5
+            self.show_first = True
+        else:
+            start = 1
+        if number > self.num_pages - 5:
+            end = self.num_pages
+        else:
+            end = number + 5
+            self.show_last = True
+        self.page_range = range(start, end)
+
+        return Paginator.page(self, number)
+
 def rr(template):
     def decor(view):
         def wrapper(request, *args, **kwargs):

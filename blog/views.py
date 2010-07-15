@@ -6,19 +6,16 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-
 
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post
 
-from util import rr
+from util import rr, ExtendedPaginator as Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
-
 
 @login_required()
 @rr('blog/settings.html')
@@ -152,12 +149,8 @@ def tags_search(request, tag_id):
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     tag = Tag.objects.get(pk=tag_id);
-    try:
-        blog_posts = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        blog_posts = paginator.page(paginator.num_pages)
 
-    return {'thread': blog_posts, 'tag': tag }
+    return {'thread': paginator.page(page), 'tag': tag }
 
 @rr('blog/blog.html')
 def view(request, blog_id):
@@ -170,13 +163,8 @@ def view(request, blog_id):
     posts = Post.objects.filter(blog = blog_info).order_by('-created')
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
-    try:
-        blog_posts = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        blog_posts = paginator.page(paginator.num_pages)
 
-
-    return {'thread': blog_posts, 'blog_info': blog_info }
+    return {'thread': paginator.page(page), 'blog_info': blog_info }
 
 @rr('blog/blog.html')
 def view_all(request, user_id):
@@ -189,13 +177,8 @@ def view_all(request, user_id):
     posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
-    try:
-        blog_posts = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        blog_posts = paginator.page(paginator.num_pages)
 
-
-    return {'thread': blog_posts, 'posts_owner': posts_owner}
+    return {'thread': paginator.page(page), 'posts_owner': posts_owner}
 
 @rr('blog/blog.html')
 def index(request):
@@ -206,12 +189,7 @@ def index(request):
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    try:
-        blog_posts = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        blog_posts = paginator.page(paginator.num_pages)
-
-    return { 'thread': blog_posts }
+    return { 'thread': paginator.page(page)}
 
 @rr('blog/blog_list.html')
 def list(request):
@@ -234,10 +212,5 @@ def list_users(request):
     from django.conf import settings
     paginator = Paginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
-    try:
-        user_blogs = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        user_blogs = paginator.page(paginator.num_pages)
-
-    return { 'thread': user_blogs }
+    return { 'thread': paginator.page(page) }
 

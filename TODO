@@ -11,13 +11,9 @@
  Sitemap:
      * Sitemap implementation (brezerk: done, need discusss);
 
- Voite system:
-     * Any user can voite in forum and blogs and commetns;
+ Vote system:
+     * Any user can vote in forum and blogs and commetns;
      * Define and balance privileges karma requirements;
-
- Paginator:
-     * Change display style (display 5 pages left and 5 pages right
-                             from current page NOT full pages list)
 
  == Forums ==
 
