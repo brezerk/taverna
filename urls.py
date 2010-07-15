@@ -8,6 +8,7 @@ from django.contrib import admin
 from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
 from taverna.blog.sitemaps import BlogSitemap
 from taverna.forum.feeds import RssForum, AtomForum, RssComments, AtomComments
+from taverna.userauth.feeds import RssUser, AtomUser
 
 admin.autodiscover()
 
@@ -59,6 +60,9 @@ urlpatterns = patterns('',
     (r'^pam/libprofile-edit.so$', 'userauth.views.profile_edit'),
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
+
+    url(r'^pam/librss-(?P<user_id>\d+).so$', RssUser(), name='rss_user'),
+    url(r'^pam/libatom-(?P<user_id>\d+).so$', AtomUser(), name='atom_user'),
 
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
