@@ -8,12 +8,13 @@ from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
+
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post
 
-from util import rr
+from util import rr, get_offset
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
@@ -90,7 +91,10 @@ def post_add(request):
         'dont_strip': True}
 
 @rr('blog/blog.html')
-def tags_search(request, tag_id, page = 1):
+def tags_search(request, tag_id):
+
+    page = get_offset(request)
+
     blog_posts = None
     try:
         posts = Post.objects.filter(tags = tag_id).order_by('-created')
@@ -106,12 +110,15 @@ def tags_search(request, tag_id, page = 1):
     except (Tag.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
-    return {'blog_posts': blog_posts, 'tag': tag }
+    return {'thread': blog_posts, 'tag': tag }
 
 @rr('blog/blog.html')
-def view(request, blog_id, page = 1):
+def view(request, blog_id):
     blog_posts = None
     blog_info = None
+
+    page = get_offset(request)
+
     try:
         blog_info = Blog.objects.get(pk = blog_id)
         posts = Post.objects.filter(blog = blog_info).order_by('-created')
@@ -126,12 +133,15 @@ def view(request, blog_id, page = 1):
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
-    return {'blog_posts': blog_posts, 'blog_info': blog_info }
+    return {'thread': blog_posts, 'blog_info': blog_info }
 
 @rr('blog/blog.html')
-def view_all(request, user_id, page = 1):
+def view_all(request, user_id):
     blog_posts = None
     blog_info = None
+
+    page = get_offset(request)
+
     try:
         posts_owner = User.objects.get(pk = user_id)
         posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
@@ -146,11 +156,13 @@ def view_all(request, user_id, page = 1):
     except (Blog.DoesNotExist, Post.DoesNotExist):
         return HttpResponseRedirect("/")
 
-    return {'blog_posts': blog_posts, 'posts_owner': posts_owner}
+    return {'thread': blog_posts, 'posts_owner': posts_owner}
 
 @rr('blog/blog.html')
-def index(request, page = 1):
+def index(request):
     posts = Post.objects.exclude(blog = None).order_by('-created')
+
+    page = get_offset(request)
 
     from django.conf import settings
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
@@ -160,7 +172,7 @@ def index(request, page = 1):
     except (EmptyPage, InvalidPage):
         blog_posts = paginator.page(paginator.num_pages)
 
-    return { 'blog_posts': blog_posts }
+    return { 'thread': blog_posts }
 
 @rr('blog/blog_list.html')
 def list(request):
@@ -176,7 +188,17 @@ def list_public(request):
 
 @rr('blog/blog_list.html')
 def list_users(request):
-    #FIXME: Use paginator for posts view!!!
-    user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
-    return { 'user_blogs': user_blogs }
+    blog_list = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
+
+    page = get_offset(request)
+
+    from django.conf import settings
+    paginator = Paginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        user_blogs = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        user_blogs = paginator.page(paginator.num_pages)
+
+    return { 'thread': user_blogs }
 

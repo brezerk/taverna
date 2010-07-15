@@ -44,15 +44,15 @@
 
 {% block content %}
 
-{% include 'blog/pages.inc.html' %}
+{% include 'forum/pages.inc.html' %}
 
-{% if blog_posts.object_list %}
-    {% for startpost in blog_posts.object_list %}
+{% if thread.object_list %}
+    {% for startpost in thread.object_list %}
         {% include 'forum/startpost.inc.html' %}
     {% endfor %}
 {% endif %}
 
-{% include 'blog/pages.inc.html' %}
+{% include 'forum/pages.inc.html' %}
 
 {% endblock %}
 

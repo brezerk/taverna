@@ -1,5 +1,5 @@
 from models import *
-from util import rr
+from util import rr, get_offset
 from django import forms
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -8,6 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from django.utils.html import strip_tags
+
+from django.utils.translation import ugettext as _
+
+import re
 
 class ForumForm(forms.ModelForm):
     class Meta:
@@ -18,17 +22,47 @@ class ThreadForm(forms.ModelForm):
         model = Post
         exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
 
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        title = title.strip()
+
+        if not title:
+            raise forms.ValidationError(_("You have forgotten about title."))
+
+        tag_list = re.split('\[(.*?)\]', title)
+        if not tag_list[-1].strip():
+            raise forms.ValidationError(_("Tags is good. But title also required."))
+
+        if len(tag_list[-1]) < 5:
+            raise forms.ValidationError(_("Topic length < 5 is not allowed."))
+        return title
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if len(text) < 24:
+            raise forms.ValidationError(_("Text length < 24 is not allowed."))
+        return text
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if len(text) < 24:
+            raise forms.ValidationError(_("Text length < 24 is not allowed."))
+        return text
 
 @rr('forum/index.html')
 def index(request):
     return {'forums': Forum.objects.all().order_by('name')}
 
 @rr('forum/forum.html')
-def forum(request, forum_id, page = 1):
+def forum(request, forum_id):
+
+    page = get_offset(request)
+
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(reply_to = None,forum = forum).order_by('-created'),
@@ -66,7 +100,7 @@ def reply(request, post_id):
             paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
             last_page = paginator.num_pages
 
-            return HttpResponseRedirect("%s#post_%s" % (reverse("forum.views.thread", args = [last_page, post.thread.pk]), post.pk))
+            return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), last_page, post.pk))
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
@@ -106,7 +140,10 @@ def forum_create(request):
     return {'form': ForumForm()}
 
 @rr('forum/tag_search.html')
-def tags_search(request, tag_name, page = 1):
+def tags_search(request, tag_name):
+
+    page = get_offset(request)
+
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
                                               reply_to = None).order_by('-created'),
@@ -123,7 +160,10 @@ def tags_search(request, tag_name, page = 1):
     }
 
 @rr('blog/post_view.html')
-def thread(request, post_id, page = 1):
+def thread(request, post_id):
+
+    page = get_offset(request)
+
     startpost = Post.objects.get(pk = post_id)
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])

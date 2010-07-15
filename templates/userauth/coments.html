@@ -29,7 +29,7 @@
 
 {% block content %}
 
-{% include "userauth/pages.inc.html" %}
+{% include "forum/pages.inc.html" %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
 <tr class='theader'><th width='100px'>{% trans "Section" %}</th><th width='240px'>{% trans "Seaction name" %}<th>{% trans "Topic title" %}</th><th width='280px'>{% trans "Date" %}</th></tr>
@@ -61,6 +61,6 @@
 {% endfor %}
 </table>
 
-{% include "userauth/pages.inc.html" %}
+{% include "forum/pages.inc.html" %}
 {% endblock %}
 

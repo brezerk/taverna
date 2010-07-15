@@ -68,7 +68,7 @@ class RssComments(Feed):
     def item_link(self, item):
         for page in self.paginator.page_range:
             if item in self.paginator.page(page).object_list:
-                return "%s#post_%s" % (reverse("forum.views.thread", args=[page, item.thread.pk]), item.pk)
+                return "%s?offset=%s#post_%s" % (reverse("forum.views.thread", args=[item.thread.pk]), page, item.pk)
 
         return reverse("blog.views.view", args=[item.blog.pk])
 

@@ -10,6 +10,8 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import Form, ModelForm, CharField
 
+from django.utils.datastructures import MultiValueDictKeyError
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from userauth.models import Profile
@@ -176,8 +178,13 @@ def openid_finish(request):
     return {'from': form, 'error': error}
 
 @rr("userauth/coments.html")
-def user_comments(request, user_id, page = 1):
+def user_comments(request, user_id):
     user_info = User.objects.get(pk = user_id)
+
+    try:
+        page = int(request.GET['offset'])
+    except (MultiValueDictKeyError, TypeError):
+        page = 1
 
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(owner = user_info, forum = None,
@@ -189,11 +196,16 @@ def user_comments(request, user_id, page = 1):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'user_info': user_info}
+    return {'thread': thread, 'user_info': user_info, 'request_url': request.get_full_path()}
 
 @rr("userauth/coments.html")
-def notify(request, page = 1):
+def notify(request):
     user_info = request.user
+
+    try:
+        page = int(request.GET['offset'])
+    except (MultiValueDictKeyError, TypeError):
+        page = 1
 
     from django.conf import settings
     paginator = Paginator(Post.objects.exclude(owner=user_info).filter(reply_to__owner = user_info,
@@ -204,4 +216,4 @@ def notify(request, page = 1):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread}
+    return {'thread': thread, 'request_url': request.get_full_path()}

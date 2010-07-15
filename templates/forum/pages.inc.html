@@ -4,13 +4,7 @@
 {% if thread.paginator.num_pages > 1 %}
 <div class='pages'>[{% trans "Page" %} 
 {% if thread.has_previous %}
-<a href='
-        {% if search_tag %}
-            {%url forum.views.tags_search thread.previous_page_number search_tag %}
-        {% else %}
-            {%url forum.views.forum thread.previous_page_number forum.pk %}
-        {% endif %}
-'>←</a>
+<a href='?offset={{ thread.previous_page_number }}'>←</a>
 {% else %}
 ←
 {% endif %}
@@ -18,23 +12,11 @@
     {% if thread.number == page %}
         <b>{{page}}</b>
     {% else %}
-        <a href='
-        {% if search_tag %}
-            {%url forum.views.tags_search page search_tag %}
-        {% else %}
-            {%url forum.views.forum page forum.pk %}
-        {% endif %}
-        '>{{page}}</a>
+        <a href='?offset={{ page }}'>{{page}}</a>
     {% endif %}
 {% endfor %}
 {% if thread.has_next %}
-<a href='
-        {% if search_tag %}
-            {%url forum.views.tags_search thread.next_page_number search_tag %}
-        {% else %}
-            {%url forum.views.forum thread.next_page_number forum.pk %}
-        {% endif %}
-'>→</a>
+<a href='?offset={{ thread.next_page_number }}'>→</a>
 {% else %}
 →
 {% endif %}

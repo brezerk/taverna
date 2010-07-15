@@ -38,7 +38,7 @@
 {% endwith %}
 {% endwith %}
 
-{% include "forum/comments.pages.inc.html" %}
+{% include "forum/pages.inc.html" %}
 
 <div class='news'>
 {% for post in thread.object_list %}
@@ -46,7 +46,7 @@
 {% endfor %}
 </div>
 
-{% include "forum/comments.pages.inc.html" %}
+{% include "forum/pages.inc.html" %}
 
 <script lang='text/javascript'>
     highlightOnLoad();

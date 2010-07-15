@@ -8,6 +8,8 @@ from django.conf import settings
 from openid.store.filestore import FileOpenIDStore
 from openid.store import sqlstore
 
+from django.utils.datastructures import MultiValueDictKeyError
+
 def rr(template):
     def decor(view):
         def wrapper(request, *args, **kwargs):
@@ -20,6 +22,18 @@ def rr(template):
                 return val
         return wrapper
     return decor
+
+
+def get_offset(offset):
+    """
+    Get offset variable from GET request
+    """
+    try:
+        offset = int(offset.GET['offset'])
+    except (MultiValueDictKeyError, TypeError, ValueError):
+        offset = 1
+
+    return offset
 
 def getViewURL(req, view_name_or_obj, args=None, kwargs=None):
     relative_url = reverseURL(view_name_or_obj, args=args, kwargs=kwargs)
