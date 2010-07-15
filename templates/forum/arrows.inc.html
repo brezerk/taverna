@@ -1,0 +1,14 @@
+{% load i18n %}
+
+
+{% if thread.paginator.num_pages > 1 %}
+<table width='100%'><tr> 
+{% if thread.has_previous %}
+<td align='left'><a href='?offset={{ thread.previous_page_number }}'>← {% trans "back" %}</a></a></td>
+{% endif %}
+
+{% if thread.has_next %}
+<td align='right'><a href='?offset={{ thread.next_page_number }}'>{% trans "forward"%} →</a></td>
+{% endif %}
+</tr></table>
+{% endif %}
