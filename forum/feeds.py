@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 from taverna.parsers.templatetags.markup import markup
+from django.conf import settings
 
 from django.core.paginator import Paginator
 
@@ -19,10 +20,10 @@ class RssForum(Feed):
         return get_object_or_404(Forum, pk=forum_id)
 
     def items(self, obj):
-        self.title =  _("Last 30 topics in \"%s\" forum" % (obj.name))
+        self.title =  _("Last %s topics in \"%s\" forum" % (settings.PAGE_LIMITATIONS["FORUM_TOPICS"], obj.name))
         self.description = obj.description
         self.link = obj.get_absolute_url()
-        return Post.objects.filter(forum=obj, reply_to = None).order_by('-created')[:30]
+        return Post.objects.filter(forum=obj, reply_to = None).order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
     def item_title(self, item):
         return item.title
@@ -51,10 +52,10 @@ class RssComments(Feed):
 
         thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk)
 
-        self.paginator = Paginator(thread_list, 10)
+        self.paginator = Paginator(thread_list, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
 
-        return thread_list.order_by('-created')[:10]
+        return thread_list.order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
 
     def item_title(self, item):
         if item.title:

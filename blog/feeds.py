@@ -11,13 +11,15 @@ from taverna.parsers.templatetags.markup import markup
 
 from django.core.paginator import Paginator
 
+from django.conf import settings
+
 class RssBlogTraker(Feed):
     title = _("Last 10 blogs topics")
     link = "/"
     description = _("Updates on changes and additions to blogs topics.")
 
     def items(self):
-        return Post.objects.exclude(blog = None).order_by('-created')[:10]
+        return Post.objects.exclude(blog = None).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)
@@ -38,10 +40,10 @@ class RssBlog(Feed):
         return get_object_or_404(Blog, pk=blog_id)
 
     def items(self, obj):
-        self.title =  _("Last 10 topics for \"%s\" blog" % (obj.name))
+        self.title =  _("Last %s topics for \"%s\" blog" % (settings.PAGE_LIMITATIONS["BLOG_POSTS"], obj.name))
         self.description = obj.desc
         self.link = obj.get_absolute_url()
-        return Post.objects.filter(blog=obj).order_by('-created')[:10]
+        return Post.objects.filter(blog=obj).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)
