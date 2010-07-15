@@ -20,8 +20,6 @@ from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
 
 
-
-
 @login_required()
 @rr('blog/settings.html')
 def settings(request):
@@ -149,19 +147,15 @@ def tags_search(request, tag_id):
     page = request.GET.get("offset", 1)
 
     blog_posts = None
+
+    posts = Post.objects.filter(tags = tag_id).order_by('-created')
+    from django.conf import settings
+    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    tag = Tag.objects.get(pk=tag_id);
     try:
-        posts = Post.objects.filter(tags = tag_id).order_by('-created')
-        from django.conf import settings
-        paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
-
-        tag = Tag.objects.get(pk=tag_id);
-
-        try:
-            blog_posts = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            blog_posts = paginator.page(paginator.num_pages)
-    except (Tag.DoesNotExist, Post.DoesNotExist):
-        return HttpResponseRedirect("/")
+        blog_posts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        blog_posts = paginator.page(paginator.num_pages)
 
     return {'thread': blog_posts, 'tag': tag }
 
@@ -172,19 +166,15 @@ def view(request, blog_id):
 
     page = request.GET.get("offset", 1)
 
+    blog_info = Blog.objects.get(pk = blog_id)
+    posts = Post.objects.filter(blog = blog_info).order_by('-created')
+    from django.conf import settings
+    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     try:
-        blog_info = Blog.objects.get(pk = blog_id)
-        posts = Post.objects.filter(blog = blog_info).order_by('-created')
-        from django.conf import settings
-        paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+        blog_posts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        blog_posts = paginator.page(paginator.num_pages)
 
-        try:
-            blog_posts = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            blog_posts = paginator.page(paginator.num_pages)
-
-    except (Blog.DoesNotExist, Post.DoesNotExist):
-        return HttpResponseRedirect("/")
 
     return {'thread': blog_posts, 'blog_info': blog_info }
 
@@ -195,19 +185,15 @@ def view_all(request, user_id):
 
     page = request.GET.get("offset", 1)
 
+    posts_owner = User.objects.get(pk = user_id)
+    posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
+    from django.conf import settings
+    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     try:
-        posts_owner = User.objects.get(pk = user_id)
-        posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
-        from django.conf import settings
-        paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+        blog_posts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        blog_posts = paginator.page(paginator.num_pages)
 
-        try:
-            blog_posts = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            blog_posts = paginator.page(paginator.num_pages)
-
-    except (Blog.DoesNotExist, Post.DoesNotExist):
-        return HttpResponseRedirect("/")
 
     return {'thread': blog_posts, 'posts_owner': posts_owner}
 
