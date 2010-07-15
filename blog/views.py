@@ -19,6 +19,9 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
 
+
+
+
 @login_required()
 @rr('blog/settings.html')
 def settings(request):
@@ -45,6 +48,54 @@ def settings(request):
     return {'form': form}
 
 @login_required()
+@rr('blog/post_edit.html')
+def post_edit(request, post_id):
+    user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
+
+    post = Post.objects.get(pk = post_id)
+    tag_string = ""
+
+    class EditForm(ModelForm):
+        tag_string = CharField(initial = post.get_tag_list())
+        blog = ModelChoiceField(queryset = user_blogs,
+                            initial = user_blogs[0],
+                            label = _("Post to"))
+
+        class Meta:
+            model = Post
+            exclude = ('tags', 'reply_to', 'thread')
+
+        def save(self, **args)
+            post = super(PostForm, self).save(commit = False, **args)
+            post.save()
+
+            for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
+                try:
+                    post.tags.add(Tag.objects.get(name = name))
+                except Tag.DoesNotExist:
+                    tag = Tag(name = name)
+                    tag.save()
+                    post.tags.add(tag)
+
+    preview = None
+    tags = None
+
+    if request.method == 'POST':
+        form = EditForm(request.POST, instance=post)
+        form.is_valid()
+        if 'submit' in request.POST:
+            if request.POST['submit']==_("Save"):
+                form.save()
+                return HttpResponseRedirect(reverse(view, args = [post_id]))
+    else:
+        form = EditForm(instance=post)
+    return {
+        'form': form,
+        'post_id': post_id,
+        'dont_strip': True
+        }
+
+@login_required()
 @rr('blog/post_add.html')
 def post_add(request):
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
@@ -52,11 +103,13 @@ def post_add(request):
     class PostForm(ModelForm):
         tag_string = CharField()
         blog = ModelChoiceField(queryset = user_blogs,
-            initial = user_blogs[0],
-            label = _("Post to"))
+                            initial = user_blogs[0],
+                            label = _("Post to"))
+
         class Meta:
             model = Post
             exclude = ('tags', 'reply_to', 'thread')
+
         def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
             post.owner = request.user

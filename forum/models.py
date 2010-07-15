@@ -35,6 +35,20 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
 
+    def get_tag_list(self):
+        tag_string = ""
+
+        first = True
+
+        for tag in self.tags.all():
+            if first:
+                first = False
+            else:
+                tag_string = tag_string + ", "
+            tag_string = tag_string + tag.name
+
+        return tag_string
+
 
 class ForumVote(models.Model):
     forum = models.ForeignKey(Forum)
