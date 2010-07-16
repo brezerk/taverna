@@ -12,11 +12,10 @@ from django.core.paginator import Paginator
 class ExtendedPaginator(Paginator):
 
     page_range = None
-    show_first = False
-    show_last = False
 
     def page(self, number):
         number = int(number)
+
 
         if self.num_pages < 10:
             self.page_range = range(1, self.num_pages + 1)
@@ -25,19 +24,12 @@ class ExtendedPaginator(Paginator):
         end = number + 5
 
         if start < 1:
-            end -= (start)
             start = 1
 
         if end > self.num_pages:
-            start = self.num_pages - 10
             end = self.num_pages
 
         self.page_range = range(start, end + 1)
-
-        if self.page_range[0] > 1:
-            self.show_first = True
-        if self.page_range[-1] != self.num_pages:
-            self.show_last = True
 
         return Paginator.page(self, number)
 

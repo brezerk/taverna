@@ -1,14 +1,11 @@
 {% load i18n %}
 
-
 {% if thread.paginator.num_pages > 1 %}
 <div class='pages'>
 
-{% if thread.paginator.show_first %}
-<a href='?offset=1'>{% trans "First page" %}</a>
-{% endif %}
-
 [{% trans "Page" %}
+
+<a href='?offset=1'>{% trans "first" %}<a>
 
 {% if thread.has_previous %}
 <a href='?offset={{ thread.previous_page_number }}'>←</a>
@@ -27,11 +24,8 @@
 {% else %}
 →
 {% endif %}
+<a href='?offset={{ thread.paginator.num_pages }}'>{% trans "last" %}</a>
 ]
-
-{% if thread.paginator.show_last %}
-<a href='?offset={{ thread.paginator.num_pages }}'>{% trans "Last page" %}</a>
-{% endif %}
 
 </div>
 {% endif %}
