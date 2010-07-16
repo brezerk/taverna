@@ -16,7 +16,6 @@ class ExtendedPaginator(Paginator):
     def page(self, number):
         number = int(number)
 
-
         if self.num_pages < 10:
             self.page_range = range(1, self.num_pages + 1)
 
@@ -24,15 +23,11 @@ class ExtendedPaginator(Paginator):
         end = number + 5
 
         if start < 1:
-            start = 1
-
-        if end > self.num_pages:
-            end = self.num_pages
-        elif end < self.num_pages and end < 10:
             end = 10
-
-        if end - start < 9:
-            start = end - 9
+            start = 1
+        elif end >= self.num_pages:
+            start = self.num_pages - 10
+            end = self.num_pages
 
         self.page_range = range(start, end + 1)
 
