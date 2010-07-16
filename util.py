@@ -28,6 +28,11 @@ class ExtendedPaginator(Paginator):
 
         if end > self.num_pages:
             end = self.num_pages
+        elif end < self.num_pages and end < 10:
+            end = 10
+
+        if end - start < 9:
+            start = end - 9
 
         self.page_range = range(start, end + 1)
 
