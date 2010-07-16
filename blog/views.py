@@ -61,8 +61,10 @@ def post_edit(request, post_id):
             exclude = ('tags', 'reply_to', 'thread')
 
         def save(self, **args):
-            post = super(PostForm, self).save(commit = False, **args)
+            post = super(EditForm, self).save(commit = False, **args)
+            post.tags = ""
             post.save()
+
 
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:
@@ -81,7 +83,7 @@ def post_edit(request, post_id):
         if 'submit' in request.POST:
             if request.POST['submit']==_("Save"):
                 form.save()
-                return HttpResponseRedirect(reverse(view, args = [post_id]))
+                return HttpResponseRedirect(reverse("forum.views.thread", args = [post_id]))
     else:
         form = EditForm(instance=post)
     return {
