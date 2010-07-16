@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{% if form.cleaned_data %}
+    {% with form.cleaned_data as startpost %}
+    {% with 1 as dont_strip %}
+    {% with 1 as dont_show_comment_count %}
+        {% include 'forum/startpost.inc.html' %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% endif %}
+
+<form method=post>
+{% csrf_token %}
+<table>
+{{form}}
+<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Preview" %}"></td></tr>
+{% if form.cleaned_data %}
+<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Save" %}"></td></tr>
+{% endif %}
+</table>
+</form>
+
+{% endblock %}

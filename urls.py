@@ -51,6 +51,7 @@ urlpatterns = patterns('',
     url(r'^thread/libatom-(?P<post_id>\d+).so$', AtomComments(), name='atom_comments'),
 
     (r'^forum/createtopic.(?P<forum_id>\d+).so$', 'forum.views.topic_create'),
+    (r'^forum/edittopic.(?P<topic_id>\d+).so$', 'forum.views.topic_edit'),
     (r'^forum/createforum.so$', 'forum.views.forum_create'),
     (r'^forum/tagsearch.so/(?P<tag_name>.*)$', 'forum.views.tags_search'),
 

@@ -82,7 +82,13 @@
 </td>
 {% if startpost.owner %}
 {% if startpost.owner == user %}
-<td width='40px'>&nbsp;</td></tr><tr><td>&nbsp;</td><td>[<a href='{% url blog.views.post_edit startpost.pk  %}'>{% trans "Edit" %}</a>]</td></td>&nbsp;</td></tr>
+<td width='40px'>&nbsp;</td></tr><tr><td>&nbsp;</td><td>[<a href='
+{% if startpost.blog %}
+    {% url blog.views.post_edit startpost.pk  %}
+{% else %}
+    {% url forum.views.topic_edit startpost.pk  %}
+{% endif %}
+'>{% trans "Edit" %}</a>]</td></td>&nbsp;</td></tr>
 {% endif %}
 {% endif %}
 </table>

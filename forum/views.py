@@ -123,6 +123,27 @@ def topic_create(request, forum_id):
         form = ThreadForm()
     return {'form': form, 'forum': forum}
 
+@login_required()
+@rr('forum/topic_edit.html')
+def topic_edit(request, topic_id):
+    if not request.user.profile.can_create_topic:
+        return
+
+    topic = Post.objects.get(pk = topic_id)
+
+    if not topic.owner == request.user:
+        return
+
+    if request.method == 'POST':
+        form = ThreadForm(request.POST, instance=topic)
+        if form.is_valid():
+            if request.POST['submit']==_("Save"):
+                form.save()
+                return HttpResponseRedirect(reverse('forum.views.thread', args = [topic_id]))
+
+    else:
+        form = ThreadForm(instance=topic)
+    return {'form': form, 'forum': topic.forum}
 
 @login_required()
 @rr('forum/forum_create.html')
