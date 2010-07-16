@@ -17,19 +17,27 @@ class ExtendedPaginator(Paginator):
 
     def page(self, number):
         number = int(number)
-        if self.num_pages < 5:
+
+        if self.num_pages < 10:
             self.page_range = range(1, self.num_pages + 1)
-        if number > 5:
-            start = number - 5
-            self.show_first = True
-        else:
+
+        start = number - 5
+        end = number + 5
+
+        if start < 1:
+            end -= (start)
             start = 1
-        if number > self.num_pages - 5:
+
+        if end > self.num_pages:
+            start = self.num_pages - 10
             end = self.num_pages
-        else:
-            end = number + 5
+
+        self.page_range = range(start, end + 1)
+
+        if self.page_range[0] > 1:
+            self.show_first = True
+        if self.page_range[-1] != self.num_pages:
             self.show_last = True
-        self.page_range = range(start, end)
 
         return Paginator.page(self, number)
 
