@@ -49,6 +49,9 @@ class Post(models.Model):
 
         return tag_string
 
+    def get_comments_count(self):
+        return Post.objects.exclude(pk=self.pk).filter(thread=self.pk).count()
+
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)

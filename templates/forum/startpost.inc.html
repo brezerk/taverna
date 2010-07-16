@@ -75,7 +75,7 @@
 {% url blog.views.view startpost.blog.pk %}
 {% endif %}
 {% endif %}
-'>{% trans "Comments" %}: Как их считать? :[</a>
+'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
 {% else %}
     <div class='editby'>
     {% for edit in startpost.postedit_set.all %}
@@ -100,4 +100,3 @@
 {% endif %}
 </table>
 </div>
-
