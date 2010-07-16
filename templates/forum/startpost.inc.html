@@ -76,6 +76,13 @@
 {% endif %}
 {% endif %}
 '>{% trans "Comments" %}: Как их считать? :[</a>
+{% else %}
+    <div class='editby'>
+    {% for edit in startpost.postedit_set.all %}
+        {% trans "Edited by" %} <span class='plus'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
+        ( {{ edit.edited|date:"d.m.Y H:i:s" }} )<br>
+    {% endfor %}
+    </div>
 {% endif %}
 </p>
 </div>

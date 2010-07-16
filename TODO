@@ -1,12 +1,11 @@
 
  == Conception ==
-     * I think it is no good idea to implement every last LOR feature.
+     * <opium> I think it is no good idea to implement every last LOR feature.
+     * <brezerk> what you talking about? js edit form for comments?
 
  == Blogs ==
 
  Edit posts: 
-     * User can edit own posts;
-     * Record edit actions and display them in the bottom of the post;
      * Make something like ----cut----
 
  == General ==

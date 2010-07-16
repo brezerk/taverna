@@ -139,6 +139,8 @@ def topic_edit(request, topic_id):
         if form.is_valid():
             if request.POST['submit']==_("Save"):
                 form.save()
+                PostEdit(post = topic, user = request.user).save()
+
                 return HttpResponseRedirect(reverse('forum.views.thread', args = [topic_id]))
 
     else:

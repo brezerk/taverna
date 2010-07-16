@@ -10,7 +10,7 @@ from django.forms import ModelForm, CharField, ModelChoiceField
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
-from taverna.forum.models import Post
+from taverna.forum.models import Post, PostEdit
 
 from util import rr, ExtendedPaginator as Paginator
 from django.core.urlresolvers import reverse
@@ -64,7 +64,7 @@ def post_edit(request, post_id):
             post = super(EditForm, self).save(commit = False, **args)
             post.tags = ""
             post.save()
-
+            PostEdit(post = post, user = request.user).save()
 
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:

@@ -49,6 +49,13 @@ class Post(models.Model):
 
         return tag_string
 
+class PostEdit(models.Model):
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+    edited = models.DateTimeField(editable = False, auto_now_add = True)
+
+    class Meta:
+        ordering = ["-edited"]
 
 class ForumVote(models.Model):
     forum = models.ForeignKey(Forum)
