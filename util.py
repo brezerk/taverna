@@ -23,8 +23,6 @@ class ExtendedPaginator(Paginator):
         start = number - 5
         end = number + 5
 
-        if start < 1:
-            start = 1
 
         if end > self.num_pages:
             end = self.num_pages
@@ -33,6 +31,9 @@ class ExtendedPaginator(Paginator):
 
         if end - start < 9:
             start = end - 9
+
+        if start < 1:
+            start = 1
 
         self.page_range = range(start, end + 1)
 
