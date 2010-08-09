@@ -1,8 +1,4 @@
 
- == Conception ==
-     * <opium> I think it is no good idea to implement every last LOR feature.
-     * <brezerk> what you talking about? js edit form for comments?
-
  == Blogs ==
 
  Edit posts: 
@@ -17,10 +13,6 @@
      * Any user can vote in forum and blogs and commetns;
      * Define and balance privileges karma requirements;
 
- == Forums ==
-
- Redesing:
-     * Use JavaScript to display edit form for comments (Yes, Like in LOR)
 
  == Library ==
 
@@ -31,9 +23,9 @@
        Please, test it;
 
        Here some of them:
-            * django-simple-wiki  ( http://code.google.com/p/django-simple-wiki/ )
-            * django-pad          ( http://code.google.com/p/django-pad/ )
-            * sf-django-wiki      ( https://launchpad.net/sf-django-wiki/ )
+            * django-simple-wiki  ( http://code.google.com/p/django-simple-wiki/ ) (Don't work with Django 1.2, but i can fix this. right?)
+            - django-pad          ( http://code.google.com/p/django-pad/ ) ( Drop it. BSD license :[ )
+            - sf-django-wiki      ( https://launchpad.net/sf-django-wiki/ ) (Too hard, have many dependence)
 
  == Admin ===
 
