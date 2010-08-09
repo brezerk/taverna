@@ -13,7 +13,13 @@
 {{form}}
 {% csrf_token %}
 <tr><td>&nbsp;</td><td><input type=submit value={% trans "Log in" %}></tr>
+</form>
+<form method=post>
+{% csrf_token %}
+<input id="id_openid" type="hidden" name="openid" maxlength="32" value="google" />
+<tr><td>&nbsp;</td><td><input type=submit value={% trans "Google" %}></tr>
 </table>
 </form>
+
 
 {% endblock %}

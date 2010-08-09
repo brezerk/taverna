@@ -25,10 +25,11 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from hashlib import md5
+from hashlib import sha512, md5
 
 from openid.store import filestore
 from openid.consumer import consumer
+from openid import sreg
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
@@ -114,16 +115,26 @@ def openid_chalange(request):
         c = consumer.Consumer(request.session, store)
         openid_url = request.POST['openid']
 
+
+        # Google ...
+        if openid_url == "google":
+            openid_url = 'https://www.google.com/accounts/o8/id'
         try:
             auth_request = c.begin(openid_url)
         except consumer.DiscoveryFailure, exc:
             error = "OpenID discovery error: %s" % str(exc)
             return {'form': form, 'error': error}
 
-        if auth_request.shouldSendRedirect():
-            trust_root = getViewURL(request, openid_chalange)
-            redirect_to = getViewURL(request, openid_finish)
-            return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
+#       import openid.extensions.ax as ax
+#       ax_request = ax.FetchRequest()
+#       ax_request.add (ax.AttrInfo ('http://schema.openid.net/contact/email', alias='email', required=False))
+#       ax_request.add (ax.AttrInfo ('http://axschema.org/namePerson/first', alias='firstname', required=False))
+#       auth_request.addExtension(ax_request)
+
+#       if auth_request.shouldSendRedirect():
+        trust_root = getViewURL(request, openid_chalange)
+        redirect_to = getViewURL(request, openid_finish)
+        return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
     else:
         form = OpenidForm()
     return {'form': form}
@@ -144,7 +155,23 @@ def openid_finish(request):
     response = c.complete(request_args, return_to)
 
     if response.status == consumer.SUCCESS:
-        openid_hash=md5(response.getDisplayIdentifier()).hexdigest()
+        openid_hash=sha512(response.getDisplayIdentifier()).hexdigest()
+        sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
+
+#       import openid.extensions.ax as ax
+#       ax_response = ax.FetchResponse.fromSuccessResponse(response)
+
+#       print ax_response
+#
+#       ax_items = ""
+
+#       if ax_response:
+#           ax_items = {
+#               'email': ax_response.get('http://schema.openid.net/contact/email'),
+#               'firstname': ax_response.get('http://axschema.org/namePerson/first'),
+#           }
+#
+#       print ax_items
 
         try:
             profile = Profile.objects.get(openid_hash = openid_hash)
@@ -155,8 +182,7 @@ def openid_finish(request):
 
             return HttpResponseRedirect("/")
         except Profile.DoesNotExist:
-            user = User(username = slugify(response.getDisplayIdentifier()[7:-1]),
-                        is_staff = False, is_active = True,
+            user = User(username = openid_hash[:30], is_staff = False, is_active = True,
                         is_superuser = False)
             user.save()
             profile = Profile(user = user, photo = "", openid_hash = openid_hash)
@@ -164,7 +190,7 @@ def openid_finish(request):
             try:
                 blog = Blog.objects.get(owner = user)
             except Blog.DoesNotExist:
-                blog = Blog(owner = user, name = slugify(response.getDisplayIdentifier()[7:-1]))
+                blog = Blog(owner = user, name = openid_hash[:30])
                 blog.save()
 
             auth = authenticate(username=user.username)
