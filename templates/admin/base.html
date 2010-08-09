@@ -29,10 +29,10 @@
 </div>
 <!-- end of simple head title -->
 <!-- menu block -->
-{% if user.is_superuser %}
 <div class='menubox'>
     <table cellspacing='0' cellpadding='2' border='0' width='100%'>
     <tr>
+        {% if user.is_superuser %}
         <td width='300'>&nbsp;</td>
         <td align='center'>
             [<a href='{% url blog.views.index %}'>{% trans "Traker" %}</a>] 
@@ -42,10 +42,14 @@
         <td width='300' align='right'>
             {% trans "Welcome" %}, <span sytle='color: white'><b>{{ user }}</b></span></a> [<span class='minus'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
         </td>
+        {% else %}
+        <td align='center'>
+            [<a href='{% url blog.views.index %}'>{% trans "Main" %}</a>]
+        </td>
+        {% endif %}
     </tr>
     </table>
 </div>
-        {% endif %}
 <!-- end of menu block -->
 
     <!-- 
