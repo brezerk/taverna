@@ -13,6 +13,8 @@ from django.utils.translation import ugettext as _
 
 import re
 
+from django.contrib.sites.models import Site
+
 class ForumForm(forms.ModelForm):
     class Meta:
         model = Forum
@@ -188,7 +190,7 @@ def thread(request, post_id):
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
-    return {'startpost': Post.objects.get(pk = post_id)}
+    return {'startpost': Post.objects.get(pk = post_id), 'site': Site.objects.get_current().domain}
 
 def offset(request, root_id, offset_id):
     from django.conf import settings

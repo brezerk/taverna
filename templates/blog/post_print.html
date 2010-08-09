@@ -18,6 +18,7 @@
     {% if startpost.postedit_set.all.0 %}
     <br>{% trans "Lastmod by" %}: {{startpost.postedit_set.all.0.user.profile.get_visible_name}} {% trans "at" %} {{startpost.postedit_set.all.0.edited|date:"d.m.Y H:i"}}
     {% endif %}
+    <br>{% trans "Printed from" %}: <a href='{% url forum.views.thread startpost.pk %}'>http://{{ site }}{{ startpost.get_absolute_url }}</a>
     </h4>
     <div>
     {{ startpost.text|markup:startpost.parser|safe }}
