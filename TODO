@@ -26,6 +26,10 @@
             - django-pad          ( http://code.google.com/p/django-pad/ ) ( Drop it. BSD license :[ )
             - sf-django-wiki      ( https://launchpad.net/sf-django-wiki/ ) (Too hard, have many dependence)
 
+ == OpenID ==
+
+     * Revrite engine;
+
  == Admin ===
 
  Redesign:
