@@ -20,6 +20,7 @@ sitemaps = {
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
+    (r'^wiki/', include('simplewiki.urls')),
 
     (r'^libthread-(?P<post_id>\d+).so$', 'forum.views.thread'),
 

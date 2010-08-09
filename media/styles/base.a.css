@@ -1,0 +1,33 @@
+.menubox {
+    background-color: #3f3f3f;
+    border-bottom: 1px solid #686868;
+    border-top: 1px solid #686868;
+    text-align: center;
+    color: #afafaf;
+}
+
+.menubox a {
+    color: white;
+    text-decoration: none;
+}
+
+.menubox a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+
+.menubox a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+.titlebox {
+    background-color: #111111;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 16px;
+    color: #c8c8c8;
+    text-align: left;
+}
+
