@@ -22,11 +22,11 @@
 {% if user.profile.can_create_topic %}
 [<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
 {% endif %}
+{% endif %}
 </td>
 </tr>
 </table>
 
-{% endif %}
 </div>
 {% endblock %}
 
