@@ -186,6 +186,10 @@ def thread(request, post_id):
 
     return { 'startpost': startpost, 'thread': paginator.page(page), 'comment_form': PostForm() }
 
+@rr('blog/post_print.html')
+def print_post(request, post_id):
+    return {'startpost': Post.objects.get(pk = post_id)}
+
 def offset(request, root_id, offset_id):
     from django.conf import settings
     paginator = Paginator(Post.objects.filter(thread__pk = root_id).exclude(pk = root_id), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
