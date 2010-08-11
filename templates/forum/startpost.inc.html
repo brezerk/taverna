@@ -80,7 +80,7 @@
     <div class='editby'>
     {% for edit in startpost.postedit_set.all %}
         {% trans "Edited by" %} <span class='plus'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
-        ( {{ edit.edited|date:"d.m.Y H:i" }} )<br>
+        ( {{ edit.edited|date:"d.m.Y H:i" }} ) <a href='{% url blog.views.diff edit.pk %}'>Diff</a> <br>
     {% endfor %}
     </div>
 {% endif %}

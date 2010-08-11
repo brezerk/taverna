@@ -140,8 +140,9 @@ def topic_edit(request, topic_id):
         form = ThreadForm(request.POST, instance=topic)
         if form.is_valid():
             if request.POST['submit']==_("Save"):
-                form.save()
-                PostEdit(post = topic, user = request.user).save()
+                orig_text = Post.objects.get(pk = topic_id).text
+                post = form.save()
+                PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
 
                 return HttpResponseRedirect(reverse('forum.views.thread', args = [topic_id]))
 

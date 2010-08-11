@@ -47,11 +47,11 @@ def settings(request):
 def post_edit(request, post_id):
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
-    post = Post.objects.get(pk = post_id)
+    post_orig = Post.objects.get(pk = post_id)
     tag_string = ""
 
     class EditForm(ModelForm):
-        tag_string = CharField(initial = post.get_tag_list())
+        tag_string = CharField(initial = post_orig.get_tag_list())
         blog = ModelChoiceField(queryset = user_blogs,
                             initial = user_blogs[0],
                             label = _("Post to"))
@@ -61,10 +61,13 @@ def post_edit(request, post_id):
             exclude = ('tags', 'reply_to', 'thread')
 
         def save(self, **args):
+            orig_text = Post.objects.get(pk = post_id).text
+
             post = super(EditForm, self).save(commit = False, **args)
             post.tags = ""
             post.save()
-            PostEdit(post = post, user = request.user).save()
+
+            PostEdit(post = post, user = request.user, old_text = orig_text, new_text = post.text).save()
 
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:
@@ -78,14 +81,14 @@ def post_edit(request, post_id):
     tags = None
 
     if request.method == 'POST':
-        form = EditForm(request.POST, instance=post)
+        form = EditForm(request.POST, instance=post_orig)
         form.is_valid()
         if 'submit' in request.POST:
             if request.POST['submit']==_("Save"):
                 form.save()
                 return HttpResponseRedirect(reverse("forum.views.thread", args = [post_id]))
     else:
-        form = EditForm(instance=post)
+        form = EditForm(instance=post_orig)
     return {
         'form': form,
         'post_id': post_id,
@@ -167,6 +170,11 @@ def view(request, blog_id):
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return {'thread': paginator.page(page), 'blog_info': blog_info }
+
+@rr('blog/post_diff.html')
+def diff(request, diff_id):
+    edit_post = PostEdit.objects.get(pk = diff_id)
+    return {'startpost': edit_post.post, 'diff_info': edit_post.get_diff()}
 
 @rr('blog/blog.html')
 def view_all(request, user_id):

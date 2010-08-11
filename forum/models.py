@@ -29,6 +29,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, null = True)
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
+
     class Meta:
         ordering = ('created',)
 
@@ -54,11 +55,20 @@ class Post(models.Model):
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
+    new_text = models.TextField()
+    old_text = models.TextField()
     user = models.ForeignKey(User)
     edited = models.DateTimeField(editable = False, auto_now_add = True)
 
     class Meta:
         ordering = ["-edited"]
+
+    def get_diff(self):
+        import difflib
+        differ = difflib.HtmlDiff(tabsize=4,wrapcolumn=60)
+        return differ.make_table(self.old_text.splitlines(1), self.new_text.splitlines(1), 
+        _("Original %s" % self.post.created), 
+        _("Result %s by %s" % (self.edited, self.user.profile.visible_name)), context=False)
 
 class ForumVote(models.Model):
     forum = models.ForeignKey(Forum)

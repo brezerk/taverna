@@ -248,3 +248,27 @@ label, th {
     margin-bottom: 5px;
 }
 
+.diff {
+    width: 100%;
+}
+
+.diff_next {
+    border: 1px solid #3f3f3f;
+}
+
+.diff_header {
+    border: 1px solid #3f3f3f;
+    background-color: #3f3f3f;
+}
+
+.diff_chg {
+    background-color: #4e5466;
+}
+
+.diff_add {
+    background-color: #355336;
+}
+
+.diff_sub {
+    background-color: #682828;
+}

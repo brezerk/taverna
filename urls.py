@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     (r'^blog/libblog-(?P<blog_id>\d+).so$', 'blog.views.view'),
     (r'^blog/all/libblog-(?P<user_id>\d+).so$', 'blog.views.view_all'),
 
+    (r'^blog/libdiff-(?P<diff_id>\d+).so$', 'blog.views.diff'),
+
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
     (r'^blogs/$', 'blog.views.list'),
