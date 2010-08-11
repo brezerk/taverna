@@ -177,6 +177,16 @@ def tags_search(request, tag_name):
         'search_tag': tag_name,
     }
 
+def post_rollback(request, diff_id):
+    diff = PostEdit.objects.get(pk = diff_id)
+    PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()
+
+    post = diff.post
+    post.text = diff.old_text
+    post.save()
+
+    return thread(request, post.pk)
+
 @rr('blog/post_view.html')
 def thread(request, post_id):
 

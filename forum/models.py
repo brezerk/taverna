@@ -67,7 +67,7 @@ class PostEdit(models.Model):
         import difflib
         differ = difflib.HtmlDiff(tabsize=4,wrapcolumn=60)
         return differ.make_table(self.old_text.splitlines(1), self.new_text.splitlines(1), 
-        _("Original %s" % self.post.created), 
+        _("Source %s" % self.post.created), 
         _("Result %s by %s" % (self.edited, self.user.profile.visible_name)), context=False)
 
 class ForumVote(models.Model):
