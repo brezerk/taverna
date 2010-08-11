@@ -1,4 +1,5 @@
 from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse as reverseURL
 from urlparse import urljoin
@@ -36,6 +37,10 @@ class ExtendedPaginator(Paginator):
 def rr(template):
     def decor(view):
         def wrapper(request, *args, **kwargs):
+            if request.user.is_authenticated():
+                if not request.user.profile.visible_name:
+                    if request.path not in (reverseURL("userauth.views.profile_edit"), reverseURL("userauth.views.openid_logout")):
+                        return HttpResponseRedirect(reverseURL("userauth.views.profile_edit"))
             val = view(request, *args, **kwargs)
             if type(val) == type({}):
                 val.update({'user': request.user})

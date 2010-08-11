@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, editable = False)
     openid_hash = models.CharField(editable = False, blank = True, null = True, max_length = 129)
-    visible_name = models.SlugField(blank = False, null = True, max_length = 33)
+    visible_name = models.SlugField(blank = False, null = True, max_length = 33, unique = True)
     karma = models.IntegerField(default = 10)
     jabber = models.EmailField(blank = True, null = True, max_length = 32)
     website = models.CharField(blank = True, null = True, max_length = 32)
@@ -31,4 +31,4 @@ class Profile(models.Model):
         if self.visible_name:
             return self.visible_name
         else:
-            return self.user.username
+            return "User-%i" % self.id
