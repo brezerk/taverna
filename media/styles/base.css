@@ -41,6 +41,10 @@ a:hover {
 
 #content { margin: 1em; }
 
+.cut {
+    border-bottom: 1px dashed #686868;
+}
+
 .menubox {
     background-color: #3f3f3f;
     border-bottom: 1px solid #686868;

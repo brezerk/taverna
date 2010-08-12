@@ -1,9 +1,4 @@
 
- == Blogs ==
-
- Edit posts: 
-     * Make something like ----cut----
-
  == General ==
 
  Sitemap:
@@ -12,19 +7,6 @@
  Vote system:
      * Any user can vote in forum and blogs and commetns;
      * Define and balance privileges karma requirements;
-
- == Library ==
-
- Test integration:
-     * I found some simple wiki engines, which can be used for library
-       implementation;
-      
-       Please, test it;
-
-       Here some of them:
-            * django-simple-wiki  ( http://code.google.com/p/django-simple-wiki/ ) (Don't work with Django 1.2, but i can fix this. right?)
-            - django-pad          ( http://code.google.com/p/django-pad/ ) ( Drop it. BSD license :[ )
-            - sf-django-wiki      ( https://launchpad.net/sf-django-wiki/ ) (Too hard, have many dependence)
 
  == Admin ===
 

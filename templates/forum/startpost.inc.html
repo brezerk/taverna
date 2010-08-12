@@ -38,7 +38,11 @@
 <tr><td width='40px'>&nbsp;</td><td>
 <div class='content'>
 {% if dont_strip %}
-{{ startpost.text|markup:startpost.parser|safe }}
+    {% if show_cut %}
+        {{ startpost.text|show_cut|markup:startpost.parser|safe }}
+    {% else %}
+        {{ startpost.text|markup:startpost.parser|safe }}
+    {% endif %}
 {% else %}
 {{ startpost.text|strippost:startpost|safe }}
 {% endif %}

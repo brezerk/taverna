@@ -22,7 +22,9 @@
 
 {% if form.cleaned_data %}
 {% with form.cleaned_data as startpost %}
-    {% include 'forum/startpost.inc.html' %}
+    {% with 1 as show_cut %}
+        {% include 'forum/startpost.inc.html' %}
+    {% endwith %}
 {% endwith %}
 {% endif %}
 
