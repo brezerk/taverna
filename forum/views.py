@@ -35,12 +35,12 @@ class ThreadForm(forms.ModelForm):
         if not tag_list[-1].strip():
             raise forms.ValidationError(_("Tags is good. But title also required."))
 
-        if len(tag_list[-1]) < 5:
+        if len(tag_list[-1].strip()) < 5:
             raise forms.ValidationError(_("Topic length < 5 is not allowed."))
         return title
 
     def clean_text(self):
-        text = self.cleaned_data['text']
+        text = self.cleaned_data['text'].strip()
         if len(text) < 24:
             raise forms.ValidationError(_("Text length < 24 is not allowed."))
         return text
@@ -51,7 +51,7 @@ class PostForm(forms.ModelForm):
         exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
 
     def clean_text(self):
-        text = self.cleaned_data['text']
+        text = self.cleaned_data['text'].strip()
         if len(text) < 24:
             raise forms.ValidationError(_("Text length < 24 is not allowed."))
         return text
