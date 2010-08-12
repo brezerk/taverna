@@ -45,9 +45,13 @@ def settings(request):
 @login_required()
 @rr('blog/post_edit.html')
 def post_edit(request, post_id):
+    post_orig = Post.objects.get(pk = post_id)
+
+    if not post_orig.reply_to == None:
+        return HttpResponseRedirect("/")
+
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
-    post_orig = Post.objects.get(pk = post_id)
     tag_string = ""
 
     class EditForm(ModelForm):

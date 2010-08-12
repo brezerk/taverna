@@ -133,6 +133,9 @@ def topic_edit(request, topic_id):
 
     topic = Post.objects.get(pk = topic_id)
 
+    if not topic.reply_to == None:
+        return
+
     if not topic.owner == request.user:
         return
 
