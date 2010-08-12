@@ -38,7 +38,7 @@
 <tbody>
 {% for edit in startpost.postedit_set.all %}
 <tr><td class="diff_next">{{ forloop.counter }}</td><td nowrap="nowrap" {% if edit.pk == edit_post.pk %}class="diff_this"{% endif %}>
-<span class='plus'>&nbsp;<a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} <a href='{% url blog.views.diff edit.pk %}'>Diff</a> <br>
+<span class='plus'>&nbsp;<a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} <a href='{% url forum.views.post_diff edit.pk %}'>Diff</a> <br>
 </td></tr>
 {% endfor %}
 <thead><tr><th class="diff_next"><br /></th><th colspan="2" class="diff_header">{% trans "Legend" %}</th></tr></thead>

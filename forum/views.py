@@ -177,6 +177,11 @@ def tags_search(request, tag_name):
         'search_tag': tag_name,
     }
 
+@rr('blog/post_diff.html')
+def post_diff(request, diff_id):
+    edit_post = PostEdit.objects.get(pk = diff_id)
+    return {'startpost': edit_post.post, 'edit_post': edit_post}
+
 def post_rollback(request, diff_id):
     diff = PostEdit.objects.get(pk = diff_id)
     PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()

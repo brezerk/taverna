@@ -171,11 +171,6 @@ def view(request, blog_id):
 
     return {'thread': paginator.page(page), 'blog_info': blog_info }
 
-@rr('blog/post_diff.html')
-def diff(request, diff_id):
-    edit_post = PostEdit.objects.get(pk = diff_id)
-    return {'startpost': edit_post.post, 'edit_post': edit_post}
-
 @rr('blog/blog.html')
 def view_all(request, user_id):
     blog_posts = None

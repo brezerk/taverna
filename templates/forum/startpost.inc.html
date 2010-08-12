@@ -80,7 +80,7 @@
     <div class='editby'>
     {% with startpost.postedit_set.all.0 as edit %}
     {% if edit %}
-        {% trans "Last edited by" %} <span class='plus'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} (<a href='{% url blog.views.diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>)
+        {% trans "Last edited by" %} <span class='plus'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} (<a href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>)
     {% endif %}
     {% endwith %}
     </div>

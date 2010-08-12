@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     (r'^blog/libblog-(?P<blog_id>\d+).so$', 'blog.views.view'),
     (r'^blog/all/libblog-(?P<user_id>\d+).so$', 'blog.views.view_all'),
 
-    (r'^blog/libdiff-(?P<diff_id>\d+).so$', 'blog.views.diff'),
+    (r'^blog/libdiff-(?P<diff_id>\d+).so$', 'forum.views.post_diff'),
     (r'^blog/librollback-(?P<diff_id>\d+).so$', 'forum.views.post_rollback'),
 
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
