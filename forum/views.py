@@ -192,7 +192,7 @@ def post_rollback(request, diff_id):
 
     diff = PostEdit.objects.get(pk = diff_id)
 
-    if not diff.owner == request.user:
+    if not diff.post.owner == request.user:
         return HttpResponseRedirect("/")
 
     PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()
