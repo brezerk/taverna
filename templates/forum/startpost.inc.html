@@ -106,10 +106,10 @@
 {% endif %}
 {% endif %}
 
-{% if user.is_authenticated %}
-{% if user.profile.can_create_topic %}
-[<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
-{% endif %}
+{% if user.is_authenticated and user.profile.can_create_topic and startpost.owner %}
+[<a href='
+{% url forum.views.reply startpost.pk %}
+'>{% trans "Add a comment" %}</a>]
 {% endif %}
 
 </td></td>&nbsp;</td></tr>
