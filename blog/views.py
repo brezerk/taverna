@@ -45,6 +45,9 @@ def settings(request):
 @login_required()
 @rr('blog/post_edit.html')
 def post_edit(request, post_id):
+    if not request.user.profile.can_create_topic:
+        return HttpResponseRedirect("/") # FIXME redirect to error message
+
     post_orig = Post.objects.get(pk = post_id)
 
     if not post_orig.reply_to == None:

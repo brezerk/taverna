@@ -129,15 +129,15 @@ def topic_create(request, forum_id):
 @rr('forum/topic_edit.html')
 def topic_edit(request, topic_id):
     if not request.user.profile.can_create_topic:
-        return
+        return HttpResponseRedirect("/") # FIXME redirect to error message
 
     topic = Post.objects.get(pk = topic_id)
 
     if not topic.reply_to == None:
-        return
+        return HttpResponseRedirect("/")
 
     if not topic.owner == request.user:
-        return
+        return HttpResponseRedirect("/")
 
     if request.method == 'POST':
         form = ThreadForm(request.POST, instance=topic)
