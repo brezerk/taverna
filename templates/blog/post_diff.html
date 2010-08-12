@@ -41,7 +41,7 @@
 <span class='plus'>&nbsp;<a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} <a href='{% url forum.views.post_diff edit.pk %}'>Diff</a> <br>
 </td></tr>
 {% endfor %}
-<thead><tr><th class="diff_next"><br /></th><th colspan="2" class="diff_header">{% trans "Legend" %}</th></tr></thead>
+<tr><th class="diff_next"><br /></th><th colspan="2" class="diff_header">{% trans "Legend" %}</th></tr>
 <tr><td class="diff_next">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Not changed text" %}</td></tr>
 <tr><td class="diff_chg">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Changed text" %}</td></tr>
 <tr><td class="diff_add">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Added text" %}</td></tr>
