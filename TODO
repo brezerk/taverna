@@ -8,6 +8,13 @@
      * Any user can vote in forum and blogs and commetns;
      * Define and balance privileges karma requirements;
 
+ Rulesz pages:
+     * Write rules pages;
+     * Write error pages for unallowed actions (Like adding topic while you have not enough carma);
+
+ Ban IE:
+     * Ban IEUA;
+
  == Admin ===
 
  Redesign:
