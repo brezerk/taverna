@@ -50,6 +50,9 @@ def post_edit(request, post_id):
     if not post_orig.reply_to == None:
         return HttpResponseRedirect("/")
 
+    if post_orig.owner != request.user:
+        return HttpResponseRedirect("/")
+
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
     tag_string = ""
