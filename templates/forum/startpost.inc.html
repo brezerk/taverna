@@ -92,16 +92,26 @@
 </p>
 </div>
 </td>
-{% if startpost.owner %}
+<td width='40px'>&nbsp;</td></tr><tr><td>&nbsp;</td><td>
+
 {% if startpost.owner == user %}
-<td width='40px'>&nbsp;</td></tr><tr><td>&nbsp;</td><td>[<a href='
+{% if user.profile.can_create_topic %}
+[<a href='
 {% if startpost.blog %}
     {% url blog.views.post_edit startpost.pk  %}
 {% else %}
     {% url forum.views.topic_edit startpost.pk  %}
 {% endif %}
-'>{% trans "Edit" %}</a>] </td></td>&nbsp;</td></tr>
+'>{% trans "Edit" %}</a>] 
 {% endif %}
 {% endif %}
+
+{% if user.is_authenticated %}
+{% if user.profile.can_create_topic %}
+[<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
+{% endif %}
+{% endif %}
+
+</td></td>&nbsp;</td></tr>
 </table>
 </div>
