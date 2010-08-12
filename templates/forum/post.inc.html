@@ -25,14 +25,16 @@
 <tr><td>
 <b>{{post.title}}</b>
 {{post.text|markup:post.parser|safe}}
-<small><span class='plus'><a href='
+<small>
 {% if startpost %}
+<span class='plus'>
 <a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}
-</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}</small>
+</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}
 {% else %}
-<a href=''>{{user.profile.get_visible_name}}
-</a></span> @ {%now "d.m.Y H:i:s"%}</small>
+<span class='plus'><a href=''>{{user.profile.get_visible_name}}
+</a></span> @ {%now "d.m.Y H:i:s"%}
 {% endif %}
+</small>
 {% if startpost %}
 {% if user.profile.can_create_comment %}
 <br><a href="{% url forum.views.reply post.pk %}">[{% trans "Reply on this message" %}]</a>

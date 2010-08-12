@@ -39,10 +39,20 @@
 </table>
 {% endif %}
 
+{% if user_blogs %}
+<h3>{% trans "Top 20 user blogs:" %}</h3>
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='220px'>{% trans "Blog name" %}</th><th>{% trans "Description" %}</th></tr>
+{% for blog in user_blogs %}
+<tr><td><a href='{%url blog.views.view blog.id %}'>{{blog.name}}</a></td><td>{{blog.desc}}</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+
 {% if thread %}
 
 {% include 'forum/arrows.inc.html' %}
-<h3>{% trans "Top 20 user blogs:" %}</h3>
+<h3>{% trans "User blogs:" %}</h3>
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
 <tr class='theader'><th width='220px'>{% trans "Blog name" %}</th><th>{% trans "Description" %}</th></tr>
 {% for blog in thread.object_list %}

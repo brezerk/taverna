@@ -209,7 +209,6 @@ def index(request):
 @rr('blog/blog_list.html')
 def list(request):
     public_blogs = Blog.objects.filter(owner = 1)
-
     user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
     return { 'public_blogs': public_blogs, 'user_blogs': user_blogs }
 
@@ -220,7 +219,7 @@ def list_public(request):
 
 @rr('blog/blog_list.html')
 def list_users(request):
-    blog_list = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
+    blog_list = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")
 
     page = request.GET.get("offset", 1)
 
