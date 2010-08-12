@@ -186,7 +186,15 @@ def post_diff(request, diff_id):
     return {'startpost': edit_post.post, 'edit_post': edit_post}
 
 def post_rollback(request, diff_id):
+
+    if not request.user.profile.can_create_topic:
+        return HttpResponseRedirect("/") # FIXME redirect to error message
+
     diff = PostEdit.objects.get(pk = diff_id)
+
+    if not diff.owner == request.user:
+        return HttpResponseRedirect("/")
+
     PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()
 
     post = diff.post
