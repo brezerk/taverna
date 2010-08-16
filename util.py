@@ -34,7 +34,7 @@ class ExtendedPaginator(Paginator):
 
         return Paginator.page(self, number)
 
-def rr(template):
+def rr(template, mimetype=None):
     def decor(view):
         def wrapper(request, *args, **kwargs):
             if request.user.is_authenticated():
@@ -45,7 +45,7 @@ def rr(template):
             if type(val) == type({}):
                 val.update({'user': request.user})
                 val.update(csrf(request))
-                return render_to_response(template, val)
+                return render_to_response(template, val, mimetype=mimetype)
             else:
                 return val
         return wrapper

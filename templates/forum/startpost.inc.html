@@ -57,9 +57,9 @@
 {% endif %}
 <p>
 {% if startpost.owner %}
-[<span class='plus'><a href=''>▲</a></span>] {{ startpost.rating }} [<span class='minus'><a href=''>▼</a></span>]
+[<span class='plus'><a href='' class='vote-positive' id='{{ startpost.pk }}' >▲</a></span>] <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span> [<span class='minus'><a class='vote-negative' id='{{ startpost.pk }}' href=''>▼</a></span>]
 {% else %}
-[<span class='plus'><a href=''>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>]
+[<span class='plus'><a href='' class='voite'>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>]
 {% endif %}
 
 | {% trans "Author" %}: <span class='plus'><a href='

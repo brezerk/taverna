@@ -7,10 +7,12 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField
 
+from django.db import IntegrityError
+
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
-from taverna.forum.models import Post, PostEdit
+from taverna.forum.models import Post, PostEdit, PostVote
 
 from util import rr, ExtendedPaginator as Paginator
 from django.core.urlresolvers import reverse
@@ -205,6 +207,35 @@ def index(request):
     paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return { 'thread': paginator.page(page)}
+
+@login_required()
+@rr('ajax/vote.json', "application/json")
+def vote_async(request, post_id, positive):
+    post = Post.objects.get(pk = post_id)
+    if post.owner == request.user:
+        return {"rating": post.rating, "message": _("You can not vote for own post.")}
+    else:
+        if int(positive) == 0:
+            positive = True
+        else:
+            positive = False
+
+        try:
+            PostVote(post = post, user = request.user, positive = positive).save()
+        except IntegrityError:
+            return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
+
+        if positive:
+           post.rating += 1
+           post.owner.profile.karma += 1
+        else:
+           post.rating -= 1
+           post.owner.profile.karma -= 1
+
+        post.owner.profile.save()
+        post.save()
+
+    return {"rating": post.rating}
 
 @rr('blog/blog_list.html')
 def list(request):
