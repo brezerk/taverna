@@ -2,7 +2,7 @@
 {% load markup %}
 
 <div class="post" id="post_{{post.pk}}">
-<table border='0px'>
+<table border='0px' width='100%' colspan='0' rowspan='0'>
 <tr><td>
 [<a href='
 {% if startpost %}
@@ -21,15 +21,21 @@
 " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} {{post.reply_to.created|date:"d.m.Y H:i:s"}}
 {% endif %}
 {% endif %}
+</td><td width='50px' align='right'>
+
+<span id='rating-{{ post.pk }}'>{{ post.rating }}</span><span class='plus'><a href='' class='vote-positive' id='{{ post.pk }}' >+</a></span>/<span class='minus'><a class='vote-negative' id='{{ post.pk }}' href=''>-</a></span>
+
 </td></tr>
-<tr><td>
+<tr><td colspan='2'>
 <b>{{post.title}}</b>
 {{post.text|markup:post.parser|safe}}
 <small>
 {% if startpost %}
 <span class='plus'>
 <a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}
-</a></span> @ {{post.created|date:"d.m.Y H:i:s"}}
+</a></span> @ {{post.created|date:"d.m.Y H:i:s"}} 
+
+
 {% else %}
 <span class='plus'><a href=''>{{user.profile.get_visible_name}}
 </a></span> @ {%now "d.m.Y H:i:s"%}
