@@ -57,7 +57,7 @@
 {% endif %}
 <p>
 {% if startpost.owner %}
-[<span class='plus'><a href='' class='vote-positive' id='{{ startpost.pk }}' >▲</a></span>] <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span> [<span class='minus'><a class='vote-negative' id='{{ startpost.pk }}' href=''>▼</a></span>]
+[<span class='plus'><a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='{{ startpost.pk }}' >▲</a></span>] <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span> [<span class='minus'><a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a></span>]
 {% else %}
 [<span class='plus'><a href='' class='voite'>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>]
 {% endif %}

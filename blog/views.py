@@ -14,10 +14,12 @@ from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post, PostEdit, PostVote
 
-from util import rr, ExtendedPaginator as Paginator
+from util import rr, ExtendedPaginator
+from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
+
 
 @login_required()
 @rr('blog/settings.html')
@@ -164,7 +166,7 @@ def tags_search(request, tag_id):
 
     posts = Post.objects.filter(tags = tag_id).order_by('-created')
     from django.conf import settings
-    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     tag = Tag.objects.get(pk=tag_id);
 
     return {'thread': paginator.page(page), 'tag': tag }
@@ -179,7 +181,7 @@ def view(request, blog_id):
     blog_info = Blog.objects.get(pk = blog_id)
     posts = Post.objects.filter(blog = blog_info).order_by('-created')
     from django.conf import settings
-    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return {'thread': paginator.page(page), 'blog_info': blog_info }
 
@@ -193,7 +195,7 @@ def view_all(request, user_id):
     posts_owner = User.objects.get(pk = user_id)
     posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
     from django.conf import settings
-    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return {'thread': paginator.page(page), 'posts_owner': posts_owner}
 
@@ -204,7 +206,7 @@ def index(request):
     page = request.GET.get("offset", 1)
 
     from django.conf import settings
-    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return { 'thread': paginator.page(page)}
 
@@ -240,6 +242,41 @@ def vote_async(request, post_id, positive):
 
     return {"rating": post.rating}
 
+@rr('ajax/vote.json', "application/json")
+def vote_generic(request, post_id, positive):
+    post = Post.objects.get(pk = post_id)
+
+    if request.user.is_authenticated() and post.owner != request.user:
+        if int(positive) == 0:
+            positive = True
+        else:
+            positive = False
+
+        try:
+            PostVote(post = post, user = request.user, positive = positive).save()
+        except IntegrityError:
+            pass
+        else:
+            if positive:
+                post.rating += 1 
+                post.owner.profile.karma += 1
+            else:
+                post.rating -= 1
+                post.owner.profile.karma -= 1
+
+            post.owner.profile.save()
+            post.save()
+
+    if post.reply_to:
+        from django.conf import settings
+        paginator = Paginator(Post.objects.filter(thread = post.thread).exclude(pk = post.thread.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        print paginator.page_range
+        for page in paginator.page_range:
+            if post in paginator.page(page).object_list:
+               return HttpResponseRedirect("%s?offset=%i#post_%i" % (reverse("forum.views.thread", args = [post.thread.pk]), page, post.pk))
+    else:
+        return HttpResponseRedirect(reverse("forum.views.thread", args = [post.pk]))
+
 @rr('blog/blog_list.html')
 def list(request):
     public_blogs = Blog.objects.filter(owner = 1)
@@ -258,7 +295,7 @@ def list_users(request):
     page = request.GET.get("offset", 1)
 
     from django.conf import settings
-    paginator = Paginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     return { 'thread': paginator.page(page) }
 

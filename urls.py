@@ -67,6 +67,7 @@ urlpatterns = patterns('',
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
 
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
+    (r'^blog/libvote-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_generic'),
 
     url(r'^pam/librss-(?P<user_id>\d+).so$', RssUser(), name='rss_user'),
     url(r'^pam/libatom-(?P<user_id>\d+).so$', AtomUser(), name='atom_user'),

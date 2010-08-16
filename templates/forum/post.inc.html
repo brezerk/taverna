@@ -6,9 +6,9 @@
 <tr><td>
 [<a href='
 {% if startpost %}
-{% url forum.views.thread startpost.pk %}#post_{{ post.pk }}
+#post_{{ post.pk }}
 {% endif %}
-'>#</a>]
+' onclick="highlightMessage({{ post.pk }});" >#</a>]
 {% if post.reply_to %}
 {% if post.reply_to != startpost %}
 {% trans "Reply to" %}
@@ -23,7 +23,7 @@
 {% endif %}
 </td><td width='50px' align='right'>
 
-<span id='rating-{{ post.pk }}'>{{ post.rating }}</span><span class='plus'><a href='' class='vote-positive' id='{{ post.pk }}' >+</a></span>/<span class='minus'><a class='vote-negative' id='{{ post.pk }}' href=''>-</a></span>
+<span id='rating-{{ post.pk }}'>{{ post.rating }}</span>&nbsp;<span class='plus'><a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='{{ post.pk }}' >+</a></span>/<span class='minus'><a class='vote-negative' id='{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>-</a></span>
 
 </td></tr>
 <tr><td colspan='2'>

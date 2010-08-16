@@ -2,6 +2,7 @@ var old_post_id = 0
 
 function highlightOnLoad(){
     anchor = (document.location.hash);
+
     if (anchor != null)
         objName = anchor.substr(6);
             if (objName != null)
