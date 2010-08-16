@@ -5,7 +5,7 @@
      * Sitemap implementation (brezerk: done, need discusss);
 
  Vote system:
-     * Any user can vote in forum and blogs and commetns;
+     * get view for rating;
      * Define and balance privileges karma requirements;
 
  Rulesz pages:
@@ -14,6 +14,7 @@
 
  Ban IE:
      * Ban IEUA;
+     * Ban WUA;
 
  == Admin ===
 
