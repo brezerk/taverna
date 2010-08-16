@@ -208,32 +208,35 @@ def index(request):
 
     return { 'thread': paginator.page(page)}
 
-@login_required()
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):
     post = Post.objects.get(pk = post_id)
+
+    if not request.user.is_authenticated():
+        return {"rating": post.rating, "message": _("Registration required.")}
+
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
+
+    if int(positive) == 0:
+        positive = True
     else:
-        if int(positive) == 0:
-            positive = True
-        else:
-            positive = False
+        positive = False
 
-        try:
-            PostVote(post = post, user = request.user, positive = positive).save()
-        except IntegrityError:
-            return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
+    try:
+        PostVote(post = post, user = request.user, positive = positive).save()
+    except IntegrityError:
+        return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
 
-        if positive:
-           post.rating += 1
-           post.owner.profile.karma += 1
-        else:
-           post.rating -= 1
-           post.owner.profile.karma -= 1
+    if positive:
+        post.rating += 1
+        post.owner.profile.karma += 1
+    else:
+        post.rating -= 1
+        post.owner.profile.karma -= 1
 
-        post.owner.profile.save()
-        post.save()
+    post.owner.profile.save()
+    post.save()
 
     return {"rating": post.rating}
 
