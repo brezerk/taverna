@@ -54,13 +54,18 @@ def post_edit(request, post_id):
 
     post_orig = Post.objects.get(pk = post_id)
 
-    if not post_orig.reply_to == None:
-        return HttpResponseRedirect("/")
+    if not request.user.is_superuser:
+        if not post_orig.reply_to == None:
+            return HttpResponseRedirect("/")
 
-    if post_orig.owner != request.user:
-        return HttpResponseRedirect("/")
+        if post_orig.owner != request.user:
+            return HttpResponseRedirect("/")
 
-    user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
+        user_info = request.user
+    else:
+        user_info = post_orig.owner
+
+    user_blogs = Blog.objects.filter(owner__in = [1, user_info.pk]).order_by('name').order_by('-owner__id')
 
     tag_string = ""
 
@@ -225,10 +230,11 @@ def vote_async(request, post_id, positive):
     else:
         positive = False
 
-    try:
-        PostVote(post = post, user = request.user, positive = positive).save()
-    except IntegrityError:
-        return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
+    if not request.user.is_superuser:
+        try:
+            PostVote(post = post, user = request.user, positive = positive).save()
+        except IntegrityError:
+            return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
 
     if positive:
         post.rating += 1

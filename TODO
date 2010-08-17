@@ -21,6 +21,11 @@
  Redesign:
      * reorganize django admin pages;
 
+ Allow to delete:
+     * comments
+     * threads
+     * blogpost
+
  == Have fun ==
 
  Have fun:

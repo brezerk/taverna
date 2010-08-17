@@ -21,8 +21,18 @@
 {% block content %}
 
 {% if form.cleaned_data %}
+
 {% with form.cleaned_data as startpost %}
-        {% include 'forum/startpost.inc.html' %}
+    {% with startpost.blog.name as section_name %}
+    {% with startpost.title as startpost_title %}
+    {% with startpost.text|markup:startpost.parser|show_cut as startpost_text %}
+    {% with startpost.tag_string|tags as startpost_tags %}
+    {% url blog.views.view startpost.blog.pk as section_url %}
+    {% include "forum/startpost.inc.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
 {% endwith %}
 {% endif %}
 

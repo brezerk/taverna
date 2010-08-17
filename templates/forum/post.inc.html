@@ -18,11 +18,10 @@
                     {{post.reply_to.created|date:"d.m.Y H:i:s"}}
                 {% endif %}
             </td>
-            <td width='50px' align='right'>
+            <td width='200px' align='right'>
                 {% if post.pk %}
                     <span id='rating-{{ post.pk }}'>{{ post.rating }}</span>
-                    <a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='{{ post.pk }}'>&#43;</a>
-                    <a class='vote-negative' id='{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a>
+                    <a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='{{ post.pk }}'>&#43;</a>&#47;<a class='vote-negative' id='{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a>
                 {% endif %}
             </td>
         </tr>
@@ -42,8 +41,12 @@
                 {% endif %}
                 </small>
                 {% if startpost %}
+                    <br>
+                    {% if user.is_superuser %} 
+                        [<a href="{% url forum.views.reply post.pk %}">{% trans "Remove" %}</a>]
+                    {% endif %}
                     {% if user.profile.can_create_comment %}
-                        <br><a href="{% url forum.views.reply post.pk %}">[{% trans "Reply on this message" %}]</a>
+                        [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
                     {% endif %}
                 {% endif %}
             </td>

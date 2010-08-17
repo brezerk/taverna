@@ -66,6 +66,8 @@ urlpatterns = patterns('',
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
 
+    (r'^pam/libkarma.so$', 'userauth.views.karma'),
+
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
     (r'^blog/libvote-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_generic'),
 

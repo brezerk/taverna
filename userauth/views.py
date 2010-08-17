@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from userauth.models import Profile
 from blog.models import Blog
-from forum.models import Post
+from forum.models import Post, PostVote
 
 from util import rr, getViewURL, getOpenIDStore
 
@@ -243,3 +243,23 @@ def notify(request):
         thread = paginator.page(paginator.num_pages)
 
     return {'thread': thread, 'request_url': request.get_full_path()}
+
+@rr("userauth/coments.html")
+def karma(request):
+    user_info = request.user
+
+    try:
+        page = int(request.GET['offset'])
+    except (MultiValueDictKeyError, TypeError):
+        page = 1
+
+    from django.conf import settings
+    paginator = Paginator(PostVote.objects.exclude(reason = None).order_by('-pk'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return {'thread': thread, 'request_url': request.get_full_path()}
+

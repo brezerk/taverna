@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from blog.models import Blog, Tag
+from userauth.models import ReasonList
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
@@ -31,6 +32,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, null = True)
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
+    removed = models.BooleanField(default = 0, editable = False)
 
     class Meta:
         ordering = ('created',)
@@ -103,6 +105,7 @@ class PostVote(models.Model):
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
     positive = models.BooleanField()
+    reason = models.ForeignKey(ReasonList, blank = True, null = True)
     class Meta:
         unique_together = ('post', 'user')
 
