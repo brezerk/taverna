@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load markup %}
 
 {% block menubox %}
 <div class='actionbox'>
@@ -32,9 +33,31 @@
 
 {% block content %}
 
-{% with 1 as dont_strip %}
-{% with 1 as dont_show_comment_count %}
+{% with startpost.get_section_name as section_name %}
+{% with startpost.title as startpost_title %}
+{% with startpost.text|markup:startpost.parser|strip_cut as startpost_text %}
+{% with startpost.get_tag_url_list as startpost_tags %}
+{% with startpost.postedit_set.all.0 as edit %}
+{% if startpost.blog %}
+    {% url blog.views.view startpost.blog.pk as section_url %}
+{% else %}
+    {% url forum.views.forum startpost.forum.pk as section_url %}
+{% endif %}
+{% url forum.views.thread startpost.pk as startpost_url %}
+{% if user.is_authenticated and startpost.owner == user and user.profile.can_create_topic %}
+    {% if startpost.blog %}
+        {% url blog.views.post_edit startpost.pk as edit_url %}
+    {% else %}
+        {% url forum.views.topic_edit startpost.pk as edit_url %}
+    {% endif %}
+{% endif %}
+{% if user.is_authenticated and user.profile.can_create_topic %}
+    {% url forum.views.reply startpost.pk as add_comment_url %}
+{% endif %}
 {% include "forum/startpost.inc.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
 {% endwith %}
 {% endwith %}
 

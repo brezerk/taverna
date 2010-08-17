@@ -104,6 +104,7 @@ a:hover {
 .news {
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 15px;
 }
 
 .news a {
@@ -137,6 +138,21 @@ a:hover {
     color: #afafaf;
 }
 
+
+a.comment_info {
+    color: red;
+    text-decoration: none;
+}
+
+a.comment_info:visited {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+a.comment_info:hover {
+    color: #afafaf;
+}
+
 .content {
     text-align: justify;
 }
@@ -152,7 +168,7 @@ a:hover {
     border-top: 1px dashed #686868;
 }
 
-.plus a {
+.plus  a {
   color: #49d723;
 }
 
@@ -280,3 +296,28 @@ label, th {
 .diff_sub {
     background-color: #682828;
 }
+
+a.vote-positive {
+  color: #49d723;
+}
+
+a.vote-positive:visited {
+  color: #49d723;
+}
+
+a.vote-positive:hover {
+    color: green;
+}
+
+a.vote-negative {
+  color: red;
+}
+
+a.vote-negative:visited {
+  color: red;
+}
+
+a.vote-negative:hover {
+    color: #ff7e00;
+}
+

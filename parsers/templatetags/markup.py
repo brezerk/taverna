@@ -23,8 +23,13 @@ def show_cut(value):
 
 @register.filter
 @stringfilter
-def markup(value, parser):
+def strip_cut(value):
     value = value.replace("---cut---", "")
+    return value
+
+@register.filter
+@stringfilter
+def markup(value, parser):
 
     if parser == 1:
         value = "<p>" + render_bbcode(value) + "</p>"

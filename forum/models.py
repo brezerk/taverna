@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
@@ -36,6 +38,12 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
 
+    def get_section_name(self):
+        if self.blog:
+            return self.blog.name
+        else:
+            return self.forum.name
+
     def get_tag_list(self):
         tag_string = ""
 
@@ -47,6 +55,20 @@ class Post(models.Model):
             else:
                 tag_string = tag_string + ", "
             tag_string = tag_string + tag.name
+
+        return tag_string
+
+    def get_tag_url_list(self):
+        tag_string = ""
+
+        first = True
+
+        for tag in self.tags.all():
+            if first:
+                first = False
+            else:
+                tag_string = tag_string + ", "
+            tag_string = tag_string + "<a href='%s'>%s</a>" % (reverse("blog.views.tags_search", args = [tag.pk]) ,tag.name)
 
         return tag_string
 

@@ -2,116 +2,73 @@
 {% load markup %}
 
 <div class='news'>
-<h3>
-{% if startpost.blog %}
+    <h3>
+        <a href='{{ section_url }}'>{{ section_name }}</a> → <a href='{{ startpost_url }}'>{{ startpost_title }}</a>
+    </h3>
 
-<a href='{% url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name }}</a>
-→ <a href='
-{% if startpost.id %}
-{% url forum.views.thread startpost.id %}
-{% else %}
-{% url blog.views.view startpost.blog.pk %}
-{% endif %}
-'>{{ startpost.title }}
-</a></h3>
-{% if posts_owner %}
-<small>&nbsp;{% trans "Blog" %}</small>
-{% endif %}
-{% else %}
-{% if startpost.forum %}
-<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a>
-→ <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
-{% else %}
-<a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a>
-→ <a href=''>{{ startpost.title }}</a>
+    <table cellspacing='0' cellpadding='2' border='0' width='100%'>
+        <tr>
+            <td width='40px'>&nbsp;</td>
+            <td>
+                <div class='content'>
+                    {{ startpost_text|safe }}
+                    {% if startpost_tags %}
+                    <div class='tags'>
+                        <p>{% trans "Tags" %}: {{ startpost_tags|safe }}</p>
+                    </div>
+                    {% endif %}
+                    {% if startpost.owner %}
+                    <p>
+                        [<a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='{{ startpost.pk }}' >▲</a>]
+                        <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span>
+                        [<a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
+                        | {% trans "Author" %}: 
+                        <span class='plus'>
+                            <a href='{% url userauth.views.profile_view startpost.owner.id %}'>{{ startpost.owner.profile.get_visible_name }}</a>
+                        </span>
+                            ( {{ startpost.created|date:"d.m.Y H:i" }} )
 
-{% endif %}
-</h3>
-{% if posts_owner %}
-<small>&nbsp;{% trans "Forum" %}</small>
-{% endif %}
-{% endif %}
+                        {% if comments_url %}
+                        | <a class='comment_info' href='{{ comments_url }}'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
+                        {% endif %}
 
+                        {% if edit %}
+                        <div class='editby'>
+                            {% trans "Last edited by" %}
+                            <span class='plus'>
+                                <a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
+                            </span>
+                            {{ edit.edited|date:"d.m.Y H:i" }} (
+                            <span class='plus'>
+                                <a href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>
+                            </span>)
+                        </div>
+                        {% endif %}
 
-
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td width='40px'>&nbsp;</td><td>
-<div class='content'>
-{% if dont_strip %}
-    {% if show_cut %}
-        {{ startpost.text|show_cut|markup:startpost.parser|safe }}
-    {% else %}
-        {{ startpost.text|markup:startpost.parser|safe }}
-    {% endif %}
-{% else %}
-{{ startpost.text|strippost:startpost|safe }}
-{% endif %}
-{% if startpost.tags.all.0 %}
-<div class='tags'><p>{% trans "Tags" %}: 
-{% for tag in startpost.tags.all %}{% if not forloop.first %}, {% endif %}<a href='{% url blog.views.tags_search tag.pk %}'>{{ tag }}</a>{% endfor %}
-{% endif %}
-{% if startpost.tag_string %}
-<div class='tags'><p>{% trans "Tags" %}: 
-{{ startpost.tag_string|tags|safe }}
-</p></div>
-{% endif %}
-<p>
-{% if startpost.owner %}
-[<span class='plus'><a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='{{ startpost.pk }}' >▲</a></span>] <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span> [<span class='minus'><a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a></span>]
-{% else %}
-[<span class='plus'><a href='' class='voite'>▲</a></span>] 0 [<span class='minus'><a href=''>▼</a></span>]
-{% endif %}
-
-| {% trans "Author" %}: <span class='plus'><a href='
-{% if startpost.owner %}
-{% url userauth.views.profile_view startpost.owner.id %}'>{{ startpost.owner.profile.get_visible_name }}
-{% else %}
-{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}
-{% endif %}
-</a></span> ( {{ startpost.created|date:"d.m.Y H:i" }} )
-
-{% if not dont_show_comment_count %}
-| <a href='
-{% if startpost.id %}
-{% url forum.views.thread startpost.id %}
-{% else %}
-{% if startpost.blog.pk %}
-{% url blog.views.view startpost.blog.pk %}
-{% endif %}
-{% endif %}
-'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
-{% else %}
-    <div class='editby'>
-    {% with startpost.postedit_set.all.0 as edit %}
-    {% if edit %}
-        {% trans "Last edited by" %} <span class='plus'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} (<a href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>)
-    {% endif %}
-    {% endwith %}
-    </div>
-{% endif %}
-</p>
+                    </p>
+                    {% endif %}
+                </div>
+            </td>
+            <td width='40px'>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                {% if edit_url %}
+                    [<a href='{{ edit_url }}'>{% trans "Edit" %}</a>]
+                {% endif %}
+                {% if add_comment_url %}
+                    [<a href='{{ add_comment_url }}'>{% trans "Add a comment" %}</a>]
+                {% endif %}
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>
 </div>
-</td>
-<td width='40px'>&nbsp;</td></tr><tr><td>&nbsp;</td><td>
 
-{% if startpost.owner == user %}
-{% if user.profile.can_create_topic %}
-[<a href='
-{% if startpost.blog %}
-    {% url blog.views.post_edit startpost.pk  %}
-{% else %}
-    {% url forum.views.topic_edit startpost.pk  %}
-{% endif %}
-'>{% trans "Edit" %}</a>] 
-{% endif %}
-{% endif %}
-
-{% if user.is_authenticated and user.profile.can_create_topic and startpost.owner %}
-[<a href='
-{% url forum.views.reply startpost.pk %}
-'>{% trans "Add a comment" %}</a>]
-{% endif %}
-
-</td><td>&nbsp;</td></tr>
-</table>
-</div>
