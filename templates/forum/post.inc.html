@@ -2,52 +2,52 @@
 {% load markup %}
 
 <div class="post" id="post_{{post.pk}}">
-<table border='0px' width='100%' colspan='0' rowspan='0'>
-<tr><td>
-[<a href='
-{% if startpost %}
-#post_{{ post.pk }}
-{% endif %}
-' onclick="highlightMessage({{ post.pk }});" >#</a>]
-{% if post.reply_to %}
-{% if post.reply_to != startpost %}
-{% trans "Reply to" %}
-    <a href="
-    {% if post.reply_to in thread.object_list %}
-        #post_{{post.reply_to.pk}}
-    {% else %}
-        ?offset={{ post.reply_to|pg:thread.paginator }}#post_{{post.reply_to.pk}}
-    {% endif %}
-" onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} {{post.reply_to.created|date:"d.m.Y H:i:s"}}
-{% endif %}
-{% endif %}
-</td><td width='50px' align='right'>
-{% if post.pk %}
-<span id='rating-{{ post.pk }}'>{{ post.rating }}</span>&nbsp;<span class='plus'><a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='{{ post.pk }}' >+</a></span>/<span class='minus'><a class='vote-negative' id='{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>-</a></span>
-{% endif %}
-</td></tr>
-<tr><td colspan='2'>
-<b>{{post.title}}</b>
-{{post.text|markup:post.parser|safe}}
-<small>
-{% if startpost %}
-<span class='plus'>
-<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}
-</a></span> @ {{post.created|date:"d.m.Y H:i:s"}} 
-
-
-{% else %}
-<span class='plus'><a href=''>{{user.profile.get_visible_name}}
-</a></span> @ {%now "d.m.Y H:i:s"%}
-{% endif %}
-</small>
-{% if startpost %}
-{% if user.profile.can_create_comment %}
-<br><a href="{% url forum.views.reply post.pk %}">[{% trans "Reply on this message" %}]</a>
-{% endif %}
-{% endif %}
-
-</td></tr>
-</table>
+    <table border="0px" width="100%" colspan="0" rowspan="0">
+        <tr>
+            <td>
+                [<a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>]
+                {% if post.reply_to != startpost %}
+                    {% trans "Reply to" %} <a href="
+                    {% if post.reply_to in thread.object_list %}
+                        #post_{{post.reply_to.pk}}
+                    {% else %}
+                        ?offset={{ post.reply_to|pg:thread.paginator }}#post_{{post.reply_to.pk}}
+                    {% endif %}
+                    " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> 
+                    {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} 
+                    {{post.reply_to.created|date:"d.m.Y H:i:s"}}
+                {% endif %}
+            </td>
+            <td width='50px' align='right'>
+                {% if post.pk %}
+                    <span id='rating-{{ post.pk }}'>{{ post.rating }}</span>
+                    <a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='{{ post.pk }}'>&#43;</a>
+                    <a class='vote-negative' id='{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <b>{{post.title}}</b>
+                {{post.text|markup:post.parser|safe}}
+                <small>
+                {% if startpost %}
+                    <span class='plus'>
+                        <a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>
+                    </span> @ {{post.created|date:"d.m.Y H:i:s"}}
+                {% else %}
+                    <span class='plus'>
+                        <a href=''>{{user.profile.get_visible_name}}</a>
+                    </span> @ {%now "d.m.Y H:i:s"%}
+                {% endif %}
+                </small>
+                {% if startpost %}
+                    {% if user.profile.can_create_comment %}
+                        <br><a href="{% url forum.views.reply post.pk %}">[{% trans "Reply on this message" %}]</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+    </table>
 </div>
 

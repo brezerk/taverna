@@ -11,7 +11,7 @@
 {% trans "Search results for tag:" %} {{ tag.name }}
 {% else %}
     {% if blog_info %}
-        <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name}}</a> {{ blog_info.desc }}
+        <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name }}</a> {{ blog_info.desc }}
     {% else %}
         {% if posts_owner %}
             {% trans "Blog topics of user:" %} {{ posts_owner.profile.get_visible_name }}
@@ -54,27 +54,26 @@
 {% if thread.object_list %}
     {% for startpost in thread.object_list %}
 
+        {% with startpost.blog.name as section_name %}
+        {% with startpost.title as startpost_title %}
+        {% with startpost.text|strippost:startpost as startpost_text %}
+        {% with startpost.get_tag_url_list as startpost_tags %}
+        {% url blog.views.view startpost.blog.pk as section_url %}
+        {% url forum.views.thread startpost.pk as startpost_url %}
+        {% url forum.views.thread startpost.pk as comments_url %}
+        {% if user.is_authenticated and startpost.owner == user and user.profile.can_create_topic %}
+            {% url blog.views.post_edit startpost.pk as edit_url %}
+        {% endif %}
+        {% if user.is_authenticated and user.profile.can_create_topic %}
+            {% url forum.views.reply startpost.pk as add_comment_url %}
+        {% endif %}
 
+        {% include "forum/startpost.inc.html" %}
 
-{% with startpost.blog.name as section_name %}
-{% with startpost.title as startpost_title %}
-{% with startpost.text|strippost:startpost as startpost_text %}
-{% with startpost.get_tag_url_list as startpost_tags %}
-{% url blog.views.view startpost.blog.pk as section_url %}
-{% url forum.views.thread startpost.pk as startpost_url %}
-{% url forum.views.thread startpost.pk as comments_url %}
-{% if user.is_authenticated and startpost.owner == user and user.profile.can_create_topic %}
-    {% url blog.views.post_edit startpost.pk as edit_url %}
-{% endif %}
-{% if user.is_authenticated and user.profile.can_create_topic %}
-    {% url forum.views.reply startpost.pk as add_comment_url %}
-{% endif %}
-{% include "forum/startpost.inc.html" %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
 
     {% endfor %}
 {% endif %}
@@ -82,5 +81,4 @@
 {% include 'forum/pages.inc.html' %}
 
 {% endblock %}
-
 

@@ -1,15 +1,24 @@
 {% extends "base.html" %}
 {% load i18n %}
-
+{% load markup %}
 {% block content %}
 
 {% if form.cleaned_data %}
     {% with form.cleaned_data as startpost %}
-    {% with 1 as dont_strip %}
-    {% with 1 as dont_show_comment_count %}
-        {% include 'forum/startpost.inc.html' %}
-    {% endwith %}
-    {% endwith %}
+
+
+        {% with forum.name as section_name %}
+        {% with startpost.title as startpost_title %}
+        {% with startpost.text|markup:startpost.parser as startpost_text %}
+        {% url forum.views.forum forum.pk as section_url %}
+        {% url forum.views.thread startpost.pk as startpost_url %}
+
+        {% include "forum/startpost.inc.html" %}
+
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+
     {% endwith %}
 {% endif %}
 
