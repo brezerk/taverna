@@ -22,9 +22,9 @@
 {% endif %}
 {% endif %}
 </td><td width='50px' align='right'>
-
+{% if post.pk %}
 <span id='rating-{{ post.pk }}'>{{ post.rating }}</span>&nbsp;<span class='plus'><a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='{{ post.pk }}' >+</a></span>/<span class='minus'><a class='vote-negative' id='{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>-</a></span>
-
+{% endif %}
 </td></tr>
 <tr><td colspan='2'>
 <b>{{post.title}}</b>

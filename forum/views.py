@@ -5,7 +5,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
-from util import ExtendedPaginator as Paginator
+from util import ExtendedPaginator
+from django.core.paginator import Paginator
 
 from django.utils.html import strip_tags
 
@@ -67,7 +68,7 @@ def forum(request, forum_id):
 
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(reply_to = None,forum = forum).order_by('-created'),
+    paginator = ExtendedPaginator(Post.objects.filter(reply_to = None,forum = forum).order_by('-created'),
                                               settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     posts = paginator.page(page)
@@ -95,7 +96,7 @@ def reply(request, post_id):
                 post.save()
 
                 from django.conf import settings
-                paginator = Paginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+                paginator = ExtendedPaginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
                 last_page = paginator.num_pages
 
                 return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), last_page, post.pk))
@@ -171,7 +172,7 @@ def tags_search(request, tag_name):
     page = request.GET.get("offset", 1)
 
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
+    paginator = ExtendedPaginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
                                               reply_to = None).order_by('-created'),
                                               settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -210,7 +211,7 @@ def thread(request, post_id):
 
     startpost = Post.objects.get(pk = post_id)
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), 
+    paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), 
         settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
     return { 'startpost': startpost, 'thread': paginator.page(page), 'comment_form': PostForm() }
@@ -227,7 +228,7 @@ def offset(request, root_id, offset_id):
 
     for page in paginator.page_range:
         if post in paginator.page(page).object_list:
-            return HttpResponseRedirect("%s#post_%s" % (reverse("forum.views.thread", args = [page, root_id]), offset_id))
+            return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
 
     return HttpResponseRedirect("/")
 
