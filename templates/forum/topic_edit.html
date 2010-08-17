@@ -6,7 +6,6 @@
 {% if form.cleaned_data %}
     {% with form.cleaned_data as startpost %}
 
-
         {% with forum.name as section_name %}
         {% with startpost.title as startpost_title %}
         {% with startpost.text|markup:startpost.parser as startpost_text %}
