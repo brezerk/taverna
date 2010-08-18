@@ -52,7 +52,7 @@ def post_edit(request, post_id):
     if not request.user.profile.can_create_topic:
         return HttpResponseRedirect("/") # FIXME redirect to error message
 
-    post_orig = Post.objects.get(pk = post_id)
+    post_orig = Post.objects.exclude(removed = True).get(pk = post_id)
 
     if not request.user.is_superuser:
         if not post_orig.reply_to == None:
@@ -127,7 +127,7 @@ def post_add(request):
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread')
+            exclude = ('tags', 'reply_to', 'thread', 'removed')
 
         def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
@@ -169,7 +169,7 @@ def tags_search(request, tag_id):
 
     blog_posts = None
 
-    posts = Post.objects.filter(tags = tag_id).order_by('-created')
+    posts = Post.objects.exclude(removed = True).filter(tags = tag_id).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     tag = Tag.objects.get(pk=tag_id);
@@ -184,7 +184,7 @@ def view(request, blog_id):
     page = request.GET.get("offset", 1)
 
     blog_info = Blog.objects.get(pk = blog_id)
-    posts = Post.objects.filter(blog = blog_info).order_by('-created')
+    posts = Post.objects.exclude(removed = True).filter(blog = blog_info).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -198,7 +198,7 @@ def view_all(request, user_id):
     page = request.GET.get("offset", 1)
 
     posts_owner = User.objects.get(pk = user_id)
-    posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
+    posts = Post.objects.exclude(blog = None,forum = None).filter(removed = False, owner = user_id).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -206,7 +206,7 @@ def view_all(request, user_id):
 
 @rr('blog/blog.html')
 def index(request):
-    posts = Post.objects.exclude(blog = None).order_by('-created')
+    posts = Post.objects.exclude(blog = None).filter(removed = False).order_by('-created')
 
     page = request.GET.get("offset", 1)
 
@@ -217,7 +217,7 @@ def index(request):
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):
-    post = Post.objects.get(pk = post_id)
+    post = Post.objects.exclude(removed = True).get(pk = post_id)
 
     if not request.user.is_authenticated():
         return {"rating": post.rating, "message": _("Registration required.")}
@@ -250,7 +250,7 @@ def vote_async(request, post_id, positive):
 
 @rr('ajax/vote.json', "application/json")
 def vote_generic(request, post_id, positive):
-    post = Post.objects.get(pk = post_id)
+    post = Post.objects.exclude(removed = True).get(pk = post_id)
 
     if request.user.is_authenticated() and post.owner != request.user:
         if int(positive) == 0:

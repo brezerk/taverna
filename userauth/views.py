@@ -63,9 +63,9 @@ def profile_edit(request):
         class Meta:
             model = Profile
             if profile.visible_name:
-                exclude = ('karma', 'photo', 'visible_name')
+                exclude = ('user', 'karma', 'photo', 'visible_name')
             else:
-                exclude = ('karma', 'photo')
+                exclude = ('user', 'karma', 'photo')
 
         def save(self, **args):
             profile = super(SettingsForm, self).save(commit = False, **args)
@@ -213,7 +213,7 @@ def user_comments(request, user_id):
         page = 1
 
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None,
+    paginator = Paginator(Post.objects.filter(removed = False, owner = user_info, forum = None,
                           blog = None).order_by('-created'),
                           settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -234,7 +234,7 @@ def notify(request):
         page = 1
 
     from django.conf import settings
-    paginator = Paginator(Post.objects.exclude(owner=user_info).filter(reply_to__owner = user_info,
+    paginator = Paginator(Post.objects.exclude(owner=user_info).filter(removed = False, reply_to__owner = user_info,
                           forum = None, blog = None).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
@@ -244,8 +244,8 @@ def notify(request):
 
     return {'thread': thread, 'request_url': request.get_full_path()}
 
-@rr("userauth/coments.html")
-def karma(request):
+@rr("userauth/rewards.html")
+def rewards(request):
     user_info = request.user
 
     try:
@@ -254,12 +254,12 @@ def karma(request):
         page = 1
 
     from django.conf import settings
-    paginator = Paginator(PostVote.objects.exclude(reason = None).order_by('-pk'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(PostVote.objects.exclude(reason = None).filter(post__owner = user_info).order_by('-pk'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
-        thread = paginator.page(page)
+        rewards = paginator.page(page)
     except (EmptyPage, InvalidPage):
-        thread = paginator.page(paginator.num_pages)
+        rewards = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'request_url': request.get_full_path()}
+    return {'rewards': rewards, 'request_url': request.get_full_path()}
 

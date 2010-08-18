@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markup %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td>
+{% trans "Your's rewards list" %}
+</td>
+
+<td align='right'>
+{% if user.is_authenticated %}
+    {% if user.profile.can_create_topic %}
+    [<a href='{% url forum.views.topic_create 1 %}'>{% trans "Post new topic" %}</a>]
+    {% endif %}
+{% endif %}
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% include "forum/arrows.inc.html" %}
+
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='100px'>{% trans "Section" %}</th><th width='240px'>{% trans "Seaction name" %}<th>{% trans "Topic title" %}</th>
+
+<th>{% trans "Reward reason" %}</th>
+<th width='280px'>{% trans "Date" %}</th></tr>
+{% for reward in rewards.object_list %}
+<tr class="{% cycle "odd" "even" %}">
+ <td>
+    {% if reward.post.thread.forum %}
+        {% trans "Forum" %}
+    {% else %}
+            {% trans "Blog" %}
+    {% endif %}
+ </td>
+ <td>
+    {% if reward.post.thread.forum %}
+        <a href='{% url forum.views.forum reward.post.thread.forum.pk %}'>{{ reward.post.thread.forum.name }}</a>
+    {% else %}
+        <a href='{% url blog.views.view reward.post.thread.blog.pk %}'>{{ reward.post.thread.blog.name }}</a>
+    {% endif %}
+ </td>
+ <td>
+     <a href='{% url forum.views.post_view reward.post.pk %}'>
+     {% if reward.post.title %}
+     {{ reward.post.title }}
+     {% else %}
+     {{ reward.post.thread.title }}
+     {% endif %}
+     </a>
+ </td>
+ <td>
+   {% if reward.auto %} 
+        {% trans "(Auto) Reply to" %}:
+    {% endif %}
+        {{ reward.reason }} (-{{ reward.reason.cost }})
+ </td>
+ <td>{{reward.post.created|date:"d.m.Y H:i"}}
+ </td>
+</tr>
+{% endfor %}
+</table>
+
+{% include "forum/arrows.inc.html" %}
+{% endblock %}
+

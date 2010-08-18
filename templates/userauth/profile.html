@@ -31,14 +31,16 @@
 
 {% block content %}
 
-<h3>{% trans "User's insformation" %} {{ user_profile.get_visible_name }}</h3>
+<h3>{% trans "User's insformation" %}</h3>
 <table border='0' width='100%'>
     <tr><td valign='top'>
 <table border='0' width='100%'>
+    <tr><td>{% trans "Visible name" %}: {{ user_info.profile.get_visible_name }}</td></tr>
     {% if user_info.first_name or user_info.last_name %}
     <tr><td>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</td></tr>
     {% endif %}
     <tr><td>{% trans "Registration" %}: {{ user_info.date_joined|date:"d.m.Y H:i:s" }}</td></tr>
+    <tr><td>{% trans "Last visit" %}: {{ user_info.last_login|date:"d.m.Y H:i:s" }}</td></tr>
     <tr><td>{% trans "Carma" %}: {{ user_info.profile.karma }}</td></tr>
     {% if user_info.profile.website %}
     <tr><td>{% trans "Website" %}: <a href='{{ user_info.profile.website }}'>{{ user_info.profile.website }}</a></td></tr>
@@ -67,8 +69,9 @@
 <ul>
     <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>
-    {% if user.username == user_info.username %}
+    {% if user == user_info %}
     <li><a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>
+    <li><a href='{% url userauth.views.rewards %}'>{% trans "Karma rewards" %}</a>
     {% endif %}
 </ul>
 

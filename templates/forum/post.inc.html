@@ -6,12 +6,16 @@
         <tr>
             <td>
                 [<a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>]
-                {% if post.reply_to != startpost %}
+                {% if post.reply_to != post.thread %}
                     {% trans "Reply to" %} <a href="
-                    {% if post.reply_to in thread.object_list %}
-                        #post_{{post.reply_to.pk}}
+                    {% if thread %}
+                        {% if post.reply_to in thread.object_list %}
+                            #post_{{post.reply_to.pk}}
+                        {% else %}
+                            ?offset={{ post.reply_to|pg:thread.paginator }}#post_{{post.reply_to.pk}}
+                        {% endif %}
                     {% else %}
-                        ?offset={{ post.reply_to|pg:thread.paginator }}#post_{{post.reply_to.pk}}
+                        {% url forum.views.offset post.thread.pk post.pk %}
                     {% endif %}
                     " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> 
                     {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} 
@@ -30,7 +34,7 @@
                 <b>{{post.title}}</b>
                 {{post.text|markup:post.parser|safe}}
                 <small>
-                {% if startpost %}
+                {% if post.owner %}
                     <span class='plus'>
                         <a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>
                     </span> @ {{post.created|date:"d.m.Y H:i:s"}}
@@ -42,8 +46,8 @@
                 </small>
                 {% if startpost %}
                     <br>
-                    {% if user.is_superuser %} 
-                        [<a href="{% url forum.views.reply post.pk %}">{% trans "Remove" %}</a>]
+                    {% if user.is_superuser and post.pk %} 
+                        [<a href="{% url forum.views.remove post.pk %}">{% trans "Remove" %}</a>]
                     {% endif %}
                     {% if user.profile.can_create_comment %}
                         [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]

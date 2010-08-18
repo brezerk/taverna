@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from util import ExtendedPaginator
 from django.core.paginator import Paginator
 
+from django.http import Http404
+
 from django.utils.html import strip_tags
 
 from django.utils.translation import ugettext as _
@@ -23,7 +25,7 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
+        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread', 'removed')
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -49,7 +51,7 @@ class ThreadForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread')
+        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread', 'removed')
 
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
@@ -68,8 +70,9 @@ def forum(request, forum_id):
 
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
-    paginator = ExtendedPaginator(Post.objects.filter(reply_to = None,forum = forum).order_by('-created'),
-                                              settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(Post.objects.filter(reply_to = None,
+    forum = forum, removed = False).order_by('-created'),
+    settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     posts = paginator.page(page)
 
@@ -82,7 +85,7 @@ def forum(request, forum_id):
 @login_required()
 @rr('forum/reply.html')
 def reply(request, post_id):
-    reply_to = Post.objects.get(pk = post_id)
+    reply_to = Post.objects.exclude(removed = True).get(pk = post_id)
     if not request.user.profile.can_create_comment():
         return
     if request.method == 'POST':
@@ -103,6 +106,86 @@ def reply(request, post_id):
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
+
+@login_required()
+@rr('blog/post_remove.html')
+def post_view(request, post_id):
+    startpost = Post.objects.get(pk = post_id)
+    reason = PostVote.objects.exclude(reason = None).get(post = startpost)
+
+    if startpost.reply_to:
+        return { 'post': startpost, 'reason': reason }
+    else:
+        return { 'startpost': startpost, 'reason': reason }
+
+@login_required()
+@rr('blog/post_remove.html')
+def remove(request, post_id):
+    if not request.user.is_superuser:
+        raise Http404
+
+    startpost = Post.objects.exclude(removed = True).get(pk = post_id)
+
+    class RemoveForm(forms.ModelForm):
+        class Meta:
+            model = PostVote
+            exclude = ('post', 'user', 'positive')
+
+        def clean_reason(self):
+            reason = self.cleaned_data['reason']
+            if reason == None:
+                raise forms.ValidationError(_("Valid reason required."))
+            return reason
+
+        def save(self, **args):
+            postvote = super(RemoveForm, self).save(commit = False, **args)
+            postvote.post = startpost
+            postvote.user = request.user
+            postvote.positive = False
+            postvote.auto = False
+            postvote.save()
+
+            startpost.removed = True
+            modify_rating(startpost, postvote.reason.cost)
+            auto_remove(startpost, postvote.reason);
+
+    if request.method == 'POST':
+        form = RemoveForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = RemoveForm()
+
+    if startpost.reply_to:
+        return { 'post': startpost, 'form': form }
+    else:
+        return { 'startpost': startpost, 'form': form }
+
+def auto_remove(startpost, reason):
+    if startpost.reply_to == None:
+        for post in Post.objects.filter(thread = startpost.pk, removed = False):
+            PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
+            post.removed = True
+
+            modify_rating(post, reason.cost)
+    else:
+        for post in Post.objects.filter(reply_to = startpost.pk, removed = False):
+            PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
+            post.removed = True
+
+            modify_rating(post, reason.cost)
+            auto_remove(post, reason)
+
+def modify_rating(post, cost = 1, positive = False):
+    if positive:
+        post.rating += cost
+        post.owner.profile.karma += cost
+    else:
+        post.rating -= cost
+        post.owner.profile.karma -= cost
+
+    post.owner.profile.save()
+    post.save()
 
 @login_required()
 @rr('forum/topic_create.html')
@@ -132,13 +215,13 @@ def topic_edit(request, topic_id):
     if not request.user.profile.can_create_topic:
         return HttpResponseRedirect("/") # FIXME redirect to error message
 
-    topic = Post.objects.get(pk = topic_id)
+    topic = Post.objects.exclude(removed = True).get(pk = topic_id)
 
     if not topic.reply_to == None:
-        return HttpResponseRedirect("/")
+        raise Http404
 
     if not topic.owner == request.user:
-        return HttpResponseRedirect("/")
+        raise Http404
 
     if request.method == 'POST':
         form = ThreadForm(request.POST, instance=topic)
@@ -173,7 +256,7 @@ def tags_search(request, tag_name):
 
     from django.conf import settings
     paginator = ExtendedPaginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
-                                              reply_to = None).order_by('-created'),
+                                              reply_to = None, removed = False).order_by('-created'),
                                               settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     return {
@@ -191,10 +274,10 @@ def post_rollback(request, diff_id):
     if not request.user.profile.can_create_topic:
         return HttpResponseRedirect("/") # FIXME redirect to error message
 
-    diff = PostEdit.objects.get(pk = diff_id)
+    diff = PostEdit.objects.exclude(removed = False).get(pk = diff_id)
 
     if not diff.post.owner == request.user:
-        return HttpResponseRedirect("/")
+        raise Http404
 
     PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()
 
@@ -204,21 +287,23 @@ def post_rollback(request, diff_id):
 
     return thread(request, post.pk)
 
+
+
 @rr('blog/post_view.html')
 def thread(request, post_id):
 
     page = request.GET.get("offset", 1)
 
-    startpost = Post.objects.get(pk = post_id)
+    startpost = Post.objects.exclude(removed = True).get(pk = post_id)
     from django.conf import settings
-    paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), 
+    paginator = ExtendedPaginator(Post.objects.filter(removed = False, thread = startpost.thread).exclude(pk = startpost.pk), 
         settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
     return { 'startpost': startpost, 'thread': paginator.page(page), 'comment_form': PostForm() }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
-    return {'startpost': Post.objects.get(pk = post_id), 'site': Site.objects.get_current().domain}
+    return {'startpost': Post.objects.exclude(removed = True).get(pk = post_id), 'site': Site.objects.get_current().domain}
 
 def offset(request, root_id, offset_id):
     from django.conf import settings
@@ -230,6 +315,6 @@ def offset(request, root_id, offset_id):
         if post in paginator.page(page).object_list:
             return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
 
-    return HttpResponseRedirect("/")
+    raise Http404
 
 

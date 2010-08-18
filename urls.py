@@ -59,6 +59,8 @@ urlpatterns = patterns('',
     (r'^forum/tagsearch.so/(?P<tag_name>.*)$', 'forum.views.tags_search'),
 
     (r'^liboffset-(?P<root_id>\d+).so.(?P<offset_id>.*)$', 'forum.views.offset'),
+    (r'^libremove-(?P<post_id>\d+).so$', 'forum.views.remove'),
+    (r'^libview-(?P<post_id>\d+).so$', 'forum.views.post_view'),
 
     (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
     (r'^pam/libprofile-(?P<user_id>\d+).so$', 'userauth.views.profile_view'),
@@ -66,7 +68,7 @@ urlpatterns = patterns('',
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
 
-    (r'^pam/libkarma.so$', 'userauth.views.karma'),
+    (r'^pam/librewards.so$', 'userauth.views.rewards'),
 
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
     (r'^blog/libvote-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_generic'),

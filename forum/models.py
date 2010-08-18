@@ -32,7 +32,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, null = True)
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
-    removed = models.BooleanField(default = 0, editable = False)
+    removed = models.BooleanField(default = 0, editable = True)
 
     class Meta:
         ordering = ('created',)
@@ -75,7 +75,7 @@ class Post(models.Model):
         return tag_string
 
     def get_comments_count(self):
-        return Post.objects.exclude(pk=self.pk).filter(thread=self.pk).count()
+        return Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed=False).count()
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
@@ -105,7 +105,8 @@ class PostVote(models.Model):
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
     positive = models.BooleanField()
-    reason = models.ForeignKey(ReasonList, blank = True, null = True)
+    auto = models.BooleanField(default = 0, editable = False)
+    reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Post remove reason"))
     class Meta:
         unique_together = ('post', 'user')
 

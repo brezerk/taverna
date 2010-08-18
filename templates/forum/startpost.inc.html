@@ -19,17 +19,7 @@
                     {% if startpost.owner %}
                     <p>
                         [<a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='{{ startpost.pk }}' >▲</a>]
-                        <span 
-                            {% if startpost.rating > 0 %}
-                                class='plus'
-                            {% else %}
-                                {% if startpost.rating < 0 %}
-                                    class='minus'
-                                {% endif %}
-                            {% endif %}
-
-                        
-                         id='rating-{{ startpost.pk }}'><a href='{% url userauth.views.karma %}'>{{ startpost.rating }}</a></span>
+                        <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span>
                         [<a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
                         | {% trans "Author" %}: 
                         <span class='plus'>
@@ -67,8 +57,8 @@
                 &nbsp;
             </td>
             <td>
-                {% if user.is_superuser %} 
-                    [<a href="">{% trans "Remove" %}</a>]
+                {% if user.is_superuser and startpost.pk %} 
+                    [<a href="{% url forum.views.remove startpost.pk %}">{% trans "Remove" %}</a>]
                 {% endif %}
                 {% if edit_url %}
                     [<a href="{{ edit_url }}">{% trans "Edit" %}</a>]
