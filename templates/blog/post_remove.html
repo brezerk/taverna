@@ -62,7 +62,11 @@
 </form>
 {% endif %}
 {% if reason %}
-<p>{% trans "This post was removed by"%} <a href='{% url userauth.views.profile_view reason.user.pk %}'>{{reason.user.profile.get_visible_name }}</a>.<br>{% trans "Post remove reason"%}: {{ reason.reason }} ( -{{ reason.reason.cost }} )</p>
+<p>{% trans "This post was removed by"%} <a href='{% url userauth.views.profile_view reason.user.pk %}'>{{reason.user.profile.get_visible_name }}</a>.<br>{% trans "Post remove reason"%}: 
+{% if reason.auto %}
+    {% trans "(Auto) Reply to" %}:
+{% endif %}
+{{ reason.reason }} ( -{{ reason.reason.cost }} )</p>
 {% endif %}
 </div>
 

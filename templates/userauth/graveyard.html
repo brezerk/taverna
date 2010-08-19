@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markup %}
+
+{% block menubox %}
+<div class='actionbox'>
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr>
+<td>
+{% trans "Our Grave Yard page" %}
+</td>
+
+<td align='right'>
+{% if user.is_authenticated %}
+    {% if user.profile.can_create_topic %}
+    [<a href='{% url forum.views.topic_create 1 %}'>{% trans "Post new topic" %}</a>]
+    {% endif %}
+{% endif %}
+</td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block content %}
+<table cellspacing='0' cellpadding='2' border='0' width='100%'>
+<tr><td width='180px'>
+<pre>    _____
+  /~/~   ~\
+ | |       \
+ \ \ Troll  \   
+  \ \  R.I.P.\
+ --\ \       .\''
+--==\ \     ,,i!!i,
+    ''"'',,}{,,
+</pre>
+</td><td>{% trans "Welcome to Grave Yard" %}<br>{% trans "This is a place, where all buryed users rest for a while (some times - forever. Muhahahaha!)." %}<p>{% trans "Current buryed users count:"%} {{ users.paginator.count }}</p></td><td width='180px' align='right'>
+<pre>+----------+
+|  PLEASE  |
+|  DO NOT  |
+| FEED THE |
+|  TROLLS  |
++----------+
+     ||     
+     ||     
+  ..\||/..  
+  </pre>
+</td></tr></table>
+
+{% include "forum/arrows.inc.html" %}
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+<tr class='theader'><th width='160px'>{% trans "User" %}</th><th width='60px'>{% trans "Karma" %}<th>{% trans "Revard reason" %}</th></tr>
+
+{% for user_info in users.object_list %}
+<tr class="{% cycle "odd" "even" %}">
+ <td>
+ {{ user_info }}
+ </td>
+ <td>
+ {{ user_info.karma }}
+ </td>
+ <td>
+ {% if user_info.buryed %}
+     {{ user_info.buryed.reason }}
+ {% else %}
+     {% trans "Auto ban due high karma loss." %}
+ {% endif %}
+ </td>
+</tr>
+{% endfor %}
+</table>
+
+{% include "forum/arrows.inc.html" %}
+{% endblock %}
+

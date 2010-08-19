@@ -36,7 +36,13 @@
                 <small>
                 {% if post.owner %}
                     <span class='plus'>
-                        <a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>
+                        <a href='{% url userauth.views.profile_view post.owner.pk %}'>
+                        {% if post.owner.profile.is_buryed %}
+                            <del>{{post.owner.profile.get_visible_name}}</del>
+                        {% else %}
+                            {{post.owner.profile.get_visible_name}}
+                        {% endif %}
+                        </a>
                     </span> @ {{post.created|date:"d.m.Y H:i:s"}}
                 {% else %}
                     <span class='plus'>

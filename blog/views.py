@@ -20,6 +20,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from forum.views import PostForm as CommentForm
 
+from forum.views import modify_rating
+
 
 @login_required()
 @rr('blog/settings.html')
@@ -117,6 +119,10 @@ def post_edit(request, post_id):
 @login_required()
 @rr('blog/post_add.html')
 def post_add(request):
+    if not request.user.profile.can_create_topic():
+        return error(request, _("You have not enough karma to create new topic!"))
+
+
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
@@ -231,21 +237,18 @@ def vote_async(request, post_id, positive):
         positive = False
 
     if not request.user.is_superuser:
-        try:
-            PostVote(post = post, user = request.user, positive = positive).save()
-        except IntegrityError:
-            return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
 
-    if positive:
-        post.rating += 1
-        post.owner.profile.karma += 1
-    else:
-        post.rating -= 1
-        post.owner.profile.karma -= 1
+        if request.user.profile.use_force(1):
+            try:
+                PostVote(post = post, user = request.user, positive = positive).save()
+            except IntegrityError:
+                return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
+            else:
+                request.user.profile.save()
+        else:
+            return {"rating": post.rating, "message": _("You not enough force.")}
 
-    post.owner.profile.save()
-    post.save()
-
+    modify_rating(post, 1, positive)
     return {"rating": post.rating}
 
 @rr('ajax/vote.json', "application/json")
@@ -263,15 +266,7 @@ def vote_generic(request, post_id, positive):
         except IntegrityError:
             pass
         else:
-            if positive:
-                post.rating += 1 
-                post.owner.profile.karma += 1
-            else:
-                post.rating -= 1
-                post.owner.profile.karma -= 1
-
-            post.owner.profile.save()
-            post.save()
+            modify_rating(post, 1, positive)
 
     if post.reply_to:
         from django.conf import settings
@@ -305,3 +300,6 @@ def list_users(request):
 
     return { 'thread': paginator.page(page) }
 
+@rr('blog/error.html')
+def error(request, message):
+    return { 'message': message }

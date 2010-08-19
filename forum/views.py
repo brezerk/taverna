@@ -183,6 +183,7 @@ def modify_rating(post, cost = 1, positive = False):
     else:
         post.rating -= cost
         post.owner.profile.karma -= cost
+        post.owner.profile.force -= cost
 
     post.owner.profile.save()
     post.save()

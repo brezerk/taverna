@@ -34,6 +34,10 @@ from openid import sreg
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 
+from django.http import Http404
+
+from django.db.models import Q
+
 def openid_logout(request):
     logout(request)
     return HttpResponseRedirect("/")
@@ -41,17 +45,9 @@ def openid_logout(request):
 @login_required()
 @rr ('userauth/profile.html')
 def profile_view(request, user_id):
-    try:
-        user_info = User.objects.get(pk = user_id)
-        try:
-            user_blog = Blog.objects.get(owner = user_info)
-        except Blog.DoesNotExist:
-            user_blog = None
-        return {'user_info': user_info,
-                'user_blog': user_blog}
-
-    except (User.DoesNotExist, Profile.DoesNotExist):
-        return HttpResponseRedirect('/')
+    user_info = User.objects.get(pk = user_id)
+    user_blog = Blog.objects.get(owner = user_info)
+    return {'user_info': user_info,'user_blog': user_blog}
 
 @login_required()
 @rr ('userauth/settings.html')
@@ -63,9 +59,9 @@ def profile_edit(request):
         class Meta:
             model = Profile
             if profile.visible_name:
-                exclude = ('user', 'karma', 'photo', 'visible_name')
+                exclude = ('user', 'karma', 'photo', 'visible_name', 'force', 'buryed', 'buryed_reason')
             else:
-                exclude = ('user', 'karma', 'photo')
+                exclude = ('user', 'karma', 'photo', 'force', 'buryed', 'buryed_reason')
 
         def save(self, **args):
             profile = super(SettingsForm, self).save(commit = False, **args)
@@ -262,4 +258,21 @@ def rewards(request):
         rewards = paginator.page(paginator.num_pages)
 
     return {'rewards': rewards, 'request_url': request.get_full_path()}
+
+@rr("userauth/graveyard.html")
+def graveyard(request):
+    try:
+        page = int(request.GET['offset'])
+    except (MultiValueDictKeyError, TypeError):
+        page = 1
+
+    from django.conf import settings
+    paginator = Paginator(Profile.objects.filter(Q(karma__lt = 0) | Q(buryed = True)).order_by('-buryed'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        users = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        users = paginator.page(paginator.num_pages)
+
+    return {'users': users, 'request_url': request.get_full_path()}
 

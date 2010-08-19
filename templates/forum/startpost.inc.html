@@ -23,7 +23,14 @@
                         [<a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
                         | {% trans "Author" %}: 
                         <span class='plus'>
-                            <a href='{% url userauth.views.profile_view startpost.owner.id %}'>{{ startpost.owner.profile.get_visible_name }}</a>
+                            <a href='{% url userauth.views.profile_view startpost.owner.id %}'>
+                            
+                            {% if  startpost.owner.profile.is_buryed %}
+                            <del>{{ startpost.owner.profile.get_visible_name }}</del>
+                            {% else %}
+                            {{ startpost.owner.profile.get_visible_name }}
+                            {% endif %}
+                            </a>
                         </span>
                             ( {{ startpost.created|date:"d.m.Y H:i" }} )
 

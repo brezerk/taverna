@@ -40,6 +40,7 @@ urlpatterns = patterns('',
     (r'^blog/libpost-edit-(?P<post_id>\d+).so$', 'blog.views.post_edit'),
     (r'^blog/libsettings.so$', 'blog.views.settings'),
     (r'^blog/libtag-(?P<tag_id>\d+).so$', 'blog.views.tags_search'),
+    (r'^blog/liberror.so$', 'blog.views.error'),
 
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum-(?P<forum_id>\d+).so$', 'forum.views.forum'),
@@ -69,6 +70,7 @@ urlpatterns = patterns('',
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
 
     (r'^pam/librewards.so$', 'userauth.views.rewards'),
+    (r'^pam/libgraweyard.so$', 'userauth.views.graveyard'),
 
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
     (r'^blog/libvote-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_generic'),

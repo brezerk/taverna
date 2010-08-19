@@ -11,10 +11,11 @@
 <td width='300'>{% trans "User profile" %}</td>
 
 <td align='right'>
-{% if user != user_info %}
+{% if user.username != user_info.username %}
     {% if user_blog %}
         [<a href='/{{user_info.username}}/'>{% trans "Read user's blog" %}</a>]
     {% endif %}
+[<a href='/{{user.username}}/ignore/{{user_info.username}}'>{% trans "Ignore" %}</a>]
 {% else %}
     [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
     {% if user_blog %}
@@ -23,7 +24,7 @@
 [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit profile" %}</a>]
 {% endif %}
 {% if user.is_superuser %}
-    [<a href='/admin/userauth/profile/{{ user_info.profile.pk }}/'>{% trans "Bury user" %}</a>]
+    [<a href='{% url userauth.views.profile_bury user_info.pk %}'>{% trans "Bury user" %}</a>]
 {% endif %}
 </td>
 </tr>
@@ -52,7 +53,7 @@
     <tr><td>Jabber: <a href='{{ user_info.profile.jabber }}'>{{ user_info.profile.jabber }}</a></td></tr>
     {% endif %}
     {% if user_info.email %}
-    {% if user == user_info or user.is_staff %}
+    {% if user.username == user_info.username or user.is_staff %}
     <tr><td>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> ({% trans "is avalible only for you and site moderators" %})</td></tr>
     {% endif %}
     {% endif %}
@@ -68,14 +69,14 @@
     {% endif %}
     </td></tr>
 </table>
-{% if user_info.profile.is_buryed %}
+{% if user_info.profile.buryed or user_info.profile.karma < 0 %}
 <h3>{% trans "User status"%}:</h3>
 <p>{% trans "This user has been buryed at our" %} <a href=''>{% trans "Grave Yard" %}</a>.<br>
 {% trans "Reason"%}:
 {% if user_info.profile.buryed %}
-    {{ user_info.profile.buryed_reason }}
+{{ user_info.profile.buryed_reason }}
 {% else %}
-    {% trans "Auto ban due high karma loss." %}
+{% trans "Auto ban due high karma loss." %}
 {% endif %}
 </p>
 {% endif %}
