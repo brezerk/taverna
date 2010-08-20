@@ -54,7 +54,7 @@
 {% for user_info in users.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
- {{ user_info }}
+ <span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span>
  </td>
  <td>
  {{ user_info.karma }}

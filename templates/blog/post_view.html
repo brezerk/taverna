@@ -44,14 +44,14 @@
     {% url forum.views.forum startpost.forum.pk as section_url %}
 {% endif %}
 {% url forum.views.thread startpost.pk as startpost_url %}
-{% if user.is_authenticated and startpost.owner == user and user.profile.can_create_topic or user.is_superuser %}
+{% if user.is_authenticated and startpost.owner == user or user.is_superuser %}
     {% if startpost.blog %}
         {% url blog.views.post_edit startpost.pk as edit_url %}
     {% else %}
         {% url forum.views.topic_edit startpost.pk as edit_url %}
     {% endif %}
 {% endif %}
-{% if user.is_authenticated and user.profile.can_create_comment %}
+{% if user.is_authenticated %}
     {% url forum.views.reply startpost.pk as add_comment_url %}
 {% endif %}
 {% include "forum/startpost.inc.html" %}

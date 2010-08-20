@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from util import ExtendedPaginator
 from django.core.paginator import Paginator
-
+from blog.views import error
 from django.http import Http404
 
 from django.utils.html import strip_tags
@@ -87,7 +87,11 @@ def forum(request, forum_id):
 def reply(request, post_id):
     reply_to = Post.objects.exclude(removed = True).get(pk = post_id)
     if not request.user.profile.can_create_comment():
-        return
+        from django.conf import settings
+        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create comments!"),
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["COMMENT_CREATE"])
+        )
+
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -191,8 +195,12 @@ def modify_rating(post, cost = 1, positive = False):
 @login_required()
 @rr('forum/topic_create.html')
 def topic_create(request, forum_id):
-    if not request.user.profile.can_create_topic:
-        return
+    if not request.user.profile.can_create_topic():
+        from django.conf import settings
+        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create topics!"),
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_CREATE"])
+        )
+
     forum = Forum.objects.get(pk = forum_id)
     if request.method == 'POST':
         form = ThreadForm(request.POST)
@@ -241,7 +249,12 @@ def topic_edit(request, topic_id):
 @login_required()
 @rr('forum/forum_create.html')
 def forum_create(request):
-    if request.method == 'POST':
+    if not request.user.profile.can_create_forum():
+        from django.conf import settings
+        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create forums!"),
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["FORUM_CREATE"])
+        )
+
         form = ForumForm(request.POST)
         if request.user.profile.can_create_forum() and form.is_valid():
             forum = form.save(commit = False)

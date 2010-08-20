@@ -55,9 +55,7 @@
                     {% if user.is_superuser and post.pk %} 
                         [<a href="{% url forum.views.remove post.pk %}">{% trans "Remove" %}</a>]
                     {% endif %}
-                    {% if user.profile.can_create_comment %}
                         [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
-                    {% endif %}
                 {% endif %}
             </td>
         </tr>

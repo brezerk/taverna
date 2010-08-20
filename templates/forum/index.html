@@ -11,9 +11,7 @@
 
 <td align='right'>
 {% if user.is_authenticated %}
-    {% if user.profile.can_create_forum %}
     [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
-    {% endif %}
 {% endif %}
 </td>
 </tr>

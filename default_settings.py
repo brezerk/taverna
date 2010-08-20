@@ -122,3 +122,10 @@ PAGE_LIMITATIONS = {
     'FORUM_COMMENTS': 10,
 }
 
+FORCE_PRICELIST = {
+    'COMMENT_ADD': 1,
+    'TOPIC_ADD': 10,
+    'VOTE': 1,
+    'FROUM_ADD': 100,
+}
+

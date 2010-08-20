@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from django.utils.translation import gettext as _
+from django.conf import settings
 
 class ReasonList(models.Model):
     description = models.CharField(_("Description"), max_length = 128, blank = True, null = False)
@@ -46,17 +47,27 @@ class Profile(models.Model):
     def can_create_forum(self):
         if self.buryed:
             return False
-        return self.karma >= 15
+        return self.force >= settings.FORCE_PRICELIST["FORUM_CREATE"]
 
     def can_create_topic(self):
         if self.buryed:
             return False
-        return self.karma >= 10
+        return self.force >= settings.FORCE_PRICELIST["TOPIC_CREATE"]
 
     def can_create_comment(self):
         if self.buryed:
             return False
-        return self.karma >= 1
+        return self.force >= settings.FORCE_PRICELIST["COMMENT_CREATE"]
+
+    def can_vote(self):
+        if self.buryed:
+            return False
+        return self.force >= settings.FORCE_PRICELIST["CAN_VOTE"]
+
+    def can_edit_topic(self):
+        if self.buryed:
+            return False
+        return self.force >= settings.FORCE_PRICELIST["TOPIC_EDIT"]
 
     def get_visible_name(self):
         if self.visible_name:

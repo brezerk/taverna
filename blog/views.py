@@ -18,10 +18,6 @@ from util import rr, ExtendedPaginator
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from forum.views import PostForm as CommentForm
-
-from forum.views import modify_rating
-
 
 @login_required()
 @rr('blog/settings.html')
@@ -51,8 +47,12 @@ def settings(request):
 @login_required()
 @rr('blog/post_edit.html')
 def post_edit(request, post_id):
-    if not request.user.profile.can_create_topic:
-        return HttpResponseRedirect("/") # FIXME redirect to error message
+    if not request.user.profile.can_edit_topic():
+        from django.conf import settings
+        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to edit topic!"),
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_EDIT"])
+        )
+
 
     post_orig = Post.objects.exclude(removed = True).get(pk = post_id)
 
@@ -120,8 +120,10 @@ def post_edit(request, post_id):
 @rr('blog/post_add.html')
 def post_add(request):
     if not request.user.profile.can_create_topic():
-        return error(request, _("You have not enough karma to create new topic!"))
-
+        from django.conf import settings
+        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create new topic!"),
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_CREATE"])
+        )
 
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
@@ -248,6 +250,7 @@ def vote_async(request, post_id, positive):
         else:
             return {"rating": post.rating, "message": _("You not enough force.")}
 
+    from forum.views import modify_rating
     modify_rating(post, 1, positive)
     return {"rating": post.rating}
 
@@ -266,6 +269,7 @@ def vote_generic(request, post_id, positive):
         except IntegrityError:
             pass
         else:
+            from forum.views import modify_rating
             modify_rating(post, 1, positive)
 
     if post.reply_to:
@@ -301,5 +305,10 @@ def list_users(request):
     return { 'thread': paginator.page(page) }
 
 @rr('blog/error.html')
-def error(request, message):
+def error(request, error_id):
+        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create new topic!"),
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_CREATE"])
+        )
+
+    
     return { 'message': message }

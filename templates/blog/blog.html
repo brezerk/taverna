@@ -59,10 +59,10 @@
         {% url blog.views.view startpost.blog.pk as section_url %}
         {% url forum.views.thread startpost.pk as startpost_url %}
         {% url forum.views.thread startpost.pk as comments_url %}
-        {% if user.is_authenticated and startpost.owner == user and user.profile.can_create_topic %}
+        {% if user.is_authenticated and startpost.owner == user  %}
             {% url blog.views.post_edit startpost.pk as edit_url %}
         {% endif %}
-        {% if user.is_authenticated and user.profile.can_create_topic %}
+        {% if user.is_authenticated %}
             {% url forum.views.reply startpost.pk as add_comment_url %}
         {% endif %}
 

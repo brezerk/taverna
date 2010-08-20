@@ -28,7 +28,6 @@ class Post(models.Model):
     parser = models.IntegerField(choices = settings.PARSER_ENGINES, default = 0)
     rating = models.IntegerField(editable = False, default = 0)
     created = models.DateTimeField(editable = False, auto_now_add = True)
-    restrict_negative = models.BooleanField(_("Restrict user comments with negative carma"), default = 0)
     tags = models.ManyToManyField(Tag, null = True)
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
