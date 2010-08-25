@@ -158,6 +158,10 @@ def remove(request, post_id):
         form = RemoveForm(request.POST)
         if form.is_valid():
             form.save()
+            if startpost.reply_to:
+                return HttpResponseRedirect(reverse('forum.views.thread', args = [startpost.thread.pk]))
+            else:
+                return HttpResponseRedirect("/")
     else:
         form = RemoveForm()
 

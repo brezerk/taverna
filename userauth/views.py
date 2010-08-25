@@ -241,8 +241,12 @@ def notify(request):
     return {'thread': thread, 'request_url': request.get_full_path()}
 
 @rr("userauth/rewards.html")
-def rewards(request):
-    user_info = request.user
+def rewards(request, user_id):
+    user_info = User.objects.get(pk = user_id)
+
+    if not request.user.is_superuser:
+        if request.user != user_info:
+            raise Http404
 
     try:
         page = int(request.GET['offset'])
@@ -257,7 +261,7 @@ def rewards(request):
     except (EmptyPage, InvalidPage):
         rewards = paginator.page(paginator.num_pages)
 
-    return {'rewards': rewards, 'request_url': request.get_full_path()}
+    return {'rewards': rewards, 'request_url': request.get_full_path(), 'user_info': user_info}
 
 @rr("userauth/graveyard.html")
 def graveyard(request):

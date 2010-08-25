@@ -34,6 +34,7 @@ urlpatterns = patterns('',
 
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
+
     (r'^blogs/$', 'blog.views.list'),
     (r'^blogs/public/$', 'blog.views.list_public'),
     (r'^blogs/usr/libblog.so$', 'blog.views.list_users'),
@@ -69,7 +70,7 @@ urlpatterns = patterns('',
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
 
-    (r'^pam/librewards.so$', 'userauth.views.rewards'),
+    (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
     (r'^pam/libgraweyard.so$', 'userauth.views.graveyard'),
 
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),

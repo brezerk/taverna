@@ -319,10 +319,8 @@ def error(request, error):
     try:
         desc = settings.FORCE_PRICELIST[error]["DESC"]
         cost = settings.FORCE_PRICELIST[error]["COST"]
-        message = "%s<br>%s: <b>%s</b> points, you have only <b>%s</b> points." % (_("You have not enough Force to %s!") % settings.FORCE_PRICELIST[error]["DESC"],
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST[error]["COST"], request.user.profile.force)
-
     except KeyError:
-        message = error
+        desc = error
+        cost = None
 
-    return { 'message': message }
+    return { 'desc': desc, 'cost': cost }

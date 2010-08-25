@@ -7,7 +7,11 @@
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td>
-{% trans "Your's rewards list" %}
+{% if user = user_info %}
+{% trans "Your's" %} {% trans "rewards list" %}
+{% else%}
+{{ user_info.profile.get_visible_name }} {% trans "rewards list" %}
+{% endif %}
 </td>
 
 <td align='right'>
