@@ -77,7 +77,7 @@ def post_edit(request, post_id):
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread')
+            exclude = ('tags', 'reply_to', 'thread', 'removed')
 
         def save(self, **args):
             orig_text = Post.objects.get(pk = post_id).text

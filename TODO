@@ -1,30 +1,12 @@
-
  == General ==
 
  Sitemap:
      * Sitemap implementation (brezerk: done, need discusss);
 
- Vote system:
-     * get view for rating;
-     * Define and balance privileges karma requirements;
-
- Rulesz pages:
-     * Write rules pages (Flat pages?);
-     * Write error pages for unallowed actions (Like adding topic while you have not enough carma);
-
- Ban IE:
-     * Ban IEUA;
-     * Ban WUA;
-
  == Admin ===
 
  Redesign:
      * reorganize django admin pages;
-
- Allow to delete:
-     * comments
-     * threads
-     * blogpost
 
  == Have fun ==
 
@@ -32,4 +14,6 @@
      * Have fun;
      * Have some profit :P
 
+ == Redesign ==
+     * redesing url loook like. e.t.c.
 

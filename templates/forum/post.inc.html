@@ -35,15 +35,14 @@
                 {{post.text|markup:post.parser|safe}}
                 <small>
                 {% if post.owner %}
-                    <span class='plus'>
-                        <a href='{% url userauth.views.profile_view post.owner.pk %}'>
+                        <a class='plus' href='{% url userauth.views.profile_view post.owner.pk %}'>
                         {% if post.owner.profile.is_buryed %}
                             <del>{{post.owner.profile.get_visible_name}}</del>
                         {% else %}
                             {{post.owner.profile.get_visible_name}}
                         {% endif %}
                         </a>
-                    </span> @ {{post.created|date:"d.m.Y H:i:s"}}
+                         @ {{post.created|date:"d.m.Y H:i:s"}}
                 {% else %}
                     <span class='plus'>
                         <a href=''>{{user.profile.get_visible_name}}</a>

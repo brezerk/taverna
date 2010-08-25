@@ -21,9 +21,8 @@
                         [<a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='{{ startpost.pk }}' >▲</a>]
                         <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span>
                         [<a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
-                        | {% trans "Author" %}: 
-                        <span class='plus'>
-                            <a href='{% url userauth.views.profile_view startpost.owner.id %}'>
+                        | {% trans "Author" %}:
+                            <a class='plus' href='{% url userauth.views.profile_view startpost.owner.id %}'>
                             
                             {% if  startpost.owner.profile.is_buryed %}
                             <del>{{ startpost.owner.profile.get_visible_name }}</del>
@@ -31,7 +30,6 @@
                             {{ startpost.owner.profile.get_visible_name }}
                             {% endif %}
                             </a>
-                        </span>
                             ( {{ startpost.created|date:"d.m.Y H:i" }} )
 
                         {% if comments_url %}
@@ -41,13 +39,10 @@
                         {% if edit %}
                         <div class='editby'>
                             {% trans "Last edited by" %}
-                            <span class='plus'>
-                                <a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
-                            </span>
+                            <a class='plus' href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
                             {{ edit.edited|date:"d.m.Y H:i" }} (
-                            <span class='plus'>
-                                <a href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>
-                            </span>)
+                            <a class='plus' href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>
+                            )
                         </div>
                         {% endif %}
 

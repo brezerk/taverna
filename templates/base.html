@@ -1,8 +1,30 @@
+<!--
+/***************************************************************************
+ *   Copyright (C) 2010 by Alexey S. Malakhov                              *
+ *   brezerk@gmail.com                                                     *
+ *                                                                         *
+ *   This program is free software: you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation, either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ *                                                                         *
+ ***************************************************************************/
+ -->
+
+
 {% load i18n %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Taverna :. {% block title %}{% endblock %}</title>
+    <title>FOSS :. {% block title %}{% trans "Free and Open-Source Software Developers and Users" %}{% endblock %}</title>
     <link rel='stylesheet' type='text/css' href='/media/styles/base.css'>
     {% block headlist %}{% endblock %}
     <meta http-equiv='Content-Type' content='text/html; charset=utf8'>
@@ -62,12 +84,8 @@
         <td width='350' align='right'>
         {% if user.is_authenticated %}
             {% trans "Welcome" %}, 
-            {% if user.profile %}
             <a href='{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}</a>
-            {% else %}
-            <span style='color: white'><b>{{ user }}</b></span>
-            {% endif %}
-            [<span class='minus'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
+            [<a class='minus' href="{% url userauth.views.openid_logout %}">x</a>]
         {% else %}
             [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
         {% endif %}
@@ -92,7 +110,6 @@
 
 {% trans "Information" %}: <a href='/about'>{% trans "About"%}</a> &amp; <a href='/rules'>{% trans "Site rules"%}</a><br>W3C: <a href='http://validator.w3.org/check?uri=referer'>Valid HTML 4.01 Transitional</a> &amp;
 <a href='http://jigsaw.w3.org/css-validator/check/referer'>Valid CSS 2.1</a><br>
-
 
 </td>
 <td valign='top'>

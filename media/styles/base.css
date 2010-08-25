@@ -1,3 +1,22 @@
+/***************************************************************************
+ *   Copyright (C) 2010 by Alexey S. Malakhov                              *
+ *   brezerk@gmail.com                                                     *
+ *                                                                         *
+ *   This program is free software: you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation, either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ *                                                                         *
+ ***************************************************************************/
+
 html, body {
     background-color: #282828;
     color: #c1c1c1;
@@ -24,18 +43,18 @@ hr {
 }
 
 a {
-    color: #e8e8e8;
+    color: white;
     text-decoration: none;
 }
 
 a:visited {
-    color: #abbac9;
+    color: white;
     text-decoration: none;
 }
 
 
 a:hover {
-    color: #abbac9;
+    color: #afafaf;
     text-decoration: none;
 }
 
@@ -53,44 +72,11 @@ a:hover {
     color: #afafaf;
 }
 
-.menubox a {
-    color: white;
-    text-decoration: none;
-}
-
-.menubox a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-
-.menubox a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
-
 .actionbox {
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 10px;
 }
-
-.actionbox a {
-    color: white;
-    text-decoration: none;
-}
-
-.actionbox a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-
-.actionbox a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
-
 
 .titlebox {
     background-color: #111111;
@@ -105,22 +91,6 @@ a:hover {
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 15px;
-}
-
-.news a {
-    color: white;
-    text-decoration: none;
-}
-
-.news a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-
-.news a:hover {
-    color: #afafaf;
-    text-decoration: none;
 }
 
 .tags a {
@@ -140,7 +110,7 @@ a:hover {
 
 
 a.comment_info {
-    color: red;
+    color: #f6a10e;
     text-decoration: none;
 }
 
@@ -168,27 +138,27 @@ a.comment_info:hover {
     border-top: 1px dashed #686868;
 }
 
-.plus  a {
+a.plus {
   color: #49d723;
 }
 
-.plus a:visited {
+a.plus:visited {
   color: #49d723;
 }
 
-.plus a:hover {
+a.plus:hover {
     color: green;
 }
 
-.minus a {
+a.minus {
   color: red;
 }
 
-.minus a:visited {
+a.minus:visited {
   color: red;
 }
 
-.minus a:hover {
+a.minus:hover {
     color: #ff7e00;
 }
 
@@ -213,9 +183,14 @@ a.comment_info:hover {
     text-align: justify;
 }
 
-h1, h2, h3, h4, h5 { margin: 1pt; padding: 1pt; }
+h1, h2, h3, h4, h5 {
+    margin: 1pt;
+    padding: 1pt;
+}
 
-form table { width: 600px; }
+form table {
+    width: 600px;
+}
 
 #blog_topic { width: 100%; }
 #forum_posts { width: 90%; margin: 1em; }
@@ -233,7 +208,6 @@ input, select, textarea {
 label, th {
     text-align: left;
     vertical-align: text-top;
-/*    width: 220px;*/
 }
 
 #blog_topic th {
@@ -255,7 +229,10 @@ label, th {
 }
 
 .normal { }
-.dark { background-color: #232323; }
+
+.dark {
+    background-color: #232323;
+}
 
 .pages {
     text-align: center;
@@ -298,11 +275,11 @@ label, th {
 }
 
 a.vote-positive {
-  color: #49d723;
+    color: #49d723;
 }
 
 a.vote-positive:visited {
-  color: #49d723;
+    color: #49d723;
 }
 
 a.vote-positive:hover {
@@ -310,14 +287,13 @@ a.vote-positive:hover {
 }
 
 a.vote-negative {
-  color: red;
+    color: red;
 }
 
 a.vote-negative:visited {
-  color: red;
+    color: red;
 }
 
 a.vote-negative:hover {
     color: #ff7e00;
 }
-
