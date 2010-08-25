@@ -18,9 +18,9 @@
                     {% endif %}
                     {% if startpost.owner %}
                     <p>
-                        [<a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='{{ startpost.pk }}' >▲</a>]
+                        [<a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='positive-{{ startpost.pk }}' >▲</a>]
                         <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span>
-                        [<a class='vote-negative' id='{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
+                        [<a class='vote-negative' id='negative-{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
                         | {% trans "Author" %}:
                             <a class='plus' href='{% url userauth.views.profile_view startpost.owner.id %}'>
                             
