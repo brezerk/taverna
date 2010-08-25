@@ -227,11 +227,10 @@ def index(request):
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):
-    post = Post.objects.exclude(removed = True).get(pk = post_id)
-
     if not request.user.is_authenticated():
         return {"rating": post.rating, "message": _("Registration required.")}
 
+    post = Post.objects.exclude(removed = True).get(pk = post_id)
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
 
@@ -255,35 +254,36 @@ def vote_async(request, post_id, positive):
     modify_rating(post, 1, positive)
     return {"rating": post.rating}
 
-#FIXME: Rewrite this shit to use Error function, plz
-def vote_generic(request, post_id, positive):
+def vote_generic(request, post_id, positive): 
+    if not request.user.is_authenticated():
+        return error(request, _("Registration required."))
 
-    return error(request, "QUAKE")
-    
     post = Post.objects.exclude(removed = True).get(pk = post_id)
+    if post.owner == request.user:
+        return error(request, _("You can not vote for own post."))
 
-    if request.user.is_authenticated() and post.owner != request.user:
-        if int(positive) == 0:
-            positive = True
-        else:
-            positive = False
+    if int(positive) == 0:
+        positive = True
+    else:
+        positive = False
 
+    if not request.user.is_superuser:
         if request.user.profile.use_force("VOTE"):
             try:
                 PostVote(post = post, user = request.user, positive = positive).save()
             except IntegrityError:
-                pass
+                return error(request, _("You can not vote more then one time for a single post."))
             else:
                 request.user.profile.save()
-                from forum.views import modify_rating
-                modify_rating(post, 1, positive)
         else:
-            return HttpResponseRedirect(reverse("forum.views.thread", args = [post.pk]))
+            return error(request, "VOTE")
+                
+    from forum.views import modify_rating
+    modify_rating(post, 1, positive)
 
     if post.reply_to:
         from django.conf import settings
         paginator = Paginator(Post.objects.filter(thread = post.thread).exclude(pk = post.thread.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
-        print paginator.page_range
         for page in paginator.page_range:
             if post in paginator.page(page).object_list:
                return HttpResponseRedirect("%s?offset=%i#post_%i" % (reverse("forum.views.thread", args = [post.thread.pk]), page, post.pk))
