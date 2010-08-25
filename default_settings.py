@@ -128,6 +128,7 @@ PAGE_LIMITATIONS = {
 
 ugettext = lambda s: s
 
+# Force price list
 FORCE_PRICELIST = {
     'COMMENT_CREATE': {'COST': 1, 'DESC': ugettext('add new comments')},
     'TOPIC_EDIT': {'COST': 1, 'DESC': ugettext('edit topic')},
@@ -136,3 +137,8 @@ FORCE_PRICELIST = {
     'FORUM_CREATE': {'COST': 100, 'DESC': ugettext('create new forum')},
 }
 
+# Force regeneration for autobanned users
+FORCE_REGEN = {
+    'RATE': 1,
+    'BORDER': 1,
+}
