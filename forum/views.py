@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from models import *
 from util import rr
 from django import forms
@@ -25,7 +26,7 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread', 'removed')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'removed')
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -51,7 +52,7 @@ class ThreadForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('restrict_negative', 'tags', 'blog', 'reply_to', 'thread', 'removed')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'removed')
 
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
@@ -87,10 +88,7 @@ def forum(request, forum_id):
 def reply(request, post_id):
     reply_to = Post.objects.exclude(removed = True).get(pk = post_id)
     if not request.user.profile.can_create_comment():
-        from django.conf import settings
-        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create comments!"),
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["COMMENT_CREATE"])
-        )
+        return error(request, "COMMENT_CREATE")
 
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -101,6 +99,9 @@ def reply(request, post_id):
                 post.thread = post.reply_to.thread
                 post.owner = request.user
                 post.save()
+
+                request.user.profile.use_force("COMMENT_CREATE")
+                request.user.profile.save()
 
                 from django.conf import settings
                 paginator = ExtendedPaginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
@@ -196,10 +197,7 @@ def modify_rating(post, cost = 1, positive = False):
 @rr('forum/topic_create.html')
 def topic_create(request, forum_id):
     if not request.user.profile.can_create_topic():
-        from django.conf import settings
-        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create topics!"),
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_CREATE"])
-        )
+        return error(request, "TOPIC_CREATE")
 
     forum = Forum.objects.get(pk = forum_id)
     if request.method == 'POST':
@@ -213,6 +211,10 @@ def topic_create(request, forum_id):
                 post.thread = post
                 post.title = strip_tags(post.title)
                 post.save()
+
+                request.user.profile.use_force("TOPIC_CREATE")
+                request.user.profile.save()
+                
                 return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
     else:
         form = ThreadForm()
@@ -221,8 +223,8 @@ def topic_create(request, forum_id):
 @login_required()
 @rr('forum/topic_edit.html')
 def topic_edit(request, topic_id):
-    if not request.user.profile.can_create_topic:
-        return HttpResponseRedirect("/") # FIXME redirect to error message
+    if not request.user.profile.can_edit_topic():
+        return error(request, "TOPIC_EDIT")
 
     topic = Post.objects.exclude(removed = True).get(pk = topic_id)
 
@@ -240,6 +242,9 @@ def topic_edit(request, topic_id):
                 post = form.save()
                 PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
 
+                request.user.profile.use_force("TOPIC_EDIT")
+                request.user.profile.save()
+
                 return HttpResponseRedirect(reverse('forum.views.thread', args = [topic_id]))
 
     else:
@@ -250,17 +255,20 @@ def topic_edit(request, topic_id):
 @rr('forum/forum_create.html')
 def forum_create(request):
     if not request.user.profile.can_create_forum():
-        from django.conf import settings
-        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create forums!"),
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["FORUM_CREATE"])
-        )
+        return error(request, "FORUM_CREATE")
 
+    if request.method == 'POST':
         form = ForumForm(request.POST)
-        if request.user.profile.can_create_forum() and form.is_valid():
+        if form.is_valid():
             forum = form.save(commit = False)
             forum.owner = request.user
             forum.save()
+
+            request.user.profile.use_force("FORUM_CREATE")
+            request.user.profile.save()
+            
             return HttpResponseRedirect(reverse(index))
+
     return {'form': ForumForm()}
 
 @rr('forum/tag_search.html')
@@ -284,9 +292,8 @@ def post_diff(request, diff_id):
     return {'startpost': edit_post.post, 'edit_post': edit_post}
 
 def post_rollback(request, diff_id):
-
-    if not request.user.profile.can_create_topic:
-        return HttpResponseRedirect("/") # FIXME redirect to error message
+    if not request.user.profile.can_edit_topic():
+        return error(request, "TOPIC_EDIT")
 
     diff = PostEdit.objects.exclude(removed = False).get(pk = diff_id)
 
@@ -295,25 +302,24 @@ def post_rollback(request, diff_id):
 
     PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()
 
+    request.user.profile.use_force("FORUM_CREATE")
+    request.user.profile.save()
+    
     post = diff.post
     post.text = diff.old_text
     post.save()
 
     return thread(request, post.pk)
 
-
-
 @rr('blog/post_view.html')
 def thread(request, post_id):
-
     page = request.GET.get("offset", 1)
 
     startpost = Post.objects.exclude(removed = True).get(pk = post_id)
     from django.conf import settings
-    paginator = ExtendedPaginator(Post.objects.filter(removed = False, thread = startpost.thread).exclude(pk = startpost.pk), 
-        settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+    paginator = ExtendedPaginator(Post.objects.filter(removed = False, thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
-    return { 'startpost': startpost, 'thread': paginator.page(page), 'comment_form': PostForm() }
+    return { 'startpost': startpost, 'thread': paginator.page(page) }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
@@ -330,5 +336,3 @@ def offset(request, root_id, offset_id):
             return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
 
     raise Http404
-
-

@@ -37,9 +37,9 @@ class Profile(models.Model):
         else:
             return False
 
-    def use_force(self, amount = 1):
-        if self.force >= amount:
-            self.force -= amount
+    def use_force(self, force_id):
+        if self.force >= settings.FORCE_PRICELIST[force_id]["COST"]:
+            self.force -= settings.FORCE_PRICELIST[force_id]["COST"]
             return True
         else:
             return False
@@ -47,27 +47,27 @@ class Profile(models.Model):
     def can_create_forum(self):
         if self.buryed:
             return False
-        return self.force >= settings.FORCE_PRICELIST["FORUM_CREATE"]
+        return self.force >= settings.FORCE_PRICELIST["FORUM_CREATE"]["COST"]
 
     def can_create_topic(self):
         if self.buryed:
             return False
-        return self.force >= settings.FORCE_PRICELIST["TOPIC_CREATE"]
+        return self.force >= settings.FORCE_PRICELIST["TOPIC_CREATE"]["COST"]
 
     def can_create_comment(self):
         if self.buryed:
             return False
-        return self.force >= settings.FORCE_PRICELIST["COMMENT_CREATE"]
+        return self.force >= settings.FORCE_PRICELIST["COMMENT_CREATE"]["COST"]
 
     def can_vote(self):
         if self.buryed:
             return False
-        return self.force >= settings.FORCE_PRICELIST["CAN_VOTE"]
+        return self.force >= settings.FORCE_PRICELIST["CAN_VOTE"]["COST"]
 
     def can_edit_topic(self):
         if self.buryed:
             return False
-        return self.force >= settings.FORCE_PRICELIST["TOPIC_EDIT"]
+        return self.force >= settings.FORCE_PRICELIST["TOPIC_EDIT"]["COST"]
 
     def get_visible_name(self):
         if self.visible_name:

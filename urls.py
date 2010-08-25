@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -40,7 +41,6 @@ urlpatterns = patterns('',
     (r'^blog/libpost-edit-(?P<post_id>\d+).so$', 'blog.views.post_edit'),
     (r'^blog/libsettings.so$', 'blog.views.settings'),
     (r'^blog/libtag-(?P<tag_id>\d+).so$', 'blog.views.tags_search'),
-    (r'^blog/liberror.so$', 'blog.views.error'),
 
     (r'^forum.so$', 'forum.views.index'),
     (r'^forum-(?P<forum_id>\d+).so$', 'forum.views.forum'),

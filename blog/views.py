@@ -19,6 +19,8 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from django.http import Http404
+
 @login_required()
 @rr('blog/settings.html')
 def settings(request):
@@ -48,20 +50,16 @@ def settings(request):
 @rr('blog/post_edit.html')
 def post_edit(request, post_id):
     if not request.user.profile.can_edit_topic():
-        from django.conf import settings
-        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to edit topic!"),
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_EDIT"])
-        )
-
+        return error(request, "TOPIC_EDIT")
 
     post_orig = Post.objects.exclude(removed = True).get(pk = post_id)
 
     if not request.user.is_superuser:
         if not post_orig.reply_to == None:
-            return HttpResponseRedirect("/")
+            raise Http404
 
         if post_orig.owner != request.user:
-            return HttpResponseRedirect("/")
+            raise Http404
 
         user_info = request.user
     else:
@@ -98,6 +96,9 @@ def post_edit(request, post_id):
                     tag.save()
                     post.tags.add(tag)
 
+            request.user.profile.use_force("TOPIC_EDIT")
+            request.user.profile.save()
+
     preview = None
     tags = None
 
@@ -120,10 +121,7 @@ def post_edit(request, post_id):
 @rr('blog/post_add.html')
 def post_add(request):
     if not request.user.profile.can_create_topic():
-        from django.conf import settings
-        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create new topic!"),
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_CREATE"])
-        )
+       return error(request, "TOPIC_CREATE")
 
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
@@ -150,6 +148,10 @@ def post_add(request):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
+
+            request.user.profile.use_force("TOPIC_CREATE")
+            request.user.profile.save()
+                    
             return post.blog.pk
 
     form = PostForm()
@@ -239,8 +241,7 @@ def vote_async(request, post_id, positive):
         positive = False
 
     if not request.user.is_superuser:
-
-        if request.user.profile.use_force(1):
+        if request.user.profile.use_force("VOTE"):
             try:
                 PostVote(post = post, user = request.user, positive = positive).save()
             except IntegrityError:
@@ -248,14 +249,17 @@ def vote_async(request, post_id, positive):
             else:
                 request.user.profile.save()
         else:
-            return {"rating": post.rating, "message": _("You not enough force.")}
+            return {"rating": post.rating, "message": _("You have not enough Force.")}
 
     from forum.views import modify_rating
     modify_rating(post, 1, positive)
     return {"rating": post.rating}
 
-@rr('ajax/vote.json', "application/json")
+#FIXME: Rewrite this shit to use Error function, plz
 def vote_generic(request, post_id, positive):
+
+    return error(request, "QUAKE")
+    
     post = Post.objects.exclude(removed = True).get(pk = post_id)
 
     if request.user.is_authenticated() and post.owner != request.user:
@@ -264,13 +268,17 @@ def vote_generic(request, post_id, positive):
         else:
             positive = False
 
-        try:
-            PostVote(post = post, user = request.user, positive = positive).save()
-        except IntegrityError:
-            pass
+        if request.user.profile.use_force("VOTE"):
+            try:
+                PostVote(post = post, user = request.user, positive = positive).save()
+            except IntegrityError:
+                pass
+            else:
+                request.user.profile.save()
+                from forum.views import modify_rating
+                modify_rating(post, 1, positive)
         else:
-            from forum.views import modify_rating
-            modify_rating(post, 1, positive)
+            return HttpResponseRedirect(reverse("forum.views.thread", args = [post.pk]))
 
     if post.reply_to:
         from django.conf import settings
@@ -305,10 +313,16 @@ def list_users(request):
     return { 'thread': paginator.page(page) }
 
 @rr('blog/error.html')
-def error(request, error_id):
-        return error(request, "%s<br>%s: %s points" % (_("You have not enough Force to create new topic!"),
-        _("Amount of Force required for this action"), settings.FORCE_PRICELIST["TOPIC_CREATE"])
-        )
+def error(request, error):
+    from django.conf import settings
 
-    
+    try:
+        desc = settings.FORCE_PRICELIST[error]["DESC"]
+        cost = settings.FORCE_PRICELIST[error]["COST"]
+        message = "%s<br>%s: <b>%s</b> points, you have only <b>%s</b> points." % (_("You have not enough Force to %s!") % settings.FORCE_PRICELIST[error]["DESC"],
+        _("Amount of Force required for this action"), settings.FORCE_PRICELIST[error]["COST"], request.user.profile.force)
+
+    except KeyError:
+        message = error
+
     return { 'message': message }
