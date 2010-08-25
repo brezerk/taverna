@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 # Django settings for taverna project.
 
 import os
+
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -85,6 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'taverna.urls'
@@ -101,6 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.sitemaps',
+    'django.contrib.flatpages',
     'forum',
     'blog',
     'userauth',
@@ -122,10 +126,13 @@ PAGE_LIMITATIONS = {
     'FORUM_COMMENTS': 10,
 }
 
+ugettext = lambda s: s
+
 FORCE_PRICELIST = {
-    'COMMENT_ADD': 1,
-    'TOPIC_ADD': 10,
-    'VOTE': 1,
-    'FROUM_ADD': 100,
+    'COMMENT_CREATE': {'COST': 1, 'DESC': ugettext('add new comments')},
+    'TOPIC_EDIT': {'COST': 1, 'DESC': ugettext('edit topic')},
+    'TOPIC_CREATE': {'COST': 10, 'DESC': ugettext('create new topic')},
+    'VOTE': {'COST': 1, 'DESC': ugettext('voite')},
+    'FORUM_CREATE': {'COST': 100, 'DESC': ugettext('create new forum')},
 }
 
