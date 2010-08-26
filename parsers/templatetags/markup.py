@@ -20,19 +20,14 @@
 
 from django import template
 from django.utils.html import linebreaks
-from postmarkup import render_bbcode
-import markdown
-import string
-import re
-
 from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape
-
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-register = template.Library()
+import re
 
+register = template.Library()
 
 @register.filter
 @stringfilter
@@ -48,13 +43,17 @@ def strip_cut(value):
 @register.filter
 @stringfilter
 def markup(value, parser):
-
     if parser == 1:
+        from postmarkup import render_bbcode
         value = "<p>" + render_bbcode(value) + "</p>"
         return value
     elif parser == 2:
-        value = markdown.markdown(value)
+        from markdown import markdown
+        value = markdown(value)
         return value
+    elif parser == 3:
+        from wikimarkup import parselite
+        value = parselite(value)
     else:
         esc = conditional_escape
         value = esc(value)
@@ -92,7 +91,6 @@ def forumtags(value):
 
 @register.filter
 def strippost(value, post):
-
     list = value.split("---cut---")
 
     if len(list) > 1:
@@ -107,6 +105,5 @@ def pg(value, paginator):
     for page in paginator.page_range:
         if value in paginator.page(page).object_list:
             return page
-
     return 0;
 

@@ -155,7 +155,7 @@ def post_add(request):
     user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
-        tag_string = CharField()
+        tag_string = CharField(max_length = 32)
         blog = ModelChoiceField(queryset = user_blogs,
                             initial = user_blogs[0],
                             label = _("Post to"))
@@ -180,7 +180,6 @@ def post_add(request):
 
             request.user.profile.use_force("TOPIC_CREATE")
             request.user.profile.save()
-                    
             return post.blog.pk
 
     form = PostForm()
@@ -283,7 +282,7 @@ def vote_async(request, post_id, positive):
     modify_rating(post, 1, positive)
     return {"rating": post.rating}
 
-def vote_generic(request, post_id, positive): 
+def vote_generic(request, post_id, positive):
     if not request.user.is_authenticated():
         return error(request, _("Registration required."))
 
@@ -306,7 +305,7 @@ def vote_generic(request, post_id, positive):
                 request.user.profile.save()
         else:
             return error(request, "VOTE")
-                
+
     from forum.views import modify_rating
     modify_rating(post, 1, positive)
 
