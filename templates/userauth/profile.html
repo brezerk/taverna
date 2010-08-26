@@ -23,7 +23,7 @@
 [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit profile" %}</a>]
 {% endif %}
 {% if user.is_superuser %}
-    [<a href='/admin/userauth/profile/{{ user_info.profile.pk }}/'>{% trans "Bury user" %}</a>]
+    [<a href='/sudo/userauth/profile/{{ user_info.profile.pk }}/'>{% trans "Bury user" %}</a>]
 {% endif %}
 </td>
 </tr>

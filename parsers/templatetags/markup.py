@@ -20,7 +20,7 @@
 
 from django import template
 from django.utils.html import linebreaks
-from taverna.parsers.engines.phpBB.postmarkup import render_bbcode
+from postmarkup import render_bbcode
 import markdown
 import string
 import re
