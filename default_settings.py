@@ -154,6 +154,9 @@ FORCE_PRICELIST = {
     'TOPIC_CREATE': {'COST': 10, 'DESC': ugettext('create new topic')},
     'VOTE': {'COST': 1, 'DESC': ugettext('voite')},
     'FORUM_CREATE': {'COST': 100, 'DESC': ugettext('create new forum')},
+    'PROFILE_EDIT': {'COST': 1, 'DESC': ugettext('edit profile')},
+    'BLOG_DESC_EDIT': {'COST': 1, 'DESC': ugettext('edit blog description')},
+    'BLOG_NAME_EDIT': {'COST': 100, 'DESC': ugettext('edit blog name')},
 }
 
 # Force regeneration for autobanned users
