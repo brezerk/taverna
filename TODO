@@ -1,7 +1,8 @@
  == General ==
 
- Sitemap:
      * Sitemap implementation (brezerk: done, need discusss);
+     * Title fix for different pages;
+     * some cleanup and tests;
 
  == Admin ===
 
