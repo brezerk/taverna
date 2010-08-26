@@ -52,7 +52,11 @@ def profile_view(request, user_id):
 @login_required()
 @rr ('userauth/settings.html')
 def profile_edit(request):
-
+    from blog.views import error
+    
+    if not request.user.profile.can_edit_profile():
+        return error(request, "PROFILE_EDIT")
+        
     profile = request.user.get_profile()
 
     class SettingsForm(ModelForm):
@@ -70,9 +74,17 @@ def profile_edit(request):
                 profile.photo = mailhash
             profile.save()
 
-            blog = Blog.objects.get(owner = request.user.id)
-            blog.name = profile.visible_name
-            blog.save()
+            request.user.profile.use_force("PROFILE_EDIT")
+            request.user.profile.save()
+
+            try:
+                q = self.cleaned_data["visible_name"]
+            except KeyError:
+                pass
+            else:
+                blog = Blog.objects.get(owner = request.user.id)
+                blog.name = profile.visible_name
+                blog.save()
 
     class UserSettingsForm(ModelForm):
         class Meta:

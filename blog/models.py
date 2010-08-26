@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 class Blog(models.Model):
-    name = models.SlugField(max_length = 32, unique = True)
+    name = models.CharField(max_length = 32, unique = True)
     desc = models.CharField(max_length = 48, default = _("Blog description"))
     active = models.BooleanField(default = False, editable = False)
     owner = models.ForeignKey(User)

@@ -20,7 +20,7 @@
 <h3>Error</h3>
 
 {% if cost %}
-    {% trans "You have not enough Force to"%} {{ desc }}<br>{% trans "Amount of Force required for this action" %}: <b>{{ cost }}</b> points, you have only <b>{{ user.profile.force }}</b> points."
+    {% trans "You have not enough Force to"%} {{ desc }}!<br>{% trans "Amount of Force required for this action" %}: <b>{{ cost }}</b> points, you have only <b>{{ user.profile.force }}</b> points.
 {% else %}
     {{ desc|safe }}
 {% endif %}

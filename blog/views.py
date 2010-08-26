@@ -24,26 +24,37 @@ from django.http import Http404
 @login_required()
 @rr('blog/settings.html')
 def settings(request):
-
-    try:
-        blog = Blog.objects.get(owner = request.user)
-    except Blog.DoesNotExist:
-        blog = Blog(name = request.user.username)
-        blog.owner = request.user
-        blog.save()
+    blog = Blog.objects.get(owner = request.user)
 
     class BlogForm(ModelForm):
         class Meta:
             model = Blog
-            exclude = ('owner', 'name')
+            exclude = ('owner')
 
+        def save(self, **args):
+            blog_name = Blog.objects.get(owner = request.user).name
+            blog = super(BlogForm, self).save(commit = False, **args)
+            if blog.name == blog_name:
+                if request.user.profile.use_force("BLOG_DESC_EDIT"):
+                    request.user.profile.save()
+                    blog.save()
+                else:
+                    return error(request, "BLOG_DESC_EDIT")
+            else:
+                if request.user.profile.use_force("BLOG_NAME_EDIT"):
+                    request.user.profile.save()
+                    blog.save()
+                else:
+                    return error(request, "BLOG_NAME_EDIT")
+            return HttpResponseRedirect(reverse(view, args = [blog.pk]))
+            
     form = BlogForm(instance = blog)
 
     if request.method == 'POST':
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse(view, args = [blog.pk]))
+            return form.save()
+            
     return {'form': form}
 
 @login_required()

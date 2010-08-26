@@ -69,6 +69,21 @@ class Profile(models.Model):
             return False
         return self.force >= settings.FORCE_PRICELIST["TOPIC_EDIT"]["COST"]
 
+    def can_edit_profile(self):
+        if self.buryed:
+            return False
+        return self.force >= settings.FORCE_PRICELIST["PROFILE_EDIT"]["COST"]
+
+    def can_edit_blog_desc(self):
+        if self.buryed:
+            return False
+        return self.force >= settings.FORCE_PRICELIST["BLOG_DESC_EDIT"]["COST"]
+
+    def can_edit_blog_name(self):
+        if self.buryed:
+            return False
+        return self.force >= settings.FORCE_PRICELIST["BLOG_NAME_EDIT"]["COST"]
+        
     def get_visible_name(self):
         if self.visible_name:
             return self.visible_name
