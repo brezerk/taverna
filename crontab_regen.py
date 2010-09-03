@@ -27,7 +27,7 @@ from django.db.models import F
 
 if __name__=="__main__":
     users = Profile.objects.filter(karma__lt = settings.FORCE_REGEN['BORDER'], buryed = False)
-    users.update(karma = F('karma') + 1)
+    users.update(karma = F('karma') + settings.FORCE_REGEN['RATE'])
 
     users = Profile.objects.filter(force__lt = F('karma'), buryed = False)
-    users.update(force = F('force') + 1)
+    users.update(force = F('force') + settings.FORCE_REGEN['RATE'])
