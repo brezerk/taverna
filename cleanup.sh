@@ -4,7 +4,7 @@
 #
 # Plz. Use it before move project to hosting place.
 
-names="*~ *.pyc .*.swp taverna.db"
+names="*~ *.pyc .*.swp"
 
 for name in $names
 do
