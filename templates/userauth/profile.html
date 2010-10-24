@@ -22,7 +22,7 @@
     {% endif %}
 [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit profile" %}</a>]
 {% endif %}
-{% if user.is_superuser %}
+{% if user.is_staff %}
     [<a href='/sudo/userauth/profile/{{ user_info.profile.pk }}/'>{% trans "Bury user" %}</a>]
 {% endif %}
 </td>
@@ -87,7 +87,7 @@
     {% if user == user_info %}
     <li><a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>
     {% endif %}
-    {% if user == user_info or user.is_superuser %}
+    {% if user == user_info or user.is_staff %}
     <li><a href='{% url userauth.views.rewards user_info.id %}'>{% trans "Karma rewards" %}</a>
     {% endif %}
 </ul>

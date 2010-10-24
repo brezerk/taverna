@@ -155,7 +155,7 @@ def post_view(request, post_id):
 @login_required()
 @rr('blog/post_remove.html')
 def remove(request, post_id):
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         raise Http404
 
     startpost = Post.objects.exclude(removed = True).get(pk = post_id)

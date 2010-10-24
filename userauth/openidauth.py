@@ -32,7 +32,7 @@ Return None if no match.
                 user = User.objects.get(username=username, password=password)
             else:
                 user = User.objects.get(username=username)
-                if user.is_staff or user.is_superuser:
+                if user.is_superuser:
                     return None
             # plus any other test of User/UserProfile, etc.
             return user # indicates success

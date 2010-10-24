@@ -151,6 +151,7 @@ def getOpenIDStore(filestore_path, table_prefix):
         'django.db.backends.sqlite3': sqlstore.SQLiteStore,
         }
 
+
     try:
         s = types[settings.DATABASES['default']['ENGINE']](connection.connection,
                                             **tablenames)
@@ -172,7 +173,7 @@ def getOpenIDStore(filestore_path, table_prefix):
         # silently, but that could be bad, too.  More ideally, the SQL
         # store would not attempt to create tables it knows already
         # exists.
-        pass
+	pass
 
     return s
 

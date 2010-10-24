@@ -83,7 +83,7 @@ def post_edit(request, post_id):
 
     post_orig = Post.objects.exclude(removed = True).get(pk = post_id)
 
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         if not post_orig.reply_to == None:
             raise Http404
 
@@ -108,7 +108,7 @@ def post_edit(request, post_id):
             model = Post
             exclude = ('tags', 'reply_to', 'thread', 'removed')
             widgets = {
-                      'text': Textarea(attrs={'cols': 80, 'rows': 120}),
+                      'text': Textarea(attrs={'cols': 80, 'rows': 27}),
                       }            
 
         def save(self, **args):
@@ -273,16 +273,15 @@ def vote_async(request, post_id, positive):
     else:
         positive = False
 
-    if not request.user.is_superuser:
-        if request.user.profile.use_force("VOTE"):
-            try:
-                PostVote(post = post, user = request.user, positive = positive).save()
-            except IntegrityError:
-                return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
-            else:
-                request.user.profile.save()
+    if request.user.profile.use_force("VOTE"):
+        try:
+            PostVote(post = post, user = request.user, positive = positive).save()
+        except IntegrityError:
+            return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
         else:
-            return {"rating": post.rating, "message": _("You have not enough Force.")}
+            request.user.profile.save()
+    else:
+        return {"rating": post.rating, "message": _("You have not enough Force.")}
 
     from forum.views import modify_rating
     modify_rating(post, 1, positive)
@@ -301,16 +300,15 @@ def vote_generic(request, post_id, positive):
     else:
         positive = False
 
-    if not request.user.is_superuser:
-        if request.user.profile.use_force("VOTE"):
-            try:
-                PostVote(post = post, user = request.user, positive = positive).save()
-            except IntegrityError:
-                return error(request, _("You can not vote more then one time for a single post."))
-            else:
-                request.user.profile.save()
+    if request.user.profile.use_force("VOTE"):
+        try:
+            PostVote(post = post, user = request.user, positive = positive).save()
+        except IntegrityError:
+            return error(request, _("You can not vote more then one time for a single post."))
         else:
-            return error(request, "VOTE")
+            request.user.profile.save()
+    else:
+        return error(request, "VOTE")
 
     from forum.views import modify_rating
     modify_rating(post, 1, positive)

@@ -280,7 +280,7 @@ def notify(request):
 def rewards(request, user_id):
     user_info = User.objects.get(pk = user_id)
 
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         if request.user != user_info:
             raise Http404
 

@@ -54,7 +54,7 @@
 <div class='menubox'>
     <table cellspacing='0' cellpadding='2' border='0' width='100%'>
     <tr>
-        {% if user.is_superuser %}
+        {% if user.is_staff %}
         <td width='300'>&nbsp;</td>
         <td align='center'>
             [<a href='{% url blog.views.index %}'>{% trans "Traker" %}</a>] 

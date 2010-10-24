@@ -42,7 +42,7 @@
     {% url forum.views.forum startpost.forum.pk as section_url %}
 {% endif %}
 {% url forum.views.thread startpost.pk as startpost_url %}
-{% if user.is_authenticated and startpost.owner == user or user.is_superuser %}
+{% if user.is_authenticated and startpost.owner == user or user.is_staff %}
     {% if startpost.blog %}
         {% url blog.views.post_edit startpost.pk as edit_url %}
     {% else %}

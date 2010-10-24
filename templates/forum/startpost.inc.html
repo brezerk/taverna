@@ -59,7 +59,7 @@
                 &nbsp;
             </td>
             <td>
-                {% if user.is_superuser and startpost.pk %} 
+                {% if user.is_staff and startpost.pk %} 
                     [<a href="{% url forum.views.remove startpost.pk %}">{% trans "Remove" %}</a>]
                 {% endif %}
                 {% if edit_url %}
