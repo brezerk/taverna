@@ -21,6 +21,7 @@
 from models import *
 from util import rr
 from django import forms
+from django.forms import ModelForm, Textarea
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
@@ -46,6 +47,9 @@ class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = ('tags', 'blog', 'reply_to', 'thread', 'removed')
+        widgets = {
+                  'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+        }            
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -72,11 +76,16 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = ('tags', 'blog', 'reply_to', 'thread', 'removed')
+        widgets = {
+                  'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+        }            
 
     def clean_text(self):
-        text = self.cleaned_data['text'].strip()
-        if len(text) < 24:
-            raise forms.ValidationError(_("Text length < 24 is not allowed."))
+        txt_len = len(self.cleaned_data['text'].strip())
+        if txt_len < 4:
+            raise forms.ValidationError(_("Text length < 4 characters is not allowed."))
+        elif txt_len > 512:
+            raise forms.ValidationError(_("Text length > 512 characters is not allowed."))
         return text
 
 @rr('forum/index.html')
