@@ -21,7 +21,7 @@
 # Create your views here.
 
 #from librecaptcha import librecaptcha
-from recaptcha.client import captcha
+#from recaptcha.client import captcha
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
