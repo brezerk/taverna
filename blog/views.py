@@ -23,7 +23,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.forms import ModelForm, CharField, ModelChoiceField
+from django.forms import ModelForm, CharField, ModelChoiceField, Textarea
 
 from django.db import IntegrityError
 
@@ -107,6 +107,9 @@ def post_edit(request, post_id):
         class Meta:
             model = Post
             exclude = ('tags', 'reply_to', 'thread', 'removed')
+            widgets = {
+                      'text': Textarea(attrs={'cols': 80, 'rows': 120}),
+                      }            
 
         def save(self, **args):
             orig_text = Post.objects.get(pk = post_id).text
@@ -163,6 +166,9 @@ def post_add(request):
         class Meta:
             model = Post
             exclude = ('tags', 'reply_to', 'thread', 'removed')
+            widgets = {
+                      'text': Textarea(attrs={'rows': 27}),
+                      }            
 
         def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
