@@ -85,7 +85,7 @@
     <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>
     {% if user == user_info %}
-    <li><a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>
+    <li><a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>
     {% endif %}
     {% if user == user_info or user.is_superuser %}
     <li><a href='{% url userauth.views.rewards user_info.id %}'>{% trans "Karma rewards" %}</a>
