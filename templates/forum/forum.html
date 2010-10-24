@@ -27,7 +27,7 @@
 {% include "forum/pages.inc.html" %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Date" %}</th></tr>
+<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Last post" %}</th></tr>
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>

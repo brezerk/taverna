@@ -64,7 +64,7 @@ msgstr ""
 
 #: templates/base.html:29
 msgid "user's"
-msgstr ""
+msgstr "Пользовательские"
 
 #: templates/base.html:30 templates/userauth/profile.html:67
 msgid "Forum"
@@ -80,11 +80,11 @@ msgstr "Привет"
 
 #: templates/base.html:36
 msgid "Log In"
-msgstr ""
+msgstr "Войти"
 
 #: templates/base.html:36 templates/userauth/register.html:32
 msgid "Register"
-msgstr ""
+msgstr "Регистрация"
 
 #: templates/blog/add_post.html:5 templates/blog/add_post.html.py:11
 #: templates/blog/add_post.html:53
@@ -146,11 +146,11 @@ msgstr "Название блога"
 
 #: templates/blog/blog_list.html:43
 msgid "Top 20 user blogs:"
-msgstr ""
+msgstr "Лучшая 20ка пользовательских блогов:"
 
 #: templates/blog/settings.html:8
 msgid "My blog settings"
-msgstr ""
+msgstr "Настройки моего блога"
 
 #: templates/forum/forum.html:10
 msgid "ago"
@@ -187,11 +187,11 @@ msgstr ""
 #: templates/userauth/profile.html:5 templates/userauth/profile.html.py:11
 #: templates/userauth/settings.html:5 templates/userauth/settings.html:11
 msgid "User profile"
-msgstr ""
+msgstr "Профиль пользователя"
 
 #: templates/userauth/profile.html:16
 msgid "Read user's blog"
-msgstr ""
+msgstr "Читать блог пользователя"
 
 #: templates/userauth/profile.html:18
 msgid "Ignore"
@@ -203,38 +203,38 @@ msgstr "Создать блог"
 
 #: templates/userauth/profile.html:25 templates/userauth/settings.html:23
 msgid "Edit profile"
-msgstr ""
+msgstr "Редактировать профиль"
 
 #: templates/userauth/profile.html:35
 msgid "User's insformation"
-msgstr ""
+msgstr "Информация о пользователе"
 
 #: templates/userauth/profile.html:40
 msgid "Real name"
-msgstr ""
+msgstr "Настоящее имя"
 
 #: templates/userauth/profile.html:42
 msgid "Registration"
-msgstr ""
+msgstr "Регистрация"
 
 #: templates/userauth/profile.html:43
 msgid "Carma"
-msgstr ""
+msgstr "Карма"
 
 #: templates/userauth/profile.html:45 templates/userauth/settings.html:34
 msgid "Website"
-msgstr ""
+msgstr "Сайт"
 
 #: templates/userauth/profile.html:51
 msgid "is avalible only for you and site moderators"
-msgstr ""
+msgstr "доступен только вам и модераторам"
 
 #: templates/userauth/profile.html:54 templates/userauth/settings.html:37
 msgid "City"
-msgstr ""
+msgstr "Город"
 
 #: templates/userauth/profile.html:63
-msgid "User messags"
+msgid "User messages"
 msgstr ""
 
 #: templates/userauth/profile.html:66
@@ -246,7 +246,7 @@ msgid "Forum's comments"
 msgstr ""
 
 #: templates/userauth/profile.html:70
-msgid "Notifyes"
+msgid "Notifies"
 msgstr ""
 
 #: templates/userauth/register.html:8 templates/userauth/register.html:11
@@ -333,10 +333,6 @@ msgstr ""
 
 #: userauth/views.py:135
 msgid "Login already in use"
-msgstr ""
-
-#: userauth/views.py:152 userauth/views.py:156
-msgid "Wrong captcha"
 msgstr ""
 
 #~ msgid "аgo"
