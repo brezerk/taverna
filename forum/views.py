@@ -81,7 +81,8 @@ class PostForm(forms.ModelForm):
         }            
 
     def clean_text(self):
-        txt_len = len(self.cleaned_data['text'].strip())
+    	text = self.cleaned_data['text'].strip()
+        txt_len = len(text)
         if txt_len < 4:
             raise forms.ValidationError(_("Text length < 4 characters is not allowed."))
         elif txt_len > 512:
