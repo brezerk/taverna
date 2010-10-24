@@ -21,7 +21,8 @@
 # Django settings for taverna project.
 
 import os
-
+import sys
+sys.path.append('libs')
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 

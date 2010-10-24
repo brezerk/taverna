@@ -1,4 +1,6 @@
 *.pyc
-.*.swp
+*.swp
 *~
+initial_data.json
 settings.py
+libs
