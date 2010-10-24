@@ -8,11 +8,9 @@
 <tr><td>
 {% if startpost.blog %}
    <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a>
-   → <a href='{%url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
 {% else %}
 <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
-<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> →
-<a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
+<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> {{ startpost.forum.description }}
 {% endif %}
 </td>
 
