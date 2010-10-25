@@ -69,7 +69,7 @@ class RssBlog(Feed):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
-        return markup(item.text, item.parser)
+        return strippost(item.text, item)
 
 class AtomBlog(RssBlog):
     feed_type = Atom1Feed
