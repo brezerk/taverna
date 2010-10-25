@@ -42,6 +42,9 @@ from django.http import Http404
 @login_required()
 @rr('blog/settings.html')
 def settings(request):
+    if request.user.profile.buryed:
+       return error(request, "")
+
     blog = Blog.objects.get(owner = request.user)
 
     class BlogForm(ModelForm):
@@ -65,14 +68,14 @@ def settings(request):
                 else:
                     return error(request, "BLOG_NAME_EDIT")
             return HttpResponseRedirect(reverse(view, args = [blog.pk]))
-            
+
     form = BlogForm(instance = blog)
 
     if request.method == 'POST':
         form = BlogForm(request.POST, instance = blog)
         if form.is_valid():
             return form.save()
-            
+
     return {'form': form}
 
 @login_required()

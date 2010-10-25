@@ -65,22 +65,22 @@ def openid_logout(request):
 @rr ('userauth/profile.html')
 def profile_view(request, user_id):
     user_info = User.objects.get(pk = user_id)
-    
+
     try:
         user_blog = Blog.objects.get(owner = user_info)
     except:
         user_blog = ""
-        
+
     return {'user_info': user_info,'user_blog': user_blog}
 
 @login_required()
 @rr ('userauth/settings.html')
 def profile_edit(request):
     from blog.views import error
-    
+
     if not request.user.profile.can_edit_profile():
         return error(request, "PROFILE_EDIT")
-        
+
     profile = request.user.get_profile()
 
     class SettingsForm(ModelForm):
