@@ -70,7 +70,7 @@
 </table>
 {% if user_info.profile.is_buryed %}
 <h3>{% trans "User status"%}:</h3>
-<p>{% trans "This user has been buryed at our" %} <a href=''>{% trans "Grave Yard" %}</a>.<br>
+<p>{% trans "This user has been buryed at our" %} <a href='{% url userauth.views.graveyard%}'>{% trans "Grave Yard" %}</a>.<br>
 {% trans "Reason"%}:
 {% if user_info.profile.buryed %}
     {{ user_info.profile.buryed_reason }}
