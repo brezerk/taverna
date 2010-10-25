@@ -42,7 +42,7 @@ class RssUser(Feed):
         return get_object_or_404(User, pk=user_id)
 
     def items(self, obj):
-        self.title =  _("Last %s topics of user \"%s\"" % (settings.PAGE_LIMITATIONS["BLOG_POSTS"], obj.profile.get_visible_name()))
+        self.title =  _("Last topics of user \"%s\"" % (obj.profile.get_visible_name()))
         self.link = obj.get_absolute_url()
         return Post.objects.exclude(forum=None,blog=None).filter(owner=obj).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 

@@ -60,7 +60,7 @@ class RssBlog(Feed):
         return get_object_or_404(Blog, pk=blog_id)
 
     def items(self, obj):
-        self.title =  _("Last %s topics for \"%s\" blog" % (settings.PAGE_LIMITATIONS["BLOG_POSTS"], obj.name))
+        self.title = "%s: %s" % (_("Last topics for blog"), obj.name)
         self.description = obj.desc
         self.link = obj.get_absolute_url()
         return Post.objects.filter(blog=obj).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]

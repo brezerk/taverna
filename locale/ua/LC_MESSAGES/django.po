@@ -1,0 +1,692 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-10-25 18:59+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: default_settings.py:153 settings.py:155
+msgid "add new comments"
+msgstr ""
+
+#: default_settings.py:154 settings.py:156
+msgid "edit topic"
+msgstr ""
+
+#: default_settings.py:155 settings.py:157
+msgid "create new topic"
+msgstr ""
+
+#: default_settings.py:156 settings.py:158
+msgid "voite"
+msgstr ""
+
+#: default_settings.py:157 settings.py:159
+msgid "create new forum"
+msgstr ""
+
+#: default_settings.py:158 settings.py:160
+msgid "edit profile"
+msgstr ""
+
+#: default_settings.py:159 settings.py:161
+msgid "edit blog description"
+msgstr ""
+
+#: default_settings.py:160 settings.py:162
+msgid "edit blog name"
+msgstr ""
+
+#: blog/feeds.py:37
+msgid "Last 10 blogs topics"
+msgstr ""
+
+#: blog/feeds.py:39
+msgid "Updates on changes and additions to blogs topics."
+msgstr ""
+
+#: blog/feeds.py:63
+msgid "Last topics for blog"
+msgstr ""
+
+#: blog/models.py:30
+msgid "Blog description"
+msgstr ""
+
+#: blog/views.py:105 blog/views.py:164
+msgid "Post to"
+msgstr ""
+
+#: blog/views.py:141 blog/views.py:200 forum/views.py:273
+#: templates/blog/post_add.html:47 templates/blog/post_edit.html:46
+#: templates/blog/settings.html:29 templates/forum/topic_edit.html:30
+msgid "Save"
+msgstr ""
+
+#: blog/views.py:265 blog/views.py:292
+msgid "Registration required."
+msgstr ""
+
+#: blog/views.py:269 blog/views.py:296
+msgid "You can not vote for own post."
+msgstr ""
+
+#: blog/views.py:280 blog/views.py:307
+msgid "You can not vote more then one time for a single post."
+msgstr ""
+
+#: blog/views.py:284
+msgid "You have not enough Force."
+msgstr ""
+
+#: forum/feeds.py:43
+msgid "Last topics in form"
+msgstr ""
+
+#: forum/models.py:30
+msgid "Name"
+msgstr ""
+
+#: forum/models.py:31 templates/blog/blog_list.html:35
+#: templates/blog/blog_list.html.py:45 templates/blog/blog_list.html:57
+#: templates/forum/index.html:24 userauth/models.py:30
+msgid "Description"
+msgstr ""
+
+#: forum/models.py:42 templates/forum/forum.html:30
+#: templates/forum/tag_search.html:25
+msgid "Title"
+msgstr ""
+
+#: forum/models.py:43
+msgid "Text"
+msgstr ""
+
+#: forum/models.py:111
+#, python-format
+msgid "Source %s"
+msgstr ""
+
+#: forum/models.py:112
+msgid "Result {time} by {user}"
+msgstr ""
+
+#: forum/models.py:126 templates/blog/post_remove.html:65
+msgid "Post remove reason"
+msgstr ""
+
+#: forum/views.py:59
+msgid "You have forgotten about title."
+msgstr ""
+
+#: forum/views.py:63
+msgid "Tags is good. But title also required."
+msgstr ""
+
+#: forum/views.py:66
+msgid "Topic length < 5 is not allowed."
+msgstr ""
+
+#: forum/views.py:72
+msgid "Text length < 24 is not allowed."
+msgstr ""
+
+#: forum/views.py:87
+msgid "Text length < 4 characters is not allowed."
+msgstr ""
+
+#: forum/views.py:89
+msgid "Text length > 512 characters is not allowed."
+msgstr ""
+
+#: forum/views.py:125 templates/forum/reply.html:18
+msgid "Reply"
+msgstr ""
+
+#: forum/views.py:171
+msgid "Valid reason required."
+msgstr ""
+
+#: forum/views.py:239 templates/forum/forum.html:18
+#: templates/forum/topic_create.html:31 templates/userauth/coments.html:21
+#: templates/userauth/graveyard.html:16 templates/userauth/rewards.html:20
+msgid "Post new topic"
+msgstr ""
+
+#: parsers/templatetags/markup.py:98
+msgid "Read full post"
+msgstr ""
+
+#: templates/base.html:27
+msgid "Free and Open-Source Software Developers and Users"
+msgstr ""
+
+#: templates/base.html:82 templates/admin/base.html:60
+msgid "Traker"
+msgstr ""
+
+#: templates/base.html:83 templates/admin/base.html:61
+#: templates/blog/blog.html:14 templates/blog/post_diff.html:10
+#: templates/blog/post_view.html:10
+msgid "Blogs"
+msgstr ""
+
+#: templates/base.html:83 templates/admin/base.html:61
+msgid "public"
+msgstr ""
+
+#: templates/base.html:83 templates/admin/base.html:61
+msgid "user's"
+msgstr ""
+
+#: templates/base.html:84 templates/admin/base.html:62
+#: templates/forum/forum_create.html:4 templates/forum/tag_search.html:25
+#: templates/userauth/coments.html:40 templates/userauth/rewards.html:42
+msgid "Forum"
+msgstr ""
+
+#: templates/base.html:85
+msgid "Grave yard"
+msgstr ""
+
+#: templates/base.html:88 templates/admin/base.html:65
+msgid "Welcome"
+msgstr ""
+
+#: templates/base.html:90 templates/userauth/profile.html:88
+msgid "Notifies"
+msgstr ""
+
+#: templates/base.html:93
+msgid "Log In"
+msgstr ""
+
+#: templates/base.html:114
+msgid "Information"
+msgstr ""
+
+#: templates/base.html:114
+msgid "About"
+msgstr ""
+
+#: templates/base.html:114
+msgid "Site rules"
+msgstr ""
+
+#: templates/admin/base.html:63
+msgid "Library"
+msgstr ""
+
+#: templates/admin/base.html:69
+msgid "Main"
+msgstr ""
+
+#: templates/admin/base.html:84
+msgid "Welcome,"
+msgstr ""
+
+#: templates/admin/base.html:89
+msgid "Documentation"
+msgstr ""
+
+#: templates/admin/base.html:97
+msgid "Change password"
+msgstr ""
+
+#: templates/admin/base.html:104
+msgid "Log out"
+msgstr ""
+
+#: templates/admin/base.html:112
+msgid "Home"
+msgstr ""
+
+#: templates/blog/blog.html:11
+msgid "Search results for tag:"
+msgstr ""
+
+#: templates/blog/blog.html:17
+msgid "Blog topics of user:"
+msgstr ""
+
+#: templates/blog/blog.html:19 templates/blog/blog_list.html:8
+msgid "Blog's traker"
+msgstr ""
+
+#: templates/blog/blog.html:36 templates/blog/blog_list.html:21
+#: templates/userauth/profile.html:19
+msgid "Add topic"
+msgstr ""
+
+#: templates/blog/blog.html:38 templates/blog/blog_list.html:22
+#: templates/userauth/profile.html:21
+msgid "Blog settings"
+msgstr ""
+
+#: templates/blog/blog_list.html:16 templates/blog/settings.html:12
+msgid "Blog's list"
+msgstr ""
+
+#: templates/blog/blog_list.html:33
+msgid "public blogs:"
+msgstr ""
+
+#: templates/blog/blog_list.html:35 templates/blog/blog_list.html.py:45
+#: templates/blog/blog_list.html:57
+msgid "Blog name"
+msgstr ""
+
+#: templates/blog/blog_list.html:43
+msgid "Top 20 user blogs:"
+msgstr ""
+
+#: templates/blog/blog_list.html:55
+msgid "User blogs:"
+msgstr ""
+
+#: templates/blog/error.html:10
+msgid "Error"
+msgstr ""
+
+#: templates/blog/error.html:23
+msgid "You have not enough Force to"
+msgstr ""
+
+#: templates/blog/error.html:23
+msgid "Amount of Force required for this action"
+msgstr ""
+
+#: templates/blog/post_add.html:5 templates/blog/post_add.html.py:11
+#: templates/blog/post_add.html:41
+msgid "Adding new topic"
+msgstr ""
+
+#: templates/blog/post_add.html:14 templates/blog/post_edit.html:14
+#: templates/blog/settings.html:15 templates/forum/forum_create.html:14
+#: templates/userauth/settings.html:14
+msgid "Cancel"
+msgstr ""
+
+#: templates/blog/post_add.html:45 templates/blog/post_edit.html:44
+#: templates/forum/reply.html:16 templates/forum/topic_create.html:29
+#: templates/forum/topic_edit.html:28
+msgid "Preview"
+msgstr ""
+
+#: templates/blog/post_diff.html:13 templates/blog/post_view.html:12
+#: templates/forum/forum.html:10 templates/forum/index.html:9
+#: templates/forum/tag_search.html:10
+msgid "Forum list"
+msgstr ""
+
+#: templates/blog/post_diff.html:23
+msgid "Rollback to Source"
+msgstr ""
+
+#: templates/blog/post_diff.html:37
+msgid "History"
+msgstr ""
+
+#: templates/blog/post_diff.html:44
+msgid "Legend"
+msgstr ""
+
+#: templates/blog/post_diff.html:45
+msgid "Not changed text"
+msgstr ""
+
+#: templates/blog/post_diff.html:46
+msgid "Changed text"
+msgstr ""
+
+#: templates/blog/post_diff.html:47
+msgid "Added text"
+msgstr ""
+
+#: templates/blog/post_diff.html:48
+msgid "Removed text"
+msgstr ""
+
+#: templates/blog/post_edit.html:5 templates/blog/post_edit.html.py:11
+#: templates/blog/post_edit.html:40
+msgid "Edit topic"
+msgstr ""
+
+#: templates/blog/post_print.html:38
+msgid "Article"
+msgstr ""
+
+#: templates/blog/post_print.html:39 templates/userauth/coments.html:42
+#: templates/userauth/rewards.html:44
+msgid "Blog"
+msgstr ""
+
+#: templates/blog/post_print.html:39 templates/forum/startpost.inc.html:24
+msgid "Author"
+msgstr ""
+
+#: templates/blog/post_print.html:39 templates/blog/post_print.html.py:41
+msgid "at"
+msgstr ""
+
+#: templates/blog/post_print.html:41
+msgid "Lastmod by"
+msgstr ""
+
+#: templates/blog/post_print.html:43
+msgid "Printed from"
+msgstr ""
+
+#: templates/blog/post_remove.html:10
+msgid "View removed post"
+msgstr ""
+
+#: templates/blog/post_remove.html:12
+msgid "Remove post"
+msgstr ""
+
+#: templates/blog/post_remove.html:16
+msgid "Resource rules"
+msgstr ""
+
+#: templates/blog/post_remove.html:60 templates/forum/post.inc.html:55
+#: templates/forum/startpost.inc.html:63
+msgid "Remove"
+msgstr ""
+
+#: templates/blog/post_remove.html:65
+msgid "This post was removed by"
+msgstr ""
+
+#: templates/blog/post_remove.html:67 templates/userauth/rewards.html:65
+msgid "(Auto) Reply to"
+msgstr ""
+
+#: templates/blog/post_view.html:22 templates/forum/startpost.inc.html:69
+msgid "Add a comment"
+msgstr ""
+
+#: templates/blog/settings.html:24
+msgid "My blog settings"
+msgstr ""
+
+#: templates/forum/arrows.inc.html:6
+msgid "back"
+msgstr ""
+
+#: templates/forum/arrows.inc.html:10
+msgid "forward"
+msgstr ""
+
+#: templates/forum/forum.html:30
+msgid "Last post"
+msgstr ""
+
+#: templates/forum/forum.html:37 templates/forum/tag_search.html:33
+msgid "ago"
+msgstr ""
+
+#: templates/forum/forum_create.html:4 templates/forum/forum_create.html:11
+msgid "New forum creation"
+msgstr ""
+
+#: templates/forum/forum_create.html:23 templates/forum/index.html:14
+msgid "Create forum"
+msgstr ""
+
+#: templates/forum/forum_create.html:29
+msgid "Add"
+msgstr ""
+
+#: templates/forum/index.html:24
+msgid "Forum name"
+msgstr ""
+
+#: templates/forum/pages.inc.html:6
+msgid "Page"
+msgstr ""
+
+#: templates/forum/pages.inc.html:8
+msgid "first"
+msgstr ""
+
+#: templates/forum/pages.inc.html:27
+msgid "last"
+msgstr ""
+
+#: templates/forum/post.inc.html:10
+msgid "Reply to"
+msgstr ""
+
+#: templates/forum/post.inc.html:20
+msgid "comment"
+msgstr ""
+
+#: templates/forum/post.inc.html:21 templates/userauth/coments.html:57
+msgid "by"
+msgstr ""
+
+#: templates/forum/post.inc.html:57
+msgid "Reply on this message"
+msgstr ""
+
+#: templates/forum/startpost.inc.html:16
+msgid "Tags"
+msgstr ""
+
+#: templates/forum/startpost.inc.html:36 templates/userauth/profile.html:86
+msgid "Comments"
+msgstr ""
+
+#: templates/forum/startpost.inc.html:41
+msgid "Last edited by"
+msgstr ""
+
+#: templates/forum/startpost.inc.html:44
+msgid "Total edits"
+msgstr ""
+
+#: templates/forum/startpost.inc.html:66
+msgid "Edit"
+msgstr ""
+
+#: templates/forum/tag_search.html:10
+msgid "Search results for tag"
+msgstr ""
+
+#: templates/forum/tag_search.html:14
+msgid "Back"
+msgstr ""
+
+#: templates/forum/tag_search.html:25 templates/userauth/coments.html:35
+#: templates/userauth/rewards.html:37
+msgid "Date"
+msgstr ""
+
+#: templates/userauth/coments.html:11
+msgid "Commetns list of user"
+msgstr ""
+
+#: templates/userauth/coments.html:14
+msgid "Your reply notifies"
+msgstr ""
+
+#: templates/userauth/coments.html:35 templates/userauth/rewards.html:34
+msgid "Section"
+msgstr ""
+
+#: templates/userauth/coments.html:35 templates/userauth/rewards.html:34
+msgid "Seaction name"
+msgstr ""
+
+#: templates/userauth/coments.html:35 templates/userauth/rewards.html:34
+msgid "Topic title"
+msgstr ""
+
+#: templates/userauth/graveyard.html:10
+msgid "Our Grave Yard page"
+msgstr ""
+
+#: templates/userauth/graveyard.html:37
+msgid "Welcome to Grave Yard"
+msgstr ""
+
+#: templates/userauth/graveyard.html:37
+msgid ""
+"This is a place, where all buryed users rest for a while (sometimes - "
+"forever. Muhahahaha!)."
+msgstr ""
+
+#: templates/userauth/graveyard.html:37
+msgid "Current buryed users count:"
+msgstr ""
+
+#: templates/userauth/graveyard.html:52
+msgid "User"
+msgstr ""
+
+#: templates/userauth/graveyard.html:52
+msgid "Karma"
+msgstr ""
+
+#: templates/userauth/graveyard.html:52
+msgid "Revard reason"
+msgstr ""
+
+#: templates/userauth/graveyard.html:66 templates/userauth/profile.html:78
+msgid "Auto ban due high karma loss."
+msgstr ""
+
+#: templates/userauth/openid.html:6
+msgid "Log in page"
+msgstr ""
+
+#: templates/userauth/openid.html:15
+msgid "Log in"
+msgstr ""
+
+#: templates/userauth/openid.html:20
+msgid "Google"
+msgstr ""
+
+#: templates/userauth/profile.html:5 templates/userauth/profile.html.py:11
+#: templates/userauth/settings.html:5 templates/userauth/settings.html:11
+msgid "User profile"
+msgstr ""
+
+#: templates/userauth/profile.html:16
+msgid "Read user's blog"
+msgstr ""
+
+#: templates/userauth/profile.html:23 templates/userauth/settings.html:23
+msgid "Edit profile"
+msgstr ""
+
+#: templates/userauth/profile.html:26
+msgid "Bury user"
+msgstr ""
+
+#: templates/userauth/profile.html:36
+msgid "User's insformation"
+msgstr ""
+
+#: templates/userauth/profile.html:40
+msgid "Visible name"
+msgstr ""
+
+#: templates/userauth/profile.html:42
+msgid "Real name"
+msgstr ""
+
+#: templates/userauth/profile.html:44
+msgid "Registration"
+msgstr ""
+
+#: templates/userauth/profile.html:45
+msgid "Last visit"
+msgstr ""
+
+#: templates/userauth/profile.html:46
+msgid "Carma"
+msgstr ""
+
+#: templates/userauth/profile.html:47
+msgid "Force"
+msgstr ""
+
+#: templates/userauth/profile.html:49
+msgid "Website"
+msgstr ""
+
+#: templates/userauth/profile.html:56
+msgid "is avalible only for you and site moderators"
+msgstr ""
+
+#: templates/userauth/profile.html:60
+msgid "City"
+msgstr ""
+
+#: templates/userauth/profile.html:72
+msgid "User status"
+msgstr ""
+
+#: templates/userauth/profile.html:73
+msgid "This user has been buryed at our"
+msgstr ""
+
+#: templates/userauth/profile.html:73
+msgid "Grave Yard"
+msgstr ""
+
+#: templates/userauth/profile.html:74
+msgid "Reason"
+msgstr ""
+
+#: templates/userauth/profile.html:83
+msgid "User messags"
+msgstr ""
+
+#: templates/userauth/profile.html:85
+msgid "Topics"
+msgstr ""
+
+#: templates/userauth/profile.html:91
+msgid "Karma rewards"
+msgstr ""
+
+#: templates/userauth/rewards.html:11
+msgid "Your's"
+msgstr ""
+
+#: templates/userauth/rewards.html:11 templates/userauth/rewards.html.py:13
+msgid "rewards list"
+msgstr ""
+
+#: templates/userauth/rewards.html:36
+msgid "Reward reason"
+msgstr ""
+
+#: templates/userauth/settings.html:28
+msgid "Update"
+msgstr ""
+
+#: userauth/feeds.py:45
+#, python-format
+msgid "Last topics of user \"%s\""
+msgstr ""
+
+#: userauth/models.py:43
+msgid "Ban reason"
+msgstr ""
