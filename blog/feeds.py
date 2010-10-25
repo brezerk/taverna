@@ -27,7 +27,7 @@ from taverna.forum.models import Post
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from taverna.parsers.templatetags.markup import markup
+from taverna.parsers.templatetags.markup import strippost
 
 from django.core.paginator import Paginator
 

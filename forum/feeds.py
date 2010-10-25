@@ -40,7 +40,7 @@ class RssForum(Feed):
         return get_object_or_404(Forum, pk=forum_id)
 
     def items(self, obj):
-        self.title = "%s: %s" % (_("Last topics in form"), obj.name))
+        self.title = _("Last topics in form: %s" % (obj.name))
         self.description = obj.description
         self.link = obj.get_absolute_url()
         return Post.objects.filter(forum=obj, reply_to = None).order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
