@@ -102,7 +102,7 @@ class Profile(models.Model):
         if self.buryed:
             return False
         return self.force >= settings.FORCE_PRICELIST["BLOG_NAME_EDIT"]["COST"]
-        
+
     def get_visible_name(self):
         if self.visible_name:
             return self.visible_name

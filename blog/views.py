@@ -168,7 +168,7 @@ def post_add(request):
             exclude = ('tags', 'reply_to', 'thread', 'removed')
             widgets = {
                       'text': Textarea(attrs={'rows': 27}),
-                      }            
+                      }
 
         def save(self, **args):
             post = super(PostForm, self).save(commit = False, **args)
@@ -348,11 +348,15 @@ def list_users(request):
 def error(request, error):
     from django.conf import settings
 
-    try:
-        desc = settings.FORCE_PRICELIST[error]["DESC"]
-        cost = settings.FORCE_PRICELIST[error]["COST"]
-    except KeyError:
-        desc = error
+    if request.user.profile.buryed:
+        desc = _("Sorry, but You have been buryed at you Grave Yard. See you profile for a details.")
         cost = None
+    else:
+        try:
+            desc = settings.FORCE_PRICELIST[error]["DESC"]
+            cost = settings.FORCE_PRICELIST[error]["COST"]
+        except KeyError:
+            desc = error
+            cost = None
 
     return { 'desc': desc, 'cost': cost }
