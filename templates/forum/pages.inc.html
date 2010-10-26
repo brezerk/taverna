@@ -5,10 +5,10 @@
 
 [{% trans "Page" %}
 
-<a href='?offset=1'>{% trans "first" %}<a>
+<a href='?{% if showall = "1" %}showall=1&{% endif %}offset=1'>{% trans "first" %}<a>
 
 {% if thread.has_previous %}
-<a href='?offset={{ thread.previous_page_number }}'>←</a>
+<a href='?{% if showall = "1" %}showall=1&{% endif %}offset={{ thread.previous_page_number }}'>←</a>
 {% else %}
 ←
 {% endif %}
@@ -16,15 +16,21 @@
     {% if thread.number == page %}
         <b>{{page}}</b>
     {% else %}
-        <a href='?offset={{ page }}'>{{page}}</a>
+        <a href='?{% if showall = "1" %}showall=1&{% endif %}offset={{ page }}'>{{page}}</a>
     {% endif %}
 {% endfor %}
 {% if thread.has_next %}
-<a href='?offset={{ thread.next_page_number }}'>→</a>
+<a href='?{% if showall = "1" %}
+showall=1&
+{% endif %}
+offset={{ thread.next_page_number }}'>→</a>
 {% else %}
 →
 {% endif %}
-<a href='?offset={{ thread.paginator.num_pages }}'>{% trans "last" %}</a>
+<a href='?{% if showall = "1" %}
+showall=1&
+{% endif %}
+offset={{ thread.paginator.num_pages }}'>{% trans "last" %}</a>
 ]
 
 </div>

@@ -337,7 +337,7 @@ def post_rollback(request, diff_id):
 
     request.user.profile.use_force("FORUM_CREATE")
     request.user.profile.save()
-    
+
     post = diff.post
     post.text = diff.old_text
     post.save()
@@ -347,12 +347,17 @@ def post_rollback(request, diff_id):
 @rr('blog/post_view.html')
 def thread(request, post_id):
     page = request.GET.get("offset", 1)
+    showall = request.GET.get("showall", 0)
 
     startpost = Post.objects.exclude(removed = True).get(pk = post_id)
     from django.conf import settings
-    paginator = ExtendedPaginator(Post.objects.filter(removed = False, thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
-    return { 'startpost': startpost, 'thread': paginator.page(page) }
+    if showall == "1":
+        paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+    else:
+        paginator = ExtendedPaginator(Post.objects.filter(removed = False, thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+
+    return { 'startpost': startpost, 'thread': paginator.page(page), 'showall': showall }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
