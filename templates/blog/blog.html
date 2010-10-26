@@ -32,6 +32,11 @@
         [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
     {% endif %}
 {% endif %}
+{% if showall == "1" %}
+[<a href='?showall=0'>{% trans "Hide removed comments" %}</a>]
+{% else %}
+[<a href='?showall=1'>{% trans "Show removed comments" %}</a>]
+{% endif %}
 {% if user.is_authenticated %}
     [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
     {% if blog_info.owner = user %}

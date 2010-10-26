@@ -349,7 +349,8 @@ def thread(request, post_id):
     page = request.GET.get("offset", 1)
     showall = request.GET.get("showall", 0)
 
-    startpost = Post.objects.exclude(removed = True).get(pk = post_id)
+    startpost = Post.objects.get(pk = post_id)
+    #startpost = Post.objects.exclude(removed = True).get(pk = post_id)
     from django.conf import settings
 
     if showall == "1":

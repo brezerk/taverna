@@ -228,39 +228,51 @@ def view(request, blog_id):
     blog_posts = None
     blog_info = None
 
+    showall = request.GET.get("showall", 0)
     page = request.GET.get("offset", 1)
 
     blog_info = Blog.objects.get(pk = blog_id)
-    posts = Post.objects.exclude(removed = True).filter(blog = blog_info).order_by('-created')
+    if showall == "1":
+        posts = Post.objects.filter(blog = blog_info).order_by('-created')
+    else:
+        posts = Post.objects.exclude(removed = True).filter(blog = blog_info).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    return {'thread': paginator.page(page), 'blog_info': blog_info }
+    return {'thread': paginator.page(page), 'blog_info': blog_info, 'showall': showall }
 
 @rr('blog/blog.html')
 def view_all(request, user_id):
     blog_posts = None
     blog_info = None
 
+    showall = request.GET.get("showall", 0)
     page = request.GET.get("offset", 1)
 
     posts_owner = User.objects.get(pk = user_id)
-    posts = Post.objects.exclude(blog = None,forum = None).filter(removed = False, owner = user_id).order_by('-created')
+    if showall == "1":
+        posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
+    else:
+        posts = Post.objects.exclude(blog = None,forum = None).filter(removed = False, owner = user_id).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    return {'thread': paginator.page(page), 'posts_owner': posts_owner}
+    return {'thread': paginator.page(page), 'posts_owner': posts_owner, 'showall': showall}
 
 @rr('blog/blog.html')
 def index(request):
-    posts = Post.objects.exclude(blog = None).filter(removed = False).order_by('-created')
+    showall = request.GET.get("showall", 0)
+    if showall == "1":
+        posts = Post.objects.exclude(blog = None).order_by('-created')
+    else:
+        posts = Post.objects.exclude(blog = None).filter(removed = False).order_by('-created')
 
     page = request.GET.get("offset", 1)
 
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    return { 'thread': paginator.page(page)}
+    return { 'thread': paginator.page(page), 'showall': showall }
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):
