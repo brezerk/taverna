@@ -28,6 +28,18 @@
 
 {% block content %}
 
+{% if user_info.profile.is_buryed %}
+<p>{% trans "Current user status"%}:</p>
+<p>{% trans "This user has been buryed at our" %} <a href='{% url userauth.views.graveyard%}'>{% trans "Grave Yard" %}</a>.<br>
+{% trans "Reason"%}:
+{% if user_info.profile.buryed %}
+    {{ user_info.profile.buryed_reason }}
+{% else %}
+    {% trans "Auto ban due high karma loss." %}
+{% endif %}
+</p>
+{% endif %}
+
 {% include "forum/arrows.inc.html" %}
 
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
@@ -72,6 +84,8 @@
 {% endfor %}
 </table>
 
+{% include "forum/arrows.inc.html" %}
+
 {% if form %}
 <p>{% trans "Change current user status" %}:</p>
 <form method="POST" action="">{% csrf_token %}
@@ -82,6 +96,5 @@
 </form>
 {% endif %}
 
-{% include "forum/arrows.inc.html" %}
 {% endblock %}
 

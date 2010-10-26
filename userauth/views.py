@@ -296,6 +296,8 @@ def rewards(request, user_id):
                     profile.buryed = False
                 else:
                     profile.buryed = True
+                    profile.karma = -100
+                    profile.force = -100
                 profile.save()
 
         if request.method == 'POST':
