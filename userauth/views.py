@@ -27,13 +27,13 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.forms import Form, ModelForm, CharField
+from django.forms import Form, ModelForm, CharField, ModelChoiceField
 
 from django.utils.datastructures import MultiValueDictKeyError
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from userauth.models import Profile
+from userauth.models import Profile, ReasonList
 from blog.models import Blog
 from forum.models import Post, PostVote
 
@@ -279,11 +279,33 @@ def notify(request):
 @rr("userauth/rewards.html")
 def rewards(request, user_id):
     user_info = User.objects.get(pk = user_id)
+    form = None
 
     if not request.user.is_staff:
         if request.user != user_info:
             raise Http404
+    else:
+        class SettingsForm(ModelForm):
+            class Meta:
+                model = Profile
+                fields = ('buryed_reason',)
 
+            def save(self, **args):
+                profile = super(SettingsForm, self).save(commit = False, **args)
+                if self.cleaned_data['buryed_reason'] == None:
+                    profile.buryed = False
+                else:
+                    profile.buryed = True
+                profile.save()
+
+        if request.method == 'POST':
+            form = SettingsForm(request.POST, instance=user_info.profile)
+            form.fields['buryed_reason'].empty_label=_("Not banned")
+            if form.is_valid():
+                form.save()
+        else:
+            form = SettingsForm(instance=user_info.profile)
+            form.fields['buryed_reason'].empty_label=_("Not banned")
     try:
         page = int(request.GET['offset'])
     except (MultiValueDictKeyError, TypeError):
@@ -297,7 +319,7 @@ def rewards(request, user_id):
     except (EmptyPage, InvalidPage):
         rewards = paginator.page(paginator.num_pages)
 
-    return {'rewards': rewards, 'request_url': request.get_full_path(), 'user_info': user_info}
+    return {'rewards': rewards, 'request_url': request.get_full_path(), 'user_info': user_info, 'form': form}
 
 @rr("userauth/graveyard.html")
 def graveyard(request):

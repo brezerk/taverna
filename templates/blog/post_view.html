@@ -17,9 +17,9 @@
 <td align='right'>
 [<a href='{% url forum.views.print_post startpost.pk %}'>Printable version</a>]
 {% if showall == "1" %}
-[<a href='?showall=0'>{% trans "Hide removed comments" %}</a>]
+[<a href='?showall=0'>{% trans "Hide removed" %}</a>]
 {% else %}
-[<a href='?showall=1'>{% trans "Show removed comments" %}</a>]
+[<a href='?showall=1'>{% trans "Show removed" %}</a>]
 {% endif %}
 [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
 

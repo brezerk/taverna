@@ -49,7 +49,7 @@ class ThreadForm(forms.ModelForm):
         exclude = ('tags', 'blog', 'reply_to', 'thread', 'removed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
-        }            
+        }
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -78,10 +78,10 @@ class PostForm(forms.ModelForm):
         exclude = ('tags', 'blog', 'reply_to', 'thread', 'removed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
-        }            
+        }
 
     def clean_text(self):
-    	text = self.cleaned_data['text'].strip()
+        text = self.cleaned_data['text'].strip()
         txt_len = len(text)
         if txt_len < 4:
             raise forms.ValidationError(_("Text length < 4 characters is not allowed."))
@@ -247,7 +247,7 @@ def topic_create(request, forum_id):
 
                 request.user.profile.use_force("TOPIC_CREATE")
                 request.user.profile.save()
-                
+
                 return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
     else:
         form = ThreadForm()
@@ -299,7 +299,7 @@ def forum_create(request):
 
             request.user.profile.use_force("FORUM_CREATE")
             request.user.profile.save()
-            
+
             return HttpResponseRedirect(reverse(index))
 
     return {'form': ForumForm()}
