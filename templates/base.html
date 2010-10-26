@@ -87,7 +87,7 @@
         {% if user.is_authenticated %}
             {% trans "Welcome" %}, 
             <a href='{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}</a>
-	    [<a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>]
+	    [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>]
             [<a class='minus' href="{% url userauth.views.openid_logout %}">x</a>]
         {% else %}
             [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
