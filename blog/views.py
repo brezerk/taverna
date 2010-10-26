@@ -112,7 +112,7 @@ def post_edit(request, post_id):
             exclude = ('tags', 'reply_to', 'thread', 'removed')
             widgets = {
                       'text': Textarea(attrs={'cols': 80, 'rows': 27}),
-                      }            
+                      }
 
         def save(self, **args):
             orig_text = Post.objects.get(pk = post_id).text
@@ -352,7 +352,7 @@ def error(request, error):
     from django.conf import settings
 
     if request.user.profile.buryed:
-        desc = _("Sorry, but You have been buryed at you Grave Yard. See you profile for a details.")
+        desc = _("Sorry, but You have been buryed at our Grave Yard. See your profile for a details.")
         cost = None
     else:
         try:
