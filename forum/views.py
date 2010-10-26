@@ -185,6 +185,7 @@ def remove(request, post_id):
 
     if request.method == 'POST':
         form = RemoveForm(request.POST)
+        form.fields['reason'].empty_label=None
         if form.is_valid():
             form.save()
             if startpost.reply_to:
@@ -193,6 +194,7 @@ def remove(request, post_id):
                 return HttpResponseRedirect("/")
     else:
         form = RemoveForm()
+        form.fields['reason'].empty_label=None
 
     if startpost.reply_to:
         return { 'post': startpost, 'form': form }
