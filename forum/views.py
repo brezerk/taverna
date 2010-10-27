@@ -158,6 +158,9 @@ def remove(request, post_id):
     if not request.user.is_staff:
         raise Http404
 
+    if request.user.profile.buryed:
+       return error(request, "")
+
     startpost = Post.objects.exclude(removed = True).get(pk = post_id)
 
     class RemoveForm(forms.ModelForm):
