@@ -165,3 +165,9 @@ FORCE_REGEN = {
     'RATE': 1,
     'BORDER': 1,
 }
+
+# Post Flags
+O_REMOVED=2
+O_LOCKED=4
+O_STIKED=8
+

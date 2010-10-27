@@ -39,7 +39,7 @@ class RssBlogTraker(Feed):
     description = _("Updates on changes and additions to blogs topics.")
 
     def items(self):
-        return Post.objects.exclude(blog = None).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
+        return Post.objects.exclude(blog = None).extra(where=['not flags & 2']).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)
@@ -63,7 +63,7 @@ class RssBlog(Feed):
         self.title = "%s: %s" % (_("Last topics for blog"), obj.name)
         self.description = obj.desc
         self.link = obj.get_absolute_url()
-        return Post.objects.filter(blog=obj).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
+        return Post.objects.filter(blog=obj).extra(where=['not flags & 2']).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)

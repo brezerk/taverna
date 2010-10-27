@@ -59,7 +59,7 @@
                 &nbsp;
             </td>
             <td>
-            {% if startpost.removed %}
+            {% if startpost.is_removed %}
                 [<a href="{% url userauth.views.rewards startpost.owner.pk %}">{% trans "This post was removed" %}</a>]
             {% else %}
                 {% if user.is_staff and startpost.pk %} 
