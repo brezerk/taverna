@@ -31,6 +31,8 @@ from django.core.paginator import Paginator
 from blog.views import error
 from django.http import Http404
 
+from django.utils.datastructures import MultiValueDictKeyError
+
 from django.utils.html import strip_tags
 
 from django.utils.translation import ugettext as _
@@ -97,7 +99,7 @@ def index(request):
 def forum(request, forum_id):
 
     page = request.GET.get("offset", 1)
-    showall = request.GET.get("showall", 0)
+    showall = request.GET.get("showall", 1)
 
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
@@ -116,6 +118,33 @@ def forum(request, forum_id):
         'form': PostForm(),
         'showall': showall,
     }
+
+@rr('forum/traker.html')
+def traker(request):
+    user_info = User.objects.get(pk = request.user.pk)
+
+    try:
+        page = int(request.GET['offset'])
+    except (MultiValueDictKeyError, TypeError):
+        page = 1
+
+    showall = request.GET.get("showall", 1)
+
+    from django.conf import settings
+
+    if showall == "1":
+        pages = Post.objects.filter(blog = None).exclude(owner = user_info).order_by('-created')
+    else:
+        pages = Post.objects.filter(removed = False, blog = None).exclude(owner = user_info).order_by('-created')
+
+    paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return {'thread': thread, 'user_info': user_info, 'request_url': request.get_full_path(), 'showall': showall }
 
 @login_required()
 @rr('forum/reply.html')
@@ -376,12 +405,15 @@ def print_post(request, post_id):
 
 def offset(request, root_id, offset_id):
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(thread__pk = root_id).exclude(pk = root_id), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
-    post = Post.objects.get(pk=offset_id)
+    if offset_id == root_id:
+        return HttpResponseRedirect(reverse('forum.views.thread', args = [root_id]))
+    else:
+        paginator = Paginator(Post.objects.filter(thread__pk = root_id).exclude(pk = root_id), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        post = Post.objects.get(pk=offset_id)
 
-    for page in paginator.page_range:
-        if post in paginator.page(page).object_list:
-            return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
+        for page in paginator.page_range:
+            if post in paginator.page(page).object_list:
+                return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
 
     raise Http404
