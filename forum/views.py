@@ -97,12 +97,16 @@ def index(request):
 def forum(request, forum_id):
 
     page = request.GET.get("offset", 1)
+    showall = request.GET.get("showall", 0)
 
     forum = Forum.objects.get(pk = forum_id)
     from django.conf import settings
-    paginator = ExtendedPaginator(Post.objects.filter(reply_to = None,
-    forum = forum, removed = False).order_by('-created'),
-    settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    if showall == "1":
+        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-created')
+    else:
+        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-created')
+
+    paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     posts = paginator.page(page)
 
@@ -110,6 +114,7 @@ def forum(request, forum_id):
         'forum': forum,
         'thread': posts,
         'form': PostForm(),
+        'showall': showall,
     }
 
 @login_required()
