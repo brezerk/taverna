@@ -3,6 +3,8 @@
 
 {% block content %}
 
+{% include 'forum/post.inc.html' %}
+
 {% if form.cleaned_data %}
     {% with form.cleaned_data as post %}
         {% include 'forum/post.inc.html' %}
