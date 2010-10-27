@@ -212,16 +212,21 @@ def post_add(request):
 @rr('blog/blog.html')
 def tags_search(request, tag_id):
 
+    showall = request.GET.get("showall", 0)
     page = request.GET.get("offset", 1)
 
     blog_posts = None
 
-    posts = Post.objects.exclude(removed = True).filter(tags = tag_id).order_by('-created')
+    if showall == "1":
+        posts = Post.objects.filter(tags = tag_id).order_by('-created')
+    else:
+        posts = Post.objects.exclude(removed = True).filter(tags = tag_id).order_by('-created')
+
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     tag = Tag.objects.get(pk=tag_id);
 
-    return {'thread': paginator.page(page), 'tag': tag }
+    return {'thread': paginator.page(page), 'tag': tag, 'showall': showall}
 
 @rr('blog/blog.html')
 def view(request, blog_id):

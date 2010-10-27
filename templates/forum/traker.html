@@ -46,8 +46,10 @@
  <td>
   {% if post.removed %}
     [<span style='color: red'>x</span>]
-  {% endif %}
+ <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>{{post.thread.title}}</a>
+{% else %}
  <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</a>
+  {% endif %}
  </td>
  <td>{{post.created|timesince}}
  {% if not user_info %}

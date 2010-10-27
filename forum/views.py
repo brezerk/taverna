@@ -409,11 +409,21 @@ def offset(request, root_id, offset_id):
     if offset_id == root_id:
         return HttpResponseRedirect(reverse('forum.views.thread', args = [root_id]))
     else:
-        paginator = Paginator(Post.objects.filter(thread__pk = root_id).exclude(pk = root_id), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        showall = request.GET.get("showall", 0)
+
+        if showall == "1":
+            pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id)
+        else:
+            pages = Post.objects.filter(removed = False, thread__pk = root_id).exclude(pk = root_id)
+
+        paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         post = Post.objects.get(pk=offset_id)
 
         for page in paginator.page_range:
             if post in paginator.page(page).object_list:
-                return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
+                if showall == "1":
+                   return HttpResponseRedirect("%s?showall=1&offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
+                else:
+                    return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
 
     raise Http404
