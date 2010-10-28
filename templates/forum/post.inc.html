@@ -55,7 +55,7 @@
                         [<a href="{% url userauth.views.rewards post.owner.pk %}">{% trans "This post was removed" %}</a>]
                     {% else %}
                         {% if user.is_staff and post.pk %} 
-                            [<a href="{% url forum.views.remove post.pk %}">{% trans "Remove" %}</a>]
+                            [<a href="{% url forum.views.remove post.pk %}?offset={{ thread.number }}">{% trans "Remove" %}</a>]
                         {% endif %}
                             [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
                         {% endif %}

@@ -27,7 +27,7 @@ from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from util import ExtendedPaginator
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from blog.views import error
 from django.http import Http404
 
@@ -40,6 +40,7 @@ from django.utils.translation import ugettext as _
 import re
 
 from django.contrib.sites.models import Site
+
 
 class ForumForm(forms.ModelForm):
     class Meta:
@@ -226,7 +227,8 @@ def remove(request, post_id):
         if form.is_valid():
             form.save()
             if startpost.reply_to:
-                return HttpResponseRedirect(reverse('forum.views.thread', args = [startpost.thread.pk]))
+                offset = request.GET.get("offset", 1)
+                return HttpResponseRedirect("%s?offset=%s" % (reverse('forum.views.thread', args = [startpost.thread.pk]), offset))
             else:
                 return HttpResponseRedirect("/")
     else:
@@ -396,7 +398,12 @@ def thread(request, post_id):
     else:
         paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk).extra(where=['not flags & 2']), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
-    return { 'startpost': startpost, 'thread': paginator.page(page), 'showall': showall }
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return { 'startpost': startpost, 'thread': thread, 'showall': showall }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):

@@ -38,6 +38,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from django.http import Http404
+from django.core.paginator import InvalidPage, EmptyPage
 
 @login_required()
 @rr('blog/settings.html')
@@ -277,7 +278,12 @@ def index(request):
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    return { 'thread': paginator.page(page), 'showall': showall }
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return { 'thread': thread, 'showall': showall }
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):

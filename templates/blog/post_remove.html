@@ -54,7 +54,7 @@
 
 <div class='page_content'>
 {% if form %}
-<form method="POST" action="{{ form_url }}">{% csrf_token %}
+<form method="POST" action="">{% csrf_token %}
 <table id='blog_topic'>
     {{ form }}
     <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Remove" %}"></td></tr>
