@@ -50,7 +50,13 @@
     {% endif %}
  </td>
  <td>
- <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</a>
+  {% if post.is_removed %}
+    <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>
+    [<span style='color: red'>x</span>]
+  {% else %}
+    <a href='{% url forum.views.offset post.thread.pk post.id %}'>
+  {% endif %}
+ {{post.thread.title}}</a>
  </td>
  <td>{{post.created|timesince}}
  {% if not user_info %}

@@ -52,9 +52,7 @@
   {% endif %}
  </td>
  <td>{{post.created|timesince}}
- {% if not user_info %}
  {% trans "by" %} (<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{ post.owner.profile.get_visible_name }}</a>)
- {% endif %}
  </td>
 </tr>
 {% endfor %}

@@ -245,8 +245,8 @@ def user_comments(request, user_id):
         page = 1
 
     from django.conf import settings
-    paginator = Paginator(Post.objects.filter(removed = False, owner = user_info, forum = None,
-                          blog = None).order_by('-created'),
+    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None,
+                          blog = None).extra(where=['not flags & 2']).order_by('-created'),
                           settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
@@ -266,8 +266,7 @@ def notify(request):
         page = 1
 
     from django.conf import settings
-    paginator = Paginator(Post.objects.exclude(owner=user_info).filter(removed = False, reply_to__owner = user_info,
-                          forum = None, blog = None).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(Post.objects.exclude(owner=user_info).filter(forum = None, blog = None, reply_to__owner = user_info).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         thread = paginator.page(page)

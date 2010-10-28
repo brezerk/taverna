@@ -37,7 +37,7 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
-  {% if post.removed %}
+  {% if post.is_removed %}
     [<span style='color: red'>x</span>]
   {% endif %}
   {{post|forumtags|safe}} 
