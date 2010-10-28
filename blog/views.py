@@ -85,7 +85,8 @@ def post_edit(request, post_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    post_orig = Post.objects.extra(where=['not flags & 2']).get(pk = post_id)
+    from django.conf import settings
+    post_orig = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
 
     if not request.user.is_staff:
         if not post_orig.reply_to == None:
@@ -221,7 +222,8 @@ def tags_search(request, tag_id):
     if showall == "1":
         posts = Post.objects.filter(tags = tag_id).order_by('-created')
     else:
-        posts = Post.objects.extra(where=['not flags & 2']).filter(tags = tag_id).order_by('-created')
+        from django.conf import settings
+        posts = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(tags = tag_id).order_by('-created')
 
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
@@ -241,7 +243,8 @@ def view(request, blog_id):
     if showall == "1":
         posts = Post.objects.filter(blog = blog_info).order_by('-created')
     else:
-        posts = Post.objects.filter(blog = blog_info).extra(where=['not flags & 2']).order_by('-created')
+        from django.conf import settings
+        posts = Post.objects.filter(blog = blog_info).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -259,7 +262,8 @@ def view_all(request, user_id):
     if showall == "1":
         posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
     else:
-        posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).extra(where=['not flags & 2']).order_by('-created')
+        from django.conf import settings
+        posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
     from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -271,7 +275,8 @@ def index(request):
     if showall == "1":
         posts = Post.objects.exclude(blog = None).order_by('-created')
     else:
-        posts = Post.objects.exclude(blog = None).extra(where=['not flags & 2']).order_by('-created')
+        from django.conf import settings
+        posts = Post.objects.exclude(blog = None).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
 
     page = request.GET.get("offset", 1)
 
@@ -290,7 +295,8 @@ def vote_async(request, post_id, positive):
     if not request.user.is_authenticated():
         return {"rating": post.rating, "message": _("Registration required.")}
 
-    post = Post.objects.extra(where=['not flags & 2']).get(pk = post_id)
+    from django.conf import settings
+    post = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
 
@@ -317,7 +323,8 @@ def vote_generic(request, post_id, positive):
     if not request.user.is_authenticated():
         return error(request, _("Registration required."))
 
-    post = Post.objects.extra(where=['not flags & 2']).get(pk = post_id)
+    from django.conf import settings
+    post = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
     if post.owner == request.user:
         return error(request, _("You can not vote for own post."))
 
