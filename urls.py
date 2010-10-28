@@ -59,7 +59,7 @@ urlpatterns = patterns('',
     (r'^blogs/usr/libblog.so$', 'blog.views.list_users'),
     (r'^blog/libpost-new.so$', 'blog.views.post_add'),
     (r'^blog/libpost-edit-(?P<post_id>\d+).so$', 'blog.views.post_edit'),
-    (r'^blog/libsettings.so$', 'blog.views.user_settings'),
+    (r'^blog/libsettings.so$', 'blog.views.blog_settings'),
     (r'^blog/libtag-(?P<tag_id>\d+).so$', 'blog.views.tags_search'),
 
     (r'^forum.so$', 'forum.views.index'),

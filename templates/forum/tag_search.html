@@ -11,6 +11,12 @@
 </td>
 
 <td align='right'>
+    {% if showall == "1" %}
+        [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
+    {% else %}
+        [<a href='?showall=1'>{% trans "Show removed" %}</a>]
+    {% endif %}
+
     [<a href='{% url forum.views.index %}'>{% trans "Back" %}</a>]
 </td>
 </tr>
@@ -26,6 +32,9 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
+  {% if post.is_removed %}
+  [<span style='color: red'>x</span>]
+  {% endif %}
   {{post|forumtags|safe}} 
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
  </td>

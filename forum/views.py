@@ -107,7 +107,7 @@ def forum(request, forum_id):
     if showall == "1":
         pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-created')
     else:
-        pages = Post.objects.filter(reply_to = None, forum = forum).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
+        pages = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(forum = forum).order_by('-created')
 
     paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -214,7 +214,7 @@ def remove(request, post_id):
             postvote.auto = False
             postvote.save()
 
-            startpost.flags = startpost.flags + settings.O_REMOVE
+            startpost.flags = startpost.flags + int(settings.O_REMOVED)
             modify_rating(startpost, postvote.reason.cost)
             auto_remove(startpost, postvote.reason);
 
@@ -227,7 +227,10 @@ def remove(request, post_id):
                 offset = request.GET.get("offset", 1)
                 return HttpResponseRedirect("%s?offset=%s" % (reverse('forum.views.thread', args = [startpost.thread.pk]), offset))
             else:
-                return HttpResponseRedirect("/")
+                if startpost.forum:
+                    return HttpResponseRedirect(reverse('forum.views.forum', args = [startpost.forum.pk]))
+                else:
+                    return HttpResponseRedirect(reverse('blog.views.view', args = [startpost.blog.pk]))
     else:
         form = RemoveForm()
         form.fields['reason'].empty_label=None
@@ -241,13 +244,13 @@ def auto_remove(startpost, reason):
     if startpost.reply_to == None:
         for post in Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(thread = startpost.pk):
             PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-            post.flags = post.flags + settings.O_REMOVED
+            post.flags = post.flags + int(settings.O_REMOVED)
 
             modify_rating(post, reason.cost)
     else:
         for post in Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(reply_to = startpost.pk):
             PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-            post.flags = post.flags + settings.O_REMOVED
+            post.flags = post.flags + int(settings.O_REMOVED)
 
             modify_rating(post, reason.cost)
             auto_remove(post, reason)
@@ -346,14 +349,19 @@ def forum_create(request):
 def tags_search(request, tag_name):
 
     page = request.GET.get("offset", 1)
+    showall = request.GET.get("showall", 0)
 
-    paginator = ExtendedPaginator(Post.objects.filter(title__contains = u"[%s]" % (tag_name),
-                                              reply_to = None).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created'),
-                                              settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    if showall == "1":
+        posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name)).order_by('-created')
+    else:
+        posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name)).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
+
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     return {
         'thread': paginator.page(page),
         'search_tag': tag_name,
+        'showall': showall
     }
 
 @rr('blog/post_diff.html')

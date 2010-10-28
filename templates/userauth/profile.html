@@ -18,7 +18,7 @@
 {% else %}
     [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
     {% if user_blog %}
-        [<a href='{% url blog.views.settings %}'>{% trans "Blog settings" %}</a>]
+        [<a href='{% url blog.views.blog_settings %}'>{% trans "Blog settings" %}</a>]
     {% endif %}
 [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit profile" %}</a>]
 {% endif %}
