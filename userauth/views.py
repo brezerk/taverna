@@ -244,7 +244,6 @@ def user_comments(request, user_id):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    from django.conf import settings
     paginator = Paginator(Post.objects.filter(owner = user_info, forum = None,
                           blog = None).extra(where=['not flags & 2']).order_by('-created'),
                           settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
@@ -265,7 +264,6 @@ def notify(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    from django.conf import settings
     paginator = Paginator(Post.objects.exclude(owner=user_info).filter(forum = None, blog = None, reply_to__owner = user_info).order_by('-created'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
@@ -312,7 +310,6 @@ def rewards(request, user_id):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    from django.conf import settings
     paginator = Paginator(PostVote.objects.exclude(reason = None).filter(post__owner = user_info).order_by('-pk'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
@@ -329,7 +326,6 @@ def graveyard(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    from django.conf import settings
     paginator = Paginator(Profile.objects.filter(Q(karma__lt = 0) | Q(buryed = True)).order_by('-buryed'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:

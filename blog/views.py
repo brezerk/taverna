@@ -39,10 +39,11 @@ from django.utils.translation import ugettext as _
 
 from django.http import Http404
 from django.core.paginator import InvalidPage, EmptyPage
+from django.conf import settings
 
 @login_required()
 @rr('blog/settings.html')
-def settings(request):
+def user_settings(request):
     if request.user.profile.buryed:
        return error(request, "")
 
@@ -85,7 +86,6 @@ def post_edit(request, post_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    from django.conf import settings
     post_orig = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
 
     if not request.user.is_staff:
@@ -222,10 +222,8 @@ def tags_search(request, tag_id):
     if showall == "1":
         posts = Post.objects.filter(tags = tag_id).order_by('-created')
     else:
-        from django.conf import settings
         posts = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(tags = tag_id).order_by('-created')
 
-    from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
     tag = Tag.objects.get(pk=tag_id);
 
@@ -243,9 +241,8 @@ def view(request, blog_id):
     if showall == "1":
         posts = Post.objects.filter(blog = blog_info).order_by('-created')
     else:
-        from django.conf import settings
         posts = Post.objects.filter(blog = blog_info).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
-    from django.conf import settings
+
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return {'thread': paginator.page(page), 'blog_info': blog_info, 'showall': showall }
@@ -262,9 +259,8 @@ def view_all(request, user_id):
     if showall == "1":
         posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).order_by('-created')
     else:
-        from django.conf import settings
         posts = Post.objects.exclude(blog = None,forum = None).filter(owner = user_id).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
-    from django.conf import settings
+
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     return {'thread': paginator.page(page), 'posts_owner': posts_owner, 'showall': showall}
@@ -272,15 +268,14 @@ def view_all(request, user_id):
 @rr('blog/blog.html')
 def index(request):
     showall = request.GET.get("showall", 0)
+
     if showall == "1":
         posts = Post.objects.exclude(blog = None).order_by('-created')
     else:
-        from django.conf import settings
         posts = Post.objects.exclude(blog = None).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
 
     page = request.GET.get("offset", 1)
 
-    from django.conf import settings
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     try:
@@ -295,7 +290,6 @@ def vote_async(request, post_id, positive):
     if not request.user.is_authenticated():
         return {"rating": post.rating, "message": _("Registration required.")}
 
-    from django.conf import settings
     post = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
@@ -323,7 +317,6 @@ def vote_generic(request, post_id, positive):
     if not request.user.is_authenticated():
         return error(request, _("Registration required."))
 
-    from django.conf import settings
     post = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
     if post.owner == request.user:
         return error(request, _("You can not vote for own post."))
@@ -347,7 +340,6 @@ def vote_generic(request, post_id, positive):
     modify_rating(post, 1, positive)
 
     if post.reply_to:
-        from django.conf import settings
         paginator = Paginator(Post.objects.filter(thread = post.thread).exclude(pk = post.thread.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         for page in paginator.page_range:
             if post in paginator.page(page).object_list:
@@ -372,15 +364,12 @@ def list_users(request):
 
     page = request.GET.get("offset", 1)
 
-    from django.conf import settings
     paginator = ExtendedPaginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     return { 'thread': paginator.page(page) }
 
 @rr('blog/error.html')
 def error(request, error):
-    from django.conf import settings
-
     if request.user.profile.buryed:
         desc = _("Sorry, but You have been buryed at our Grave Yard. See your profile for a details.")
         cost = None
@@ -393,3 +382,4 @@ def error(request, error):
             cost = None
 
     return { 'desc': desc, 'cost': cost }
+

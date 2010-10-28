@@ -55,7 +55,7 @@ class Post(models.Model):
         ordering = ('created',)
 
     def is_removed(self):
-        return bool(2 & self.flags)
+        return bool(settings.O_REMOVED & self.flags)
 
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
