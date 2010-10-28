@@ -57,6 +57,15 @@ class Post(models.Model):
     def is_removed(self):
         return bool(settings.O_REMOVED & self.flags)
 
+    def is_stiked(self):
+        return bool(settings.O_STIKED & self.flags)
+
+    def is_solved(self):
+        return bool(settings.O_SOLVED & self.flags)
+
+    def is_closed(self):
+        return bool(settings.O_CLOSED & self.flags)
+
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
 
