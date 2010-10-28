@@ -51,7 +51,7 @@
                 </small>
                 {% if startpost %}
                     <br>
-                    {% if post.is_removed %}
+                    {% if post.removed %}
                         [<a href="{% url userauth.views.rewards post.owner.pk %}">{% trans "This post was removed" %}</a>]
                     {% else %}
                         {% if user.is_staff and post.pk %} 

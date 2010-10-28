@@ -49,22 +49,16 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, null = True)
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
-    flags = models.IntegerField(editable = True, default =0)
+    removed = models.BooleanField(editable = True, default = 0)
+    stiked = models.BooleanField(editable = True, default = 0)
+    closed = models.BooleanField(editable = True, default = 0)
+    solved = models.BooleanField(editable = True, default = 0)
 
     class Meta:
         ordering = ('created',)
 
     def is_removed(self):
         return bool(settings.O_REMOVED & self.flags)
-
-    def is_stiked(self):
-        return bool(settings.O_STIKED & self.flags)
-
-    def is_solved(self):
-        return bool(settings.O_SOLVED & self.flags)
-
-    def is_closed(self):
-        return bool(settings.O_CLOSED & self.flags)
 
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
@@ -104,7 +98,7 @@ class Post(models.Model):
         return tag_string
 
     def get_comments_count(self):
-        return Post.objects.exclude(pk=self.pk).filter(thread=self.pk).extra(where=['not flags & 2']).count()
+        return Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).count()
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)

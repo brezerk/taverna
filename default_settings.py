@@ -166,9 +166,3 @@ FORCE_REGEN = {
     'BORDER': 1,
 }
 
-# Post Flags
-O_REMOVED=2
-O_LOCKED=4
-O_STIKED=8
-O_SOLVED=16
-

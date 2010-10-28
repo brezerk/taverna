@@ -50,7 +50,7 @@
     {% endif %}
  </td>
  <td>
-  {% if post.is_removed %}
+  {% if post.removed %}
     <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>
     [<span style='color: red'>x</span>]
   {% else %}

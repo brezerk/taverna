@@ -50,7 +50,7 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked', 'closed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -79,7 +79,7 @@ class ThreadForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked', 'closed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -107,7 +107,7 @@ def forum(request, forum_id):
     if showall == "1":
         pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-created')
     else:
-        pages = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(forum = forum).order_by('-created')
+        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-created')
 
     paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -134,7 +134,7 @@ def traker(request):
     if showall == "1":
         pages = Post.objects.filter(blog = None).exclude(owner = user_info).order_by('-created')
     else:
-        pages = Post.objects.filter(blog = None).extra(where=['not flags & %s' % (settings.O_REMOVED)]).exclude(owner = user_info).order_by('-created')
+        pages = Post.objects.filter(blog = None, removed = False).exclude(owner = user_info).order_by('-created')
 
     paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -148,7 +148,7 @@ def traker(request):
 @login_required()
 @rr('forum/reply.html')
 def reply(request, post_id):
-    reply_to = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
+    reply_to = Post.objects.filter(removed = False).get(pk = post_id)
     if not request.user.profile.can_create_comment():
         return error(request, "COMMENT_CREATE")
 
@@ -193,7 +193,7 @@ def remove(request, post_id):
     if request.user.profile.buryed:
        return error(request, "")
 
-    startpost = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id)
+    startpost = Post.objects.exclude(removed = True).get(pk = post_id)
 
     class RemoveForm(forms.ModelForm):
         class Meta:
@@ -214,7 +214,7 @@ def remove(request, post_id):
             postvote.auto = False
             postvote.save()
 
-            startpost.flags = startpost.flags + int(settings.O_REMOVED)
+            startpost.removed = True
             modify_rating(startpost, postvote.reason.cost)
             auto_remove(startpost, postvote.reason);
 
@@ -242,15 +242,15 @@ def remove(request, post_id):
 
 def auto_remove(startpost, reason):
     if startpost.reply_to == None:
-        for post in Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(thread = startpost.pk):
+        for post in Post.objects.filter(thread = startpost.pk, removed = False):
             PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-            post.flags = post.flags + int(settings.O_REMOVED)
+            post.removed = True
 
             modify_rating(post, reason.cost)
     else:
-        for post in Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).filter(reply_to = startpost.pk):
+        for post in Post.objects.filter(reply_to = startpost.pk, removed = False):
             PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-            post.flags = post.flags + int(settings.O_REMOVED)
+            post.removed = True
 
             modify_rating(post, reason.cost)
             auto_remove(post, reason)
@@ -292,6 +292,7 @@ def topic_create(request, forum_id):
                 return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
     else:
         form = ThreadForm()
+        form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked')
     return {'form': form, 'forum': forum}
 
 @login_required()
@@ -300,7 +301,7 @@ def topic_edit(request, topic_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    topic = Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = topic_id)
+    topic = Post.objects.exclude(removed=True).get(pk = topic_id)
 
     if not topic.reply_to == None:
         raise Http404
@@ -354,7 +355,7 @@ def tags_search(request, tag_name):
     if showall == "1":
         posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name)).order_by('-created')
     else:
-        posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name)).extra(where=['not flags & %s' % (settings.O_REMOVED)]).order_by('-created')
+        posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name), removed = False).order_by('-created')
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -373,7 +374,7 @@ def post_rollback(request, diff_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    diff = PostEdit.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = diff_id)
+    diff = PostEdit.objects.exclude(removed = True).get(pk = diff_id)
 
     if not diff.post.owner == request.user:
         raise Http404
@@ -399,7 +400,7 @@ def thread(request, post_id):
     if showall == "1":
         paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
     else:
-        paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk).extra(where=['not flags & %s' % (settings.O_REMOVED)]), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread, removed = False).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
     try:
         thread = paginator.page(page)
@@ -410,7 +411,7 @@ def thread(request, post_id):
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
-    return {'startpost': Post.objects.extra(where=['not flags & %s' % (settings.O_REMOVED)]).get(pk = post_id), 'site': Site.objects.get_current().domain}
+    return {'startpost': Post.objects.exclude(removed = True).get(pk = post_id), 'site': Site.objects.get_current().domain}
 
 def offset(request, root_id, offset_id):
     if offset_id == root_id:
@@ -421,7 +422,7 @@ def offset(request, root_id, offset_id):
         if showall == "1":
             pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id)
         else:
-            pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id).extra(where=['not flags & %s' % (settings.O_REMOVED)])
+            pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id, removed = True)
 
         paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         post = Post.objects.get(pk=offset_id)

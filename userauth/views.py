@@ -244,8 +244,7 @@ def user_comments(request, user_id):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None,
-                          blog = None).extra(where=['not flags & 2']).order_by('-created'),
+    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None, blog = None).exclude(removed = True).order_by('-created'),
                           settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:

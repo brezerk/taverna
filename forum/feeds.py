@@ -43,7 +43,7 @@ class RssForum(Feed):
         self.title = _("Last topics in form: %s" % (obj.name))
         self.description = obj.description
         self.link = obj.get_absolute_url()
-        return Post.objects.filter(forum=obj, reply_to = None).extra(where=['not flags & 2']).order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
+        return Post.objects.filter(forum=obj, reply_to = None, removed = False).order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
     def item_title(self, item):
         return item.title
@@ -70,7 +70,7 @@ class RssComments(Feed):
         self.title = obj.title
         self.description = markup(obj.text, obj.parser)
 
-        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk).extra(where=['not flags & 2'])
+        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk, removed = True)
 
         self.paginator = Paginator(thread_list, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
