@@ -298,3 +298,11 @@ a.vote-negative:visited {
 a.vote-negative:hover {
     color: #ff7e00;
 }
+
+.stiked {
+    color: #72b2d8;
+}
+
+.solved {
+    color: #00ff00;
+}

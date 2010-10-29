@@ -76,6 +76,14 @@ class ThreadForm(forms.ModelForm):
             raise forms.ValidationError(_("Text length < 24 is not allowed."))
         return text
 
+class AdminThreadForm(ThreadForm):
+    class Meta:
+        model = Post
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved')
+        widgets = {
+                  'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+        }
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -105,9 +113,9 @@ def forum(request, forum_id):
 
     forum = Forum.objects.get(pk = forum_id)
     if showall == "1":
-        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-created')
+        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-stiked', '-created')
     else:
-        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-created')
+        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-stiked', '-created')
 
     paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -148,7 +156,7 @@ def traker(request):
 @login_required()
 @rr('forum/reply.html')
 def reply(request, post_id):
-    reply_to = Post.objects.filter(removed = False).get(pk = post_id)
+    reply_to = Post.objects.filter(removed = False, closed = False).get(pk = post_id)
     if not request.user.profile.can_create_comment():
         return error(request, "COMMENT_CREATE")
 
@@ -275,7 +283,10 @@ def topic_create(request, forum_id):
 
     forum = Forum.objects.get(pk = forum_id)
     if request.method == 'POST':
-        form = ThreadForm(request.POST)
+        if request.user.is_staff:
+            form = AdminThreadForm(request.POST)
+        else:
+            form = ThreadForm(request.POST)
         if form.is_valid():
             if request.POST['submit']==_("Post new topic"):
                 post = form.save(commit = False)
@@ -291,7 +302,10 @@ def topic_create(request, forum_id):
 
                 return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
     else:
-        form = ThreadForm()
+        if request.user.is_staff:
+            form = AdminThreadForm()
+        else:
+            form = ThreadForm()
         form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked')
     return {'form': form, 'forum': forum}
 
@@ -310,7 +324,10 @@ def topic_edit(request, topic_id):
         raise Http404
 
     if request.method == 'POST':
-        form = ThreadForm(request.POST, instance=topic)
+        if request.user.is_staff:
+            form = AdminThreadForm(request.POST, instance=topic)
+        else:
+            form = ThreadForm(request.POST, instance=topic)
         if form.is_valid():
             if request.POST['submit']==_("Save"):
                 orig_text = Post.objects.get(pk = topic_id).text
@@ -323,7 +340,10 @@ def topic_edit(request, topic_id):
                 return HttpResponseRedirect(reverse('forum.views.thread', args = [topic_id]))
 
     else:
-        form = ThreadForm(instance=topic)
+        if request.user.is_staff:
+            form = AdminThreadForm(instance=topic)
+        else:
+            form = ThreadForm(instance=topic)
     return {'form': form, 'forum': topic.forum}
 
 @login_required()
@@ -389,6 +409,20 @@ def post_rollback(request, diff_id):
     post.save()
 
     return thread(request, post.pk)
+
+def post_solve(request, post_id):
+    post = Post.objects.filter(removed = False).get(pk = post_id)
+
+    if post.solved:
+        post.solved = False
+    else:
+        post.solved = True
+    post.save()
+
+    if request.user.is_staff or request.user == post.owner:
+        return HttpResponseRedirect(reverse("forum.views.thread", args = [post_id]))
+    else:
+        raise Http404
 
 @rr('blog/post_view.html')
 def thread(request, post_id):

@@ -38,8 +38,18 @@
 <tr class="{% cycle "odd" "even" %}">
  <td>
   {% if post.removed %}
-    [<span style='color: red'>x</span>]
+    &nbsp;<span style='color: red'>✘</span>
+  {% else %}
+    {% if post.stiked %}
+    &nbsp;<span class='stiked'>⛁</span>
+    {% endif %}
+    {% if post.solved %}
+    &nbsp;<span class='solved'>✔</span>
+    {% endif %}
   {% endif %}
+    {% if post.closed %}
+    &nbsp;<span class='solved'>⚷</span>
+    {% endif %}
   {{post|forumtags|safe}} 
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
  </td>

@@ -33,7 +33,7 @@
 <tr class="{% cycle "odd" "even" %}">
  <td>
   {% if post.is_removed %}
-  [<span style='color: red'>x</span>]
+  [<span style='color: red'>✘</span>]
   {% endif %}
   {{post|forumtags|safe}} 
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]

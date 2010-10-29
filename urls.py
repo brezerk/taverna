@@ -83,6 +83,7 @@ urlpatterns = patterns('',
     (r'^liboffset-(?P<root_id>\d+).so.(?P<offset_id>\d+)$', 'forum.views.offset'),
     (r'^libremove-(?P<post_id>\d+).so$', 'forum.views.remove'),
     (r'^libview-(?P<post_id>\d+).so$', 'forum.views.post_view'),
+    (r'^libsolve-(?P<post_id>\d+).so$', 'forum.views.post_solve'),
 
     (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
     (r'^pam/libprofile-(?P<user_id>\d+).so$', 'userauth.views.profile_view'),
