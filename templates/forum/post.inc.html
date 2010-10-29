@@ -65,7 +65,6 @@
                         {% endif %}
                             {% if post.thread.closed %}
                                 [{% trans "This topic is closed" %}]
-                                [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
                             {% else %}
                                 [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
                             {% endif %}
