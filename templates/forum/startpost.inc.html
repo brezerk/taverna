@@ -2,7 +2,19 @@
 
 <div class='news'>
     <h3>
-        <a href='{{ section_url }}'>{{ section_name }}</a> → <a href='{{ startpost_url }}'>{{ startpost_title }}</a>
+        {% if startpost.removed %}
+            <span class='removed'>✘</span>
+        {% endif %}
+        {% if startpost.stiked %}
+            <span class='stiked'>⛁</span>
+        {% endif %}
+        {% if startpost.closed %}
+            <span class='solved'>⚷</span>
+        {% endif %}
+        {% if startpost.solved %}
+            <span class='solved'>✔</span>
+        {% endif %}
+        <a href='{{ startpost_url }}'>{{ startpost_title }}</a>
     </h3>
 
     <table cellspacing='0' cellpadding='2' border='0' width='100%'>

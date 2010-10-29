@@ -157,6 +157,10 @@ def traker(request):
 @rr('forum/reply.html')
 def reply(request, post_id):
     reply_to = Post.objects.filter(removed = False, closed = False).get(pk = post_id)
+
+    if reply_to.thread.closed:
+        raise Http404
+
     if not request.user.profile.can_create_comment():
         return error(request, "COMMENT_CREATE")
 
