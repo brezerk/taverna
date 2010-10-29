@@ -306,3 +306,7 @@ a.vote-negative:hover {
 .solved {
     color: #00ff00;
 }
+
+.removed {
+    color: red;
+}

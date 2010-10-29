@@ -5,7 +5,13 @@
     <table border="0px" width="100%" colspan="0" rowspan="0">
         <tr>
             <td>
-                [<a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>]
+                <a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >
+                {% if post.removed %}
+                    <span class='removed'>✘</span>
+                {% else %}
+                    #
+                {% endif %}
+                </a>
                 {% if post.reply_to != post.thread %}
                     {% trans "Reply to" %} <a href="
                     {% if thread %}
