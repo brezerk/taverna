@@ -50,7 +50,7 @@ class Post(models.Model):
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
     removed = models.BooleanField(editable = True, default = 0)
-    stiked = models.BooleanField(editable = True, default = 0)
+    sticked = models.BooleanField(editable = True, default = 0)
     closed = models.BooleanField(editable = True, default = 0)
     solved = models.BooleanField(editable = True, default = 0)
 
