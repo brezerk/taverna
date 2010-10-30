@@ -1,26 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load markup %}
 
 {% block menubox %}
 <div class='actionbox'>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
-<td>
-{% if user = user_info %}
-{% trans "Your's" %} {% trans "rewards list" %}
-{% else%}
-{{ user_info.profile.get_visible_name }} {% trans "rewards list" %}
-{% endif %}
-</td>
-
-<td align='right'>
-{% if user.is_authenticated %}
-    {% if user.profile.can_create_topic %}
-    [<a href='{% url forum.views.topic_create 1 %}'>{% trans "Post new topic" %}</a>]
-    {% endif %}
-{% endif %}
-</td>
+    <td>
+        <a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a> {% trans "rewards list" %}
+    </td>
 </tr>
 </table>
 </div>
@@ -50,33 +37,16 @@
 {% for reward in rewards.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
-    {% if reward.post.thread.forum %}
-        {% trans "Forum" %}
-    {% else %}
-            {% trans "Blog" %}
-    {% endif %}
+    {{ reward.post.thread.get_section_type }}
  </td>
  <td>
-    {% if reward.post.thread.forum %}
-        <a href='{% url forum.views.forum reward.post.thread.forum.pk %}'>{{ reward.post.thread.forum.name }}</a>
-    {% else %}
-        <a href='{% url blog.views.view reward.post.thread.blog.pk %}'>{{ reward.post.thread.blog.name }}</a>
-    {% endif %}
+    <a href='{{ reward.post.thread.get_section_url }}'>{{ reward.post.thread.get_section_name }}</a>
  </td>
  <td>
-     <a href='{% url forum.views.post_view reward.post.pk %}'>
-     {% if reward.post.title %}
-     {{ reward.post.title }}
-     {% else %}
-     {{ reward.post.thread.title }}
-     {% endif %}
-     </a>
+     <a href='{% url forum.views.post_view reward.post.pk %}'>{{ reward.post.get_title }}</a>
  </td>
  <td>
-   {% if reward.auto %} 
-        {% trans "(Auto) Reply to" %}:
-    {% endif %}
-        {{ reward.reason }} (-{{ reward.reason.cost }})
+   {{ reward.get_reason }}
  </td>
  <td>{{reward.post.created|date:"d.m.Y H:i"}}
  </td>

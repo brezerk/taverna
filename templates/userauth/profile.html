@@ -6,68 +6,69 @@
 
 {% block menubox %}
 <div class='actionbox'>
+    <div class='left'>
+        {% trans "User profile" %}
+    </div>
+    <div class='right'>
+        [<a href='{% url blog.views.view user_blog.pk %}'>{% trans "User's blog" %}</a>]
+        {% if user.pk == user_info.pk %}
+            [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit" %}</a>]
+        {% endif %}
+        {% if user.is_staff %}
+            [<a href='{% url userauth.views.rewards user_info.pk %}'>{% trans "Bury user" %}</a>]
+        {% endif %}
+    </div>
+</div>
+
+<!--
+<div class='actionbox'>
 <table cellspacing='0' cellpadding='2' border='0' width='100%'>
 <tr>
 <td width='300'>{% trans "User profile" %}</td>
 
 <td align='right'>
-{% if user != user_info %}
-    {% if user_blog %}
-        [<a href='/{{user_info.username}}/'>{% trans "Read user's blog" %}</a>]
-    {% endif %}
-{% else %}
-    [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
-    {% if user_blog %}
-        [<a href='{% url blog.views.blog_settings %}'>{% trans "Blog settings" %}</a>]
-    {% endif %}
-[<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit profile" %}</a>]
-{% endif %}
-{% if user.is_staff %}
-    [<a href='{% url userauth.views.rewards user_info.pk %}'>{% trans "Bury user" %}</a>]
-{% endif %}
 </td>
 </tr>
 </table>
 </div>
+-->
 {% endblock %}
 
 {% block content %}
 
 <h3>{% trans "User's insformation" %}</h3>
-<table border='0' width='100%'>
-    <tr><td valign='top'>
-<table border='0' width='100%'>
-    <tr><td>{% trans "Visible name" %}: {{ user_info.profile.get_visible_name }}</td></tr>
-    {% if user_info.first_name or user_info.last_name %}
-    <tr><td>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</td></tr>
-    {% endif %}
-    <tr><td>{% trans "Registration" %}: {{ user_info.date_joined|date:"d.m.Y H:i:s" }}</td></tr>
-    <tr><td>{% trans "Last visit" %}: {{ user_info.last_login|date:"d.m.Y H:i:s" }}</td></tr>
-    <tr><td>{% trans "Carma" %}: {{ user_info.profile.karma }}</td></tr>
-    <tr><td>{% trans "Force" %}: {{ user_info.profile.force }}</td></tr>
-    {% if user_info.profile.website %}
-    <tr><td>{% trans "Website" %}: <a href='{{ user_info.profile.website }}'>{{ user_info.profile.website }}</a></td></tr>
-    {% endif %}
-    {% if user_info.profile.jabber %}
-    <tr><td>Jabber: <a href='{{ user_info.profile.jabber }}'>{{ user_info.profile.jabber }}</a></td></tr>
-    {% endif %}
-    {% if user_info.email %}
-    {% if user == user_info or user.is_staff %}
-    <tr><td>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> ({% trans "is avalible only for you and site moderators" %})</td></tr>
-    {% endif %}
-    {% endif %}
-    {% if user_info.profile.location %}
-    <tr><td>{% trans "City" %}: {{ user_info.profile.location }}</td></tr>
-    {% endif %}
-    <tr><td>&nbsp;</td></tr>
-    <tr><td>{{ user_info.profile.sign|linebreaksbr }}</td></tr>
-</table>
-    </td><td width='160px' valign='top'>
+<div class='profile'>
     {% if user_info.profile.photo %}
+        <div class='right'>
         <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_info.profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
+    </div>
     {% endif %}
-    </td></tr>
-</table>
+    <div class='left'>
+        <div>{% trans "Visible name" %}: {{ user_info.profile.get_visible_name }}</div>
+        {% if user_info.first_name or user_info.last_name %}
+            <div>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</div>
+        {% endif %}
+        <div>{% trans "Registration" %}: {{ user_info.date_joined|date:"d.m.Y H:i:s" }}</div>
+        <div>{% trans "Last visit" %}: {{ user_info.last_login|date:"d.m.Y H:i:s" }}</div>
+        <div>{% trans "Carma" %}: {{ user_info.profile.karma }}</div>
+        <div>{% trans "Force" %}: {{ user_info.profile.force }}</div>
+        {% if user_info.profile.website %}
+            <div>{% trans "Website" %}: <a href='{{ user_info.profile.website }}'>{{ user_info.profile.website }}</a></div>
+        {% endif %}
+        {% if user_info.profile.jabber %}
+            <div>Jabber: <a href='{{ user_info.profile.jabber }}'>{{ user_info.profile.jabber }}</a></div>
+        {% endif %}
+        {% if user_info.email %}
+            {% if user == user_info or user.is_staff %}
+                <div>Email: <a href='mailto:{{ user_info.email }}'>{{ user_info.email }}</a> ({% trans "is avalible only for you and site moderators" %})</div>
+            {% endif %}
+        {% endif %}
+        {% if user_info.profile.location %}
+            <div>{% trans "City" %}: {{ user_info.profile.location }}</div>
+        {% endif %}
+        <div>{{ user_info.profile.sign|linebreaksbr }}</div> 
+    </div>
+</div>
 {% if user_info.profile.is_buryed %}
 <h3>{% trans "User status"%}:</h3>
 <p>{% trans "This user has been buryed at our" %} <a href='{% url userauth.views.graveyard%}'>{% trans "Grave Yard" %}</a>.<br>
@@ -93,5 +94,4 @@
 </ul>
 
 {% endblock %}
-
 

@@ -69,6 +69,24 @@ class Post(models.Model):
         else:
             return self.forum.name
 
+    def get_section_type(self):
+        if self.blog:
+            return _("Blog")
+        else:
+            return _("Forum")
+
+    def get_section_url(self):
+        if self.blog:
+            return reverse("blog.views.view", args = [self.blog.pk])
+        else:
+            return reverse("forum.views.forum", args = [self.forum.pk])
+
+    def get_title(self):
+        if self.title:
+            return self.title
+        else:
+            return self.thread.title
+
     def get_tag_list(self):
         tag_string = ""
 
@@ -132,4 +150,11 @@ class PostVote(models.Model):
     reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Post remove reason"))
     class Meta:
         unique_together = ('post', 'user')
+
+    def get_reason(self):
+        ret = "%s (-%s)" % (self.reason, self.reason.cost)
+        if self.auto:
+            return _("(Auto) Reply to: ") + ret
+        else:
+            return ret
 

@@ -28,6 +28,45 @@ html, body {
     line-height:1.4
 }
 
+.actionbox {
+    overflow: hidden;
+    margin: 10px;
+}
+
+.actionbox > .left {
+    float: left;
+    cursor: default;
+    text-align: left;
+}
+
+.actionbox > .right {
+    float: right;
+    cursor: default;
+    text-align: right;
+}
+
+.profile {
+    overflow: hidden;
+    margin-left: 25px;
+}
+
+.profile > .left {
+    float: left;
+    text-align: left;
+}
+
+.profile > .right {
+    float: right;
+    text-align: right;
+}
+
+
+
+
+
+
+
+
 pre {
     font-family: monospace;
     font-size:medium;
@@ -71,12 +110,6 @@ a:hover {
     border-top: 1px solid #686868;
     text-align: center;
     color: #afafaf;
-}
-
-.actionbox {
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-bottom: 10px;
 }
 
 .titlebox {
