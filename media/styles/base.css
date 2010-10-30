@@ -47,7 +47,6 @@ html, body {
 
 .profile {
     overflow: hidden;
-    margin-left: 25px;
 }
 
 .profile > .left {
@@ -60,7 +59,11 @@ html, body {
     text-align: right;
 }
 
-
+.block {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-left: 25px;
+}
 
 
 

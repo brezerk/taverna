@@ -109,3 +109,9 @@ class Profile(models.Model):
         else:
             return "User-%i" % self.id
 
+    def get_buryed_reason(self):
+        if self.buryed:
+            return self.buryed_reason
+        else:
+            return _("Auto ban due high karma loss.")
+

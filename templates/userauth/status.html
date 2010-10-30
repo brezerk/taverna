@@ -1,0 +1,10 @@
+{% load i18n %}
+
+{% if user_info.profile.is_buryed %}
+    <b>{% trans "User status"%}:</b>
+    <div class='block'>
+        <div>{% trans "This user has been buryed at our" %} <a href='{% url userauth.views.graveyard%}'>{% trans "Grave Yard" %}</a>.</div>
+        <div>{% trans "Reason"%}: {{ user_info.profile.get_buryed_reason }}</div>
+    </div>
+{% endif %}
+

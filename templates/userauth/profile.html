@@ -19,24 +19,11 @@
         {% endif %}
     </div>
 </div>
-
-<!--
-<div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td width='300'>{% trans "User profile" %}</td>
-
-<td align='right'>
-</td>
-</tr>
-</table>
-</div>
--->
 {% endblock %}
 
 {% block content %}
 
-<h3>{% trans "User's insformation" %}</h3>
+<b>{% trans "User's insformation" %}</b>
 <div class='profile'>
     {% if user_info.profile.photo %}
         <div class='right'>
@@ -44,6 +31,7 @@
     </div>
     {% endif %}
     <div class='left'>
+        <div class='block'>
         <div>{% trans "Visible name" %}: {{ user_info.profile.get_visible_name }}</div>
         {% if user_info.first_name or user_info.last_name %}
             <div>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</div>
@@ -67,21 +55,13 @@
             <div>{% trans "City" %}: {{ user_info.profile.location }}</div>
         {% endif %}
         <div>{{ user_info.profile.sign|linebreaksbr }}</div> 
+        </div>
     </div>
 </div>
-{% if user_info.profile.is_buryed %}
-<h3>{% trans "User status"%}:</h3>
-<p>{% trans "This user has been buryed at our" %} <a href='{% url userauth.views.graveyard%}'>{% trans "Grave Yard" %}</a>.<br>
-{% trans "Reason"%}:
-{% if user_info.profile.buryed %}
-    {{ user_info.profile.buryed_reason }}
-{% else %}
-    {% trans "Auto ban due high karma loss." %}
-{% endif %}
-</p>
-{% endif %}
 
-<h3>{% trans "User messags"%}:</h3>
+{% include "userauth/status.html" %}
+
+<b>{% trans "User messags"%}:</b>
 <ul>
     <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>

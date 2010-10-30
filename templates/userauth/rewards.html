@@ -3,29 +3,15 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-    <td>
+    <div class='left'>
         <a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a> {% trans "rewards list" %}
-    </td>
-</tr>
-</table>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
 
-{% if user_info.profile.is_buryed %}
-<p>{% trans "Current user status"%}:</p>
-<p>{% trans "This user has been buryed at our" %} <a href='{% url userauth.views.graveyard%}'>{% trans "Grave Yard" %}</a>.<br>
-{% trans "Reason"%}:
-{% if user_info.profile.buryed %}
-    {{ user_info.profile.buryed_reason }}
-{% else %}
-    {% trans "Auto ban due high karma loss." %}
-{% endif %}
-</p>
-{% endif %}
+{% include "userauth/status.html" %}
 
 {% include "forum/arrows.inc.html" %}
 
