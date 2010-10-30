@@ -25,7 +25,7 @@ class ForumAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'owner', 'rating')
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'owner', 'blog', 'forum', 'removed', 'stiked', 'closed', 'solved')
+    list_display = ('id', 'title', 'owner', 'blog', 'forum', 'removed', 'sticked', 'closed', 'solved')
 
 admin.site.register(Forum, ForumAdmin)
 admin.site.register(Post, PostAdmin)

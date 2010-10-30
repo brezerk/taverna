@@ -50,7 +50,7 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked', 'closed')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked', 'closed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -87,7 +87,7 @@ class AdminThreadForm(ThreadForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked', 'closed')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked', 'closed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -113,9 +113,9 @@ def forum(request, forum_id):
 
     forum = Forum.objects.get(pk = forum_id)
     if showall == "1":
-        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-stiked', '-created')
+        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created')
     else:
-        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-stiked', '-created')
+        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-sticked', '-created')
 
     paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -310,7 +310,7 @@ def topic_create(request, forum_id):
             form = AdminThreadForm()
         else:
             form = ThreadForm()
-        form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'stiked')
+        form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked')
     return {'form': form, 'forum': forum}
 
 @login_required()

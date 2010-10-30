@@ -111,7 +111,7 @@ def post_edit(request, post_id):
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread', 'flags', 'removed', 'closed', 'solved', 'stiked')
+            exclude = ('tags', 'reply_to', 'thread', 'flags', 'removed', 'closed', 'solved', 'sticked')
             widgets = {
                       'text': Textarea(attrs={'cols': 80, 'rows': 27}),
                       }
@@ -170,7 +170,7 @@ def post_add(request):
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread', 'flags', 'removed', 'closed', 'solved', 'stiked')
+            exclude = ('tags', 'reply_to', 'thread', 'flags', 'removed', 'closed', 'solved', 'sticked')
             widgets = {
                       'text': Textarea(attrs={'rows': 27}),
                       }
