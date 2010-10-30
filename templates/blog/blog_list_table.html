@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<p>
+<table cellspacing='0' cellpadding='2' border='0' class='theader'>
+    <tr class='theader'>
+        <th width='220px'>{% trans "Blog name" %}</th>
+        <th>{% trans "Description" %}</th>
+    </tr>
+    {% for blog in blogs_list %}
+    <tr>
+        <td><a href='{%url blog.views.view blog.id %}'>{{blog.name}}</a></td>
+        <td>{{blog.desc}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</p>
