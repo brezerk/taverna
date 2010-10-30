@@ -3,19 +3,15 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% trans "Forum list" %}
-</td>
-
-<td align='right'>
-{% if user.is_authenticated %}
-    [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
-{% endif %}
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "Forum list" %}
+    </div>
+    <div class='right'>
+        {% if user.is_authenticated %}
+            [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
