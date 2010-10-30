@@ -4,21 +4,9 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% trans "Our Grave Yard page" %}
-</td>
-
-<td align='right'>
-{% if user.is_authenticated %}
-    {% if user.profile.can_create_topic %}
-    [<a href='{% url forum.views.topic_create 1 %}'>{% trans "Post new topic" %}</a>]
-    {% endif %}
-{% endif %}
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "Our Grave Yard page" %}
+    </div>
 </div>
 {% endblock %}
 
@@ -49,27 +37,20 @@
 
 {% include "forum/arrows.inc.html" %}
 <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th width='160px'>{% trans "User" %}</th><th width='60px'>{% trans "Karma" %}<th>{% trans "Revard reason" %}</th></tr>
+<tr class='theader'>
+    <th width='160px'>{% trans "User" %}</th>
+    <th width='60px'>{% trans "Karma" %}</th>
+    <th>{% trans "Revard reason" %}</th>
+</tr>
 
 {% for user_info in users.object_list %}
 <tr class="{% cycle "odd" "even" %}">
- <td>
- <span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span>
- </td>
- <td>
- {{ user_info.karma }}
- </td>
- <td>
- {% if user_info.buryed %}
-     {{ user_info.buryed_reason }}
- {% else %}
-     {% trans "Auto ban due high karma loss." %}
- {% endif %}
- </td>
+    <td><span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span></td>
+    <td>{{ user_info.karma }}</td>
+    <td>{{ user_info.get_buryed_reason }} </td>
 </tr>
 {% endfor %}
 </table>
-
 {% include "forum/arrows.inc.html" %}
 {% endblock %}
 
