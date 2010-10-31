@@ -25,6 +25,7 @@ from blog.models import Blog, Tag
 from userauth.models import ReasonList
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from taverna.parsers.templatetags import markup
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
@@ -117,6 +118,30 @@ class Post(models.Model):
 
     def get_comments_count(self):
         return Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).count()
+
+    def get_flags(self):
+        ret = ""
+        if self.removed:
+            ret = "<span class='removed'>✘</span>"
+        if self.sticked:
+            ret = ret + "<span class='sticked'>⛁</span>"
+        if self.closed:
+            ret = ret + "<span class='solved'>⚷</span>"
+        if self.solved:
+            ret = ret + "<span class='solved'>✔</span>"
+        return ret
+
+    def get_text(self):
+        return markup.markup(self.text, self.parser)
+
+    def get_vote_url_positive(self):
+        return reverse("blog.views.vote_generic", args=[self.pk, 0])
+
+    def get_vote_url_negative(self):
+        return reverse("blog.views.vote_generic", args=[self.pk, 1])
+
+    def get_strip_text(self):
+        return markup.strippost(self.text, self)
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)

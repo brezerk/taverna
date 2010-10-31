@@ -1,52 +1,37 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load markup %}
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% if tag %}
-{% trans "Search results for tag:" %} {{ tag.name }}
-{% else %}
+    <div class='left'>
     {% if blog_info %}
         <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name }}</a> {{ blog_info.desc }}
     {% else %}
+        {% trans "Blogs traker" %}
+    {% endif %}
+    </div>
+    <div class='right'>
+    {% if blog_info.desc %}
+        <a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
+    {% else %}
         {% if posts_owner %}
-            {% trans "Blog topics of user:" %} {{ posts_owner.profile.get_visible_name }}
+            [<a href='{% url rss_user posts_owner.pk %}'>RSS</a>|<a href='{% url atom_user posts_owner.pk %}'>Atom</a>]
         {% else %}
-            {% trans "Blog's traker" %}
+            [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
         {% endif %}
     {% endif %}
-{% endif %}
-</td>
-
-<td align='right'>
-{% if blog_info.desc %}
-    [<a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
-{% else %}
-    {% if posts_owner %}
-        [<a href='{% url rss_user posts_owner.pk %}'>RSS</a>|<a href='{% url atom_user posts_owner.pk %}'>Atom</a>]
+    {% if showall == "1" %}
+        [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
     {% else %}
-        [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
+        [<a href='?showall=1'>{% trans "Show removed" %}</a>]
     {% endif %}
-{% endif %}
-{% if showall == "1" %}
-[<a href='?showall=0'>{% trans "Hide removed" %}</a>]
-{% else %}
-[<a href='?showall=1'>{% trans "Show removed" %}</a>]
-{% endif %}
-{% if user.is_authenticated %}
-    [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
-    {% if blog_info.owner = user %}
-        [<a href='{% url blog.views.blog_settings %}'>{% trans "Blog settings" %}</a>]
+    {% if user.is_authenticated %}
+        [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
+        {% if blog_info.owner = user %}
+            [<a href='{% url blog.views.blog_settings %}'>{% trans "Blog settings" %}</a>]
+        {% endif %}
     {% endif %}
-{% endif %}
-
-</td>
-</tr>
-</table>
+    </div>
 </div>
 {% endblock %}
 
@@ -56,28 +41,7 @@
 
 {% if thread.object_list %}
     {% for startpost in thread.object_list %}
-
-        {% with startpost.blog.name as section_name %}
-        {% with startpost.title as startpost_title %}
-        {% with startpost.text|strippost:startpost as startpost_text %}
-        {% with startpost.get_tag_url_list as startpost_tags %}
-        {% url blog.views.view startpost.blog.pk as section_url %}
-        {% url forum.views.thread startpost.pk as startpost_url %}
-        {% url forum.views.thread startpost.pk as comments_url %}
-        {% if user.is_authenticated and startpost.owner == user  %}
-            {% url blog.views.post_edit startpost.pk as edit_url %}
-        {% endif %}
-        {% if user.is_authenticated %}
-            {% url forum.views.reply startpost.pk as add_comment_url %}
-        {% endif %}
-
         {% include "forum/startpost.inc.html" %}
-
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-
     {% endfor %}
 {% endif %}
 

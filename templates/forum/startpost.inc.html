@@ -1,84 +1,83 @@
 {% load i18n %}
 
+{% load markup %}
+
 <div class='news'>
     <h3>
-        {% if startpost.removed %}
-            <span class='removed'>✘</span>
+        {{ startpost.get_flags|safe }}
+        {% if not blog_info %}
+            <a href='{{ startpost.get_section_url }}'>{{ startpost.get_section_name }}</a> →
         {% endif %}
-        {% if startpost.sticked %}
-            <span class='sticked'>⛁</span>
-        {% endif %}
-        {% if startpost.closed %}
-            <span class='solved'>⚷</span>
-        {% endif %}
-        {% if startpost.solved %}
-            <span class='solved'>✔</span>
-        {% endif %}
-        <a href='{{ startpost_url }}'>{{ startpost_title }}</a>
+        <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
     </h3>
-
-    <table cellspacing='0' cellpadding='2' border='0' width='100%'>
-        <tr>
-            <td width='40px'>&nbsp;</td>
-            <td>
-                <div class='content'>
-                    {{ startpost_text|safe }}
-                    {% if startpost_tags %}
-                    <div class='tags'>
-                        <p>{% trans "Tags" %}: {{ startpost_tags|safe }}</p>
-                    </div>
-                    {% endif %}
-                    {% if startpost.owner %}
-                    <p>
-                        [<a href='{% url blog.views.vote_generic startpost.pk 0 %}' class='vote-positive' id='positive-{{ startpost.pk }}' >▲</a>]
-                        <span id='rating-{{ startpost.pk }}'>{{ startpost.rating }}</span>
-                        [<a class='vote-negative' id='negative-{{ startpost.pk }}' href='{% url blog.views.vote_generic startpost.pk 1 %}'>▼</a>]
-                        | {% trans "Author" %}:
-                            <a class='plus' href='{% url userauth.views.profile_view startpost.owner.id %}'>
-                            
-                            {% if  startpost.owner.profile.is_buryed %}
-                            <del>{{ startpost.owner.profile.get_visible_name }}</del>
-                            {% else %}
-                            {{ startpost.owner.profile.get_visible_name }}
-                            {% endif %}
-                            </a>
-                            ( {{ startpost.created|date:"d.m.Y H:i" }} )
-
-                        {% if comments_url %}
-                        | <a class='comment_info' href='{{ comments_url }}'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
-                        {% endif %}
-
-                        {% if edit %}
-                        <div class='editby'>
-                            {% trans "Last edited by" %}
-                            <a class='plus' href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
-                            {{ edit.edited|date:"d.m.Y H:i" }} (
-                            <a class='plus' href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a>
-                            )
-                        </div>
-                        {% endif %}
-
-                    </p>
-                    {% endif %}
-                </div>
-            </td>
-            <td width='40px'>
-                &nbsp;
-            </td>
-        </tr>
-        <tr>
-            <td>
-                &nbsp;
-            </td>
-            <td>
+    <div class='block'>
+        {% if startpost.pk %}
+            {{ startpost.get_strip_text|safe }}
+        {% else %}
+            {{ startpost.text|markup:startpost.parser|show_cut|safe }}
+        {% endif %}
+        <div class='tags'>
+            {% trans "Tags" %}:
+            {% if startpost.tag_string %}
+               {{ startpost.tag_string|tags|safe }}
+            {% else %}
+                {{ startpost.get_tag_url_list|safe }}
+            {% endif %}
+        </div>
+        <div>
+            [<a href='{{ startpost.get_vote_url_positive }}' 
+                class='vote-positive' 
+                id='positive-{{ startpost.pk }}'>▲</a>]
+            <span id='rating-{{ startpost.pk }}'>
+            {% if startpost.rating %}
+                {{ startpost.rating }}
+            {% else %}
+                0
+            {% endif %}
+            </span>
+            [<a href='{{ startpost.get_vote_url_negative }}'
+                class='vote-negative' 
+                id='negative-{{ startpost.pk }}'>▼</a>]
+            | {% trans "Author" %}:
+            {% if startpost.owner %}
+            <a class='plus' 
+               href='{% url userauth.views.profile_view startpost.owner.pk %}'>{{ startpost.owner.profile.get_html_visible_name|safe }}</a>
+            {% else %}
+            <a class='plus' 
+               href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_visible_name|safe }}</a>
+            {% endif %}
+            ( 
+            {% if startpost.created %}
+                {{ startpost.created|date:"d.m.Y H:i" }}
+            {% else %}
+                {%now "d.m.Y H:i:s"%}
+            {% endif %}
+            )
+            {% if startpost.thread %}
+            |
+            <a class='comment_info' 
+               href='{% url forum.views.thread startpost.pk %}'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
+            {% endif %}
+        </div>
+        {% if edit %}
+        <div class='editby'>
+            {% trans "Last edited by" %}
+            <a href='{% url userauth.views.profile_view edit.user.pk %}'
+               class='plus'>{{ edit.user.profile.get_visible_name }}</a>
+            {{ edit.edited|date:"d.m.Y H:i" }} ( 
+            <a class='plus' href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a> )
+        </div>
+        {% endif %}
+        {% if startpost.pk %}
+        <div class='controls'>
             {% if startpost.removed %}
                 [<a href="{% url userauth.views.rewards startpost.owner.pk %}">{% trans "This post was removed" %}</a>]
             {% else %}
-                {% if user.is_staff and startpost.pk %} 
+                {% if user.is_staff %} 
                     [<a href="{% url forum.views.remove startpost.pk %}">{% trans "Remove" %}</a>]
                 {% endif %}
-                {% if edit_url %}
-                    [<a href="{{ edit_url }}">{% trans "Edit" %}</a>]
+                {% if request.user = startpost.owner or user.is_staff %}
+                    [<a href="{% url blog.views.post_edit startpost.pk %}">{% trans "Edit" %}</a>]
                     {% if startpost.solved %}
                         [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]
                     {% else %}
@@ -86,18 +85,13 @@
                     {% endif %}
                 {% endif %}
                 {% if startpost.closed %}
-                    [<a href="{{ section_url }}">{% trans "This topic is closed" %}</a>]
+                    [<a href="{{ startpost.get_section_url }}">{% trans "This topic is closed" %}</a>]
                 {% else %}
-                    {% if add_comment_url %}
-                        [<a href="{{ add_comment_url }}">{% trans "Add a comment" %}</a>]
-                    {% endif %}
+                        [<a href="{% url forum.views.reply startpost.pk %}">{% trans "Add a comment" %}</a>]
                 {% endif %}
             {% endif %}
-            </td>
-            <td>
-                &nbsp;
-            </td>
-        </tr>
-    </table>
+        </div>
+        {% endif %}
+    </div>
 </div>
 

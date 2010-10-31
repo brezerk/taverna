@@ -109,6 +109,12 @@ class Profile(models.Model):
         else:
             return "User-%i" % self.id
 
+    def get_html_visible_name(self):
+        if self.buryed:
+            return "<del>%s</del>" % (self.get_visible_name())
+        else:
+            return self.get_visible_name()
+
     def get_buryed_reason(self):
         if self.buryed:
             return self.buryed_reason

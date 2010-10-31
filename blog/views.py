@@ -209,6 +209,7 @@ def post_add(request):
         'form': form,
         'preview': preview,
         'tags': tags,
+        'blog_info': True,
         'dont_strip': True}
 
 @rr('blog/blog.html')

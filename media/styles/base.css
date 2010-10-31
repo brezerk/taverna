@@ -65,8 +65,39 @@ html, body {
     margin-left: 25px;
 }
 
+.news {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+}
+
+.news > .block {
+    padding-top: 0em;
+    padding-bottom: 1em;
+    margin-left: 50px;
+}
+
+.news > .block > .tags {
+    padding-bottom: 1em;
+}
+
+.news > .block > .tags a {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+.news > .block > .tags a:visited {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+.news > .block > .tags a:hover {
+    color: #afafaf;
+}
 
 
+
+/* Old style */
 
 
 
@@ -124,26 +155,7 @@ a:hover {
     text-align: left;
 }
 
-.news {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 15px;
-}
 
-.tags a {
-    color: #f6a10e;
-    text-decoration: none;
-}
-
-.tags a:visited {
-    color: #f6a10e;
-    text-decoration: none;
-}
-
-
-.tags a:hover {
-    color: #afafaf;
-}
 
 
 a.comment_info {
