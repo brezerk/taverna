@@ -6,29 +6,26 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td width='300'>{% trans "User profile" %}</td>
-
-<td align='right'>
-[<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "User profile" %}
+    </div>
+    <div class='right'>
+        [<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
-
+<div class='form'>
 <h3>{% trans "Edit profile" %} {{ user.profile.get_visible_name }}</h3>
-<form method="POST" action="{% url userauth.views.profile_edit %}">{% csrf_token %}
+<form method="POST">{% csrf_token %}
 <table border='0' width='600px'>
 {{ formUser }}
 {{ formProfile }}
 <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Update" %}"></td></tr>
 </table>
 </form>
-
+</div>
 {% endblock %}
 
 

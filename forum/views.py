@@ -72,8 +72,11 @@ class ThreadForm(forms.ModelForm):
 
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
-        if len(text) < 24:
-            raise forms.ValidationError(_("Text length < 24 is not allowed."))
+        txt_len = len(text)
+        if txt_len < 4:
+            raise forms.ValidationError(_("Text length < 4 characters is not allowed."))
+        elif txt_len > 512:
+            raise forms.ValidationError(_("Text length > 512 characters is not allowed."))
         return text
 
 class AdminThreadForm(ThreadForm):
@@ -311,7 +314,7 @@ def topic_create(request, forum_id):
         else:
             form = ThreadForm()
         form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked')
-    return {'form': form, 'forum': forum}
+    return {'form': form, 'forum': forum, 'blog_info': True}
 
 @login_required()
 @rr('forum/topic_edit.html')
@@ -445,7 +448,7 @@ def thread(request, post_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return { 'startpost': startpost, 'thread': thread, 'showall': showall }
+    return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):

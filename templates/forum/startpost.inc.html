@@ -12,10 +12,15 @@
     </h3>
     <div class='block'>
         {% if startpost.pk %}
-            {{ startpost.get_strip_text|safe }}
+            {% if strippost %}
+                {{ startpost.get_strip_text|safe }}
+            {% else %}
+                {{ startpost.get_text|safe }}
+            {% endif %}
         {% else %}
             {{ startpost.text|markup:startpost.parser|show_cut|safe }}
         {% endif %}
+        {% if startpost.tag_string or startpost.get_tag_url_list %}
         <div class='tags'>
             {% trans "Tags" %}:
             {% if startpost.tag_string %}
@@ -24,10 +29,10 @@
                 {{ startpost.get_tag_url_list|safe }}
             {% endif %}
         </div>
+        {% endif %}
         <div>
-            [<a href='{{ startpost.get_vote_url_positive }}' 
-                class='vote-positive' 
-                id='positive-{{ startpost.pk }}'>▲</a>]
+            [<span class='vote-positive'><a href='{{ startpost.get_vote_url_positive }}' 
+                id='positive-{{ startpost.pk }}'>▲</a></span>]
             <span id='rating-{{ startpost.pk }}'>
             {% if startpost.rating %}
                 {{ startpost.rating }}
@@ -35,17 +40,16 @@
                 0
             {% endif %}
             </span>
-            [<a href='{{ startpost.get_vote_url_negative }}'
-                class='vote-negative' 
-                id='negative-{{ startpost.pk }}'>▼</a>]
+            [<span class='vote-negative'><a href='{{ startpost.get_vote_url_negative }}'
+                id='negative-{{ startpost.pk }}'>▼</a></span>]
             | {% trans "Author" %}:
+            <span class='user'>
             {% if startpost.owner %}
-            <a class='plus' 
-               href='{% url userauth.views.profile_view startpost.owner.pk %}'>{{ startpost.owner.profile.get_html_visible_name|safe }}</a>
+            <a href='{% url userauth.views.profile_view startpost.owner.pk %}'>{{ startpost.owner.profile.get_html_visible_name|safe }}</a>
             {% else %}
-            <a class='plus' 
-               href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_visible_name|safe }}</a>
+            <a href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_visible_name|safe }}</a>
             {% endif %}
+            </span>
             ( 
             {% if startpost.created %}
                 {{ startpost.created|date:"d.m.Y H:i" }}
@@ -55,8 +59,9 @@
             )
             {% if startpost.thread %}
             |
-            <a class='comment_info' 
-               href='{% url forum.views.thread startpost.pk %}'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
+            <span class='comments'>
+            <a href='{% url forum.views.thread startpost.pk %}'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
+            </span>
             {% endif %}
         </div>
         {% if edit %}
@@ -76,7 +81,7 @@
                 {% if user.is_staff %} 
                     [<a href="{% url forum.views.remove startpost.pk %}">{% trans "Remove" %}</a>]
                 {% endif %}
-                {% if request.user = startpost.owner or user.is_staff %}
+                {% if user = startpost.owner or user.is_staff %}
                     [<a href="{% url blog.views.post_edit startpost.pk %}">{% trans "Edit" %}</a>]
                     {% if startpost.solved %}
                         [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]

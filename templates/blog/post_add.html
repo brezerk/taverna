@@ -6,15 +6,9 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td width='300'>{% trans "Adding new topic" %}</td>
-
-<td align='right'>
-[<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "Adding new blog topic" %}
+    </div>
 </div>
 {% endblock %}
 
@@ -22,25 +16,13 @@
 
 {% if form.cleaned_data %}
 {% with form.cleaned_data as startpost %}
-
-{% with startpost.blog.name as section_name %}
-{% with startpost.title as startpost_title %}
-{% with startpost.text|markup:startpost.parser|show_cut as startpost_text %}
-{% with startpost.tag_string|tags as startpost_tags %}
-{% url blog.views.view startpost.blog.pk as section_url %}
-{% include "forum/startpost.inc.html" %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-
+    {% include "forum/startpost.inc.html" %}
 {% endwith %}
 {% endif %}
 
-<div class='page_content'>
-<h3>{% trans "Adding new topic" %}</h3>
-<form method="POST" action="{% url blog.views.post_add %}">{% csrf_token %}
-<table id='blog_topic'>
+<div class='form'>
+<form method="POST">{% csrf_token %}
+<table id='blog_topic' width='800px'>
     {{form}}
     <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Preview" %}"></td></tr>
 {% if form.cleaned_data %}

@@ -12,7 +12,7 @@
     </div>
     <div class='right'>
     {% if blog_info.desc %}
-        <a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
+        [<a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
     {% else %}
         {% if posts_owner %}
             [<a href='{% url rss_user posts_owner.pk %}'>RSS</a>|<a href='{% url atom_user posts_owner.pk %}'>Atom</a>]

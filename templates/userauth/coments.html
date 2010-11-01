@@ -4,26 +4,10 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% if user_info %}
-{% trans "Commetns list of user" %}
-<a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a>
-{% else %}
-{% trans "Your reply notifies" %}
-{% endif %}
-</td>
-
-<td align='right'>
-{% if user.is_authenticated %}
-    {% if user.profile.can_create_topic %}
-    [<a href='{% url forum.views.topic_create 1 %}'>{% trans "Post new topic" %}</a>]
-    {% endif %}
-{% endif %}
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "Commetns list of user" %}
+        <a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a>
+    </div>
 </div>
 {% endblock %}
 

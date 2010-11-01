@@ -4,75 +4,41 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td>
-{% if startpost.blog %}
-   <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a>
-{% else %}
-<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
-<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> {{ startpost.forum.description }}
-{% endif %}
-</td>
+    <div class='left'>
+    {% if startpost.blog %}
+        <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a> {{ startpost.blog.desc }}
+    {% else %}
+        <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
+        <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> {{ startpost.forum.description }}
+    {% endif %}
+    </div>
+    <div class='right'>
+        [<a href='{% url forum.views.print_post startpost.pk %}'>Printable version</a>]
+        {% if showall == "1" %}
+            [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
+        {% else %}
+            [<a href='?showall=1'>{% trans "Show removed" %}</a>]
+        {% endif %}
+        [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
 
-<td align='right'>
-[<a href='{% url forum.views.print_post startpost.pk %}'>Printable version</a>]
-{% if showall == "1" %}
-[<a href='?showall=0'>{% trans "Hide removed" %}</a>]
-{% else %}
-[<a href='?showall=1'>{% trans "Show removed" %}</a>]
-{% endif %}
-[<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
-
-{% if user.is_authenticated %}
-{% if user.profile.can_create_topic %}
-[<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
-{% endif %}
-{% endif %}
-</td>
-</tr>
-</table>
-
+        {% if user.is_authenticated %}
+            {% if user.profile.can_create_topic %}
+                [<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
+            {% endif %}
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
-
-{% with startpost.get_section_name as section_name %}
-{% with startpost.title as startpost_title %}
-{% with startpost.text|markup:startpost.parser|strip_cut as startpost_text %}
-{% with startpost.get_tag_url_list as startpost_tags %}
-{% with startpost.postedit_set.all.0 as edit %}
-{% if startpost.blog %}
-    {% url blog.views.view startpost.blog.pk as section_url %}
-{% else %}
-    {% url forum.views.forum startpost.forum.pk as section_url %}
-{% endif %}
-{% url forum.views.thread startpost.pk as startpost_url %}
-{% if user.is_authenticated and startpost.owner == user or user.is_staff %}
-    {% if startpost.blog %}
-        {% url blog.views.post_edit startpost.pk as edit_url %}
-    {% else %}
-        {% url forum.views.topic_edit startpost.pk as edit_url %}
-    {% endif %}
-{% endif %}
-{% if user.is_authenticated %}
-    {% url forum.views.reply startpost.pk as add_comment_url %}
-{% endif %}
 {% include "forum/startpost.inc.html" %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
 
 {% include "forum/pages.inc.html" %}
-
 <div class='news'>
 {% for post in thread.object_list %}
 {% include "forum/post.inc.html" %}
 {% endfor %}
 </div>
-
 {% include "forum/pages.inc.html" %}
 
 <script type='text/javascript'>

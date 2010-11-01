@@ -5,7 +5,7 @@
 
 [{% trans "Page" %}
 
-<a href='?{% if showall = "1" %}showall=1&{% endif %}offset=1'>{% trans "first" %}<a>
+<a href='?{% if showall = "1" %}showall=1&{% endif %}offset=1'>{% trans "first" %}</a>
 
 {% if thread.has_previous %}
 <a href='?{% if showall = "1" %}showall=1&{% endif %}offset={{ thread.previous_page_number }}'>←</a>

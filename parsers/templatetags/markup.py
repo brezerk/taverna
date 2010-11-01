@@ -95,7 +95,7 @@ def strippost(value, post):
 
     if len(list) > 1:
         value = markup(list[0], post.parser)
-        value = value + "<br>>>> <a href='%s'>%s</a>" % (reverse('forum.views.thread', args=[post.pk]), _("Read full post"))
+        value = value + "<div class='more'>>>> <a href='%s'>%s</a></div>" % (reverse('forum.views.thread', args=[post.pk]), _("Read full post"))
     else:
         value = markup(value, post.parser)
     return value

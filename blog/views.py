@@ -151,7 +151,7 @@ def post_edit(request, post_id):
     return {
         'form': form,
         'post_id': post_id,
-        'dont_strip': True
+        'blog_info': True
         }
 
 @login_required()
@@ -246,7 +246,7 @@ def view(request, blog_id):
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    return {'thread': paginator.page(page), 'blog_info': blog_info, 'showall': showall }
+    return {'thread': paginator.page(page), 'blog_info': blog_info, 'showall': showall, 'strippost': True }
 
 @rr('blog/blog.html')
 def view_all(request, user_id):
@@ -265,7 +265,7 @@ def view_all(request, user_id):
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
-    return {'thread': paginator.page(page), 'posts_owner': posts_owner, 'showall': showall}
+    return {'thread': paginator.page(page), 'posts_owner': posts_owner, 'showall': showall, 'strippost': True}
 
 @rr('blog/blog.html')
 def index(request):
@@ -285,7 +285,7 @@ def index(request):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return { 'thread': thread, 'showall': showall }
+    return { 'thread': thread, 'showall': showall, 'strippost': True }
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):

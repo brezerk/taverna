@@ -83,7 +83,7 @@
         {% if user.is_authenticated %}
             {% trans "Welcome" %}, 
             <a href='{% url userauth.views.profile_view user.id %}'>{{ user.profile.get_visible_name }}</a>
-            [<a class='minus' href="{% url userauth.views.openid_logout %}">x</a>]
+            [<span class='logout'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
         {% else %}
             [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
         {% endif %}
@@ -95,7 +95,7 @@
 <!-- action menu block -->
 {% block menubox %}{% endblock %}
 <!-- end of action menu block -->
-<div id=content>
+<div class='content'>
 {% block content %}{% endblock %}
 </div>
 

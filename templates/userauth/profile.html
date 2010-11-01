@@ -23,7 +23,7 @@
 
 {% block content %}
 
-<b>{% trans "User's insformation" %}</b>
+<h3>{% trans "User's insformation" %}</h3>
 <div class='profile'>
     {% if user_info.profile.photo %}
         <div class='right'>
@@ -61,7 +61,7 @@
 
 {% include "userauth/status.html" %}
 
-<b>{% trans "User messags"%}:</b>
+<h3>{% trans "User messags"%}:</h3>
 <ul>
     <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>

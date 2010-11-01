@@ -28,6 +28,66 @@ html, body {
     line-height:1.4
 }
 
+/* Title box */
+
+.titlebox {
+    background-color: #111111;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 16px;
+    color: #c8c8c8;
+    text-align: left;
+}
+
+.titlebox pre {
+    font-family: monospace;
+    font-size:medium;
+    line-height: 1;
+    margin: 0px;    
+    padding: 0px;
+}
+
+/* Menu action box */
+
+.menubox {
+    background-color: #3f3f3f;
+    border-bottom: 1px solid #686868;
+    border-top: 1px solid #686868;
+    text-align: center;
+    color: #afafaf;
+}
+
+.menubox a {
+    color: #efefef;
+    text-decoration: none;
+}
+
+.menubox a:visited {
+    color: #efefef;
+}
+
+.menubox a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+.menubox .logout a {
+    color: #d50101;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.menubox .logout a:visited {
+    color: #d50101;
+}
+
+.menubox .logout a:hover {
+    color: #fb0404;
+}
+
+
+/* User action box */
+
 .actionbox {
     overflow: hidden;
     margin: 10px;
@@ -45,6 +105,42 @@ html, body {
     text-align: right;
 }
 
+.actionbox a {
+    color: #efefef;
+    text-decoration: none;
+}
+
+.actionbox a:visited {
+    color: #efefef;
+}
+
+.actionbox a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+/* Content */
+
+.content {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.content a {
+    color: #efefef;
+    text-decoration: none;
+}
+
+.content a:visited {
+    color: #efefef;
+}
+
+.content a:hover {
+    color: #afafaf;
+}
+
+/* Profile layout and style */
+
 .profile {
     overflow: hidden;
 }
@@ -59,22 +155,43 @@ html, body {
     text-align: right;
 }
 
-.block {
-    padding-top: 1em;
-    padding-bottom: 1em;
-    margin-left: 25px;
-}
+/* News layout and style */
 
 .news {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 15px;
+    padding-bottom: 0px;
+}
+
+.news > h3 a {
+    color: #c1c1c1;
+    text-decoration: none
+}
+
+.news > h3 a:visited {
+    color: #c1c1c1;
+}
+
+.news > h3 a:hover {
+    color: #818181;
+}
+
+.news a {
+    color: #729fcf;
+}
+
+.news a:visited {
+    color: #729fcf;
+}
+
+.news a:hover {
+    color: #729fcf;
 }
 
 .news > .block {
     padding-top: 0em;
     padding-bottom: 1em;
     margin-left: 50px;
+    margin-right: 50px;
+    text-align: justify;
 }
 
 .news > .block > .tags {
@@ -95,27 +212,197 @@ html, body {
     color: #afafaf;
 }
 
-
-
-/* Old style */
-
-
-
-pre {
-    font-family: monospace;
-    font-size:medium;
-    line-height: 1;
-    margin: 0px;    
-    padding: 0px;
+.news > .block > .more {
+    padding-bottom: 1em;
 }
 
+.news > .block > .more a {
+    color: #729fcf;
+    text-decoration: none;
+}
+
+.news > .block > .more a:visited {
+    color: #729fcf;
+}
+
+.news > .block > .more a:hover {
+    color: #729fcf;
+}
+
+.news .vote-positive a {
+    color: #71bc2e;
+    text-decoration: none;
+}
+
+.news .vote-positive a:visited {
+    color: #71bc2e;
+}
+
+.news .vote-positive a:hover {
+    color: #71ff2e;
+}
+
+.news .vote-negative a {
+    color: #ae0f0f;
+    text-decoration: none;
+}
+
+.news .vote-negative a:visited {
+    color: #ae0f0f;
+}
+
+.news .vote-negative a:hover {
+    color: #ff0000;
+}
+
+.news .comments a {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+.news .comments a:visited {
+    color: #f6a10e;
+    text-decoration: none;
+}
+
+.news .comments a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+.news .controls a {
+    color: #efefef;
+    text-decoration: none;
+}
+
+.news .controls a:visited {
+    color: #efefef;
+    text-decoration: none;
+}
+
+.news .controls a:hover {
+    color: #afafaf;
+    text-decoration: none;
+}
+
+.news .cut {
+    border-bottom: 1px dashed #686868;
+}
+
+/* Color adjusts */
+
+.user a {
+    color: #71bc2e;
+    text-decoration: none;
+}
+
+.user a:visited {
+    color: #71bc2e;
+}
+
+.user a:hover {
+    color: #71ff2e;
+}
+
+/* Sign */
+
+.sign {
+    text-align: center;
+    color: #6f6f6f;
+    font-size: 8pt;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 55px;
+    margin-right: 55px;
+    border-top: 1px dashed #686868;
+}
+
+.sign a {
+    color: #efefef;
+    text-decoration: none;
+}
+
+.sign a:visited {
+    color: #efefef;
+}
+
+.sign a:hover {
+    color: #afafaf;
+}
+
+/* Form elements */
+
+.form form {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.form th {
+    width: 200px;
+    text-align: right;
+    vertical-align: top;
+}
+
+.form input, select, textarea {
+    width: 100%;
+    background-color: #606060;
+    color: #e8e8e8;
+    border: 1px solid #a8a8a8;
+}
+
+/* Table */
+
+.theader {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.theader td {
+    border: 1px solid #3f3f3f;
+}
+
+.theader th {
+    border: 1px solid #3f3f3f;
+    background-color: #3f3f3f;
+}
+
+.theader .normal { }
+
+.theader .dark {
+    background-color: #232323;
+}
+
+/* Pages */
+
+.pages {
+    text-align: center;
+}
+
+.pages > a {
+    color: white;
+    text-decoration: none;
+}
+
+.pages > a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.pages > a:hover {
+    color: #afafaf;
+    text-decoration: none;
+
+/*
 hr {
     margin: 0px;
     padding: 0px;
     border: 0px solid red;
     background-color: #1c1c1c;
 }
+*/
 
+/*
 a {
     color: white;
     text-decoration: none;
@@ -134,26 +421,8 @@ a:hover {
 
 #content { margin: 1em; }
 
-.cut {
-    border-bottom: 1px dashed #686868;
-}
 
-.menubox {
-    background-color: #3f3f3f;
-    border-bottom: 1px solid #686868;
-    border-top: 1px solid #686868;
-    text-align: center;
-    color: #afafaf;
-}
 
-.titlebox {
-    background-color: #111111;
-    padding-left: 2px;
-    padding-top: 2px;
-    padding-bottom: 16px;
-    color: #c8c8c8;
-    text-align: left;
-}
 
 
 
@@ -174,17 +443,6 @@ a.comment_info:hover {
 
 .content {
     text-align: justify;
-}
-.sign {
-    text-align: center;
-    color: #6f6f6f;
-    font-size: 8pt;
-    margin-top: 20px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    margin-left: 55px;
-    margin-right: 55px;
-    border-top: 1px dashed #686868;
 }
 
 a.plus {
@@ -263,26 +521,6 @@ label, th {
     width: 220px;
 }
 
-.theader {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.theader td {
-    border: 1px solid #3f3f3f;
-}
-
-.theader th {
-    border: 1px solid #3f3f3f;
-    background-color: #3f3f3f;
-}
-
-.normal { }
-
-.dark {
-    background-color: #232323;
-}
-
 .pages {
     text-align: center;
     margin-bottom: 10px;
@@ -358,3 +596,5 @@ a.vote-negative:hover {
 .removed {
     color: red;
 }
+
+*/

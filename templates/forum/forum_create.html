@@ -5,29 +5,24 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-    <tr>
-        <td>
-            {% trans "New forum creation" %}
-        </td>
-        <td align='right'>
+    <div class='left'>
+        {% trans "New forum creation" %}
+    </div>
+    <div class='right'>
             [<a href='{% url forum.views.index %}'>{% trans "Cancel" %}</a>]
-        </td>
-    </tr>
-</table>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
-
+<div class='form'>
 <h3>{% trans "Create forum" %}</h3>
-
 <form method=post>
 {% csrf_token %}
-<table>
+<table border='0' width='600px'>
 {{form}}
 <tr><td><td colspan=2><input type=submit value="{% trans "Add" %}">
 </table>
 </form>
-
+</div>
 {% endblock %}
