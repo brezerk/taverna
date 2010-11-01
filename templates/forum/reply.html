@@ -3,35 +3,27 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% trans "Adding a reply"%}
-</td>
-<td align='right'>
-</td>
-</tr>
-</table>
-
+    <div class='left'>
+        {% trans "Adding a reply"%}
+    </div>
 </div>
 {% endblock %}
-
-
 
 {% block content %}
 
 {% include 'forum/post.inc.html' %}
 
 {% if form.cleaned_data %}
-<p>{% trans "Your message"%}</p>
+{% trans "Your message"%}
     {% with form.cleaned_data as post %}
         {% include 'forum/post.inc.html' %}
     {% endwith %}
 {% endif %}
-<p>
+
+<div class='form'>
 <form method=post>
 {% csrf_token %}
-<table>
+<table border='0' width='800px'>
 {{form}}
 <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Preview" %}"></td></tr>
 {% if form.cleaned_data %}
@@ -39,5 +31,5 @@
 {% endif %}
 </table>
 </form>
-</p>
+</div>
 {% endblock %}

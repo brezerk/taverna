@@ -36,7 +36,7 @@ function highlightMessage(post_id){
     postObj = document.getElementById(postName);
 
     if (postObj != null){
-            postObj.style.border = "1px solid red";
+            postObj.style.border = "1px solid #7e0f0f";
             if (old_post_id != post_id)
                 unhighlightMessage();
             old_post_id = post_id;

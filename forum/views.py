@@ -339,7 +339,8 @@ def topic_edit(request, topic_id):
             if request.POST['submit']==_("Save"):
                 orig_text = Post.objects.get(pk = topic_id).text
                 post = form.save()
-                PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
+                if orig_text != post.text:
+                    PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
 
                 request.user.profile.use_force("TOPIC_EDIT")
                 request.user.profile.save()
@@ -351,7 +352,7 @@ def topic_edit(request, topic_id):
             form = AdminThreadForm(instance=topic)
         else:
             form = ThreadForm(instance=topic)
-    return {'form': form, 'forum': topic.forum}
+    return {'form': form, 'blog_info': True}
 
 @login_required()
 @rr('forum/forum_create.html')
@@ -448,7 +449,7 @@ def thread(request, post_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True }
+    return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True, 'showedits': True }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):

@@ -140,8 +140,20 @@ class Post(models.Model):
     def get_vote_url_negative(self):
         return reverse("blog.views.vote_generic", args=[self.pk, 1])
 
+    def get_edit_url(self):
+        if self.blog:
+           return reverse("blog.views.post_edit", args=[self.pk])
+        if self.forum:
+           return reverse("forum.views.topic_edit", args=[self.pk])
+
     def get_strip_text(self):
         return markup.strippost(self.text, self)
+
+    def is_edited(self):
+        if self.postedit_set.all()[0]:
+            return True
+        else:
+            return False
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)

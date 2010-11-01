@@ -2,17 +2,11 @@
 {% load markup %}
 
 <div class="post" id="post_{{post.pk}}">
-    <table border="0px" width="100%" colspan="0" rowspan="0">
-        <tr>
-            <td>
-                <a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >
-                {% if post.removed %}
-                    <span class='removed'>✘</span>
-                {% else %}
-                    #
-                {% endif %}
-                </a>
-                {% if post.reply_to != post.thread %}
+    <div class="header">
+        <div class="left">
+            <a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>
+               {{ post.get_flags }}
+               {% if post.reply_to != post.thread %}
                     {% trans "Reply to" %} <a href="
                     {% if thread %}
                         {% if post.reply_to in thread.object_list %}
@@ -27,51 +21,49 @@
                     {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} 
                     {{post.reply_to.created|date:"d.m.Y H:i:s"}}
                 {% endif %}
-            </td>
-            <td width='200px' align='right'>
-                {% if post.pk %}
-                    <span id='rating-{{ post.pk }}'>{{ post.rating }}</span>
-                    <a href='{% url blog.views.vote_generic post.pk 0 %}' class='vote-positive' id='positive-{{ post.pk }}'>&#43;</a>&#47;<a class='vote-negative' id='negative-{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td colspan='2'>
-                <b>{{post.title}}</b>
-                {{post.text|markup:post.parser|safe}}
-                <small>
-                {% if post.owner %}
-                        <a class='plus' href='{% url userauth.views.profile_view post.owner.pk %}'>
-                        {% if post.owner.profile.is_buryed %}
-                            <del>{{post.owner.profile.get_visible_name}}</del>
-                        {% else %}
-                            {{post.owner.profile.get_visible_name}}
-                        {% endif %}
-                        </a>
-                         @ {{post.created|date:"d.m.Y H:i:s"}}
-                {% else %}
-                    <span class='plus'>
-                        <a href=''>{{user.profile.get_visible_name}}</a>
-                    </span> @ {%now "d.m.Y H:i:s"%}
-                {% endif %}
-                </small>
-                {% if startpost %}
-                    <br>
-                    {% if post.removed %}
-                        [<a href="{% url userauth.views.rewards post.owner.pk %}">{% trans "This post was removed" %}</a>]
-                    {% else %}
-                        {% if user.is_staff and post.pk %} 
-                            [<a href="{% url forum.views.remove post.pk %}?offset={{ thread.number }}">{% trans "Remove" %}</a>]
-                        {% endif %}
-                            {% if post.thread.closed %}
-                                [{% trans "This topic is closed" %}]
-                            {% else %}
-                                [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-            </td>
-        </tr>
-    </table>
+        </div>
+        <div class="right">
+            {% if post.pk%}
+            <span id='rating-{{ post.pk }}'>{{ post.rating }}</span>
+            <span class="vote-positive"><a href='{% url blog.views.vote_generic post.pk 0 %}' id='positive-{{ post.pk }}'>&#43;</a></span>&#47;<span class="vote-negative"><a id='negative-{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a></span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="content">
+        <div class="title">{{ post.title }}</div>
+        <div class="text">{{post.text|markup:post.parser|safe}}</div>
+    </div>
+    <div class="info">
+        <span class='user'>
+        {% if post.owner %}
+            <a href='{% url userauth.views.profile_view post.owner.pk %}'>
+            {{ post.owner.profile.get_html_visible_name|safe }}
+        {% else %}
+            <a href='{% url userauth.views.profile_view user.pk %}'>
+            {{ user.profile.get_html_visible_name|safe }}
+        {% endif %}
+        </a></span>
+        @ 
+        {% if post.created %}
+            {{post.created|date:"d.m.Y H:i:s"}}
+        {% else %}
+            {%now "d.m.Y H:i:s"%}            
+        {% endif %}
+    </div>
+    <div class="controls">
+    {% if post.pk %}
+        {% if post.removed %}
+            [<a href="{% url userauth.views.rewards post.owner.pk %}">{% trans "This post was removed" %}</a>]
+        {% else %}
+            {% if user.is_staff %} 
+                [<a href="{% url forum.views.remove post.pk %}?offset={{ thread.number }}">{% trans "Remove" %}</a>]
+            {% endif %}
+            {% if post.thread.closed %}
+                [{% trans "This topic is closed" %}]
+            {% else %}
+                [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    </div>
 </div>
-

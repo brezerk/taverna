@@ -4,29 +4,23 @@
 {% block menubox %}
 
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td>
-{% if startpost.blog %}
-   <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a>
-   → <a href='{%url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
-{% else %}
-<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
-<a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> →
-<a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
-{% endif %}
-</td>
-
-<td align='right'>
-{% if startpost.owner %}
-{% if startpost.owner == user %}
-[<a href='{% url forum.views.post_rollback edit_post.pk %}
-'>{% trans "Rollback to Source" %}</a>]
-{% endif %}
-{% endif %}
-</td>
-</tr>
-</table>
-
+    <div class='left'>
+    {% if startpost.blog %}
+       <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a>
+       → <a href='{%url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
+    {% else %}
+        <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
+        <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> →
+        <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
+    {% endif %}
+    </div>
+    <div class='right'>
+        {% if startpost.owner == user or user.is_staff %}
+            [<a href='{% url forum.views.post_rollback edit_post.pk %}'>
+            {% trans "Rollback to Source" %}
+            </a>]
+    {% endif %}
+    </div>
 </div>
 {% endblock %}
 
@@ -38,7 +32,7 @@
 <tbody>
 {% for edit in startpost.postedit_set.all %}
 <tr><td class="diff_next">{{ forloop.counter }}</td><td nowrap="nowrap" {% if edit.pk == edit_post.pk %}class="diff_this"{% endif %}>
-&nbsp;<a class='plus' href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a> {{ edit.edited|date:"d.m.Y H:i" }} <a class='plus' href='{% url forum.views.post_diff edit.pk %}'>Diff</a> <br>
+&nbsp;<span class='user'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a></span> {{ edit.edited|date:"d.m.Y H:i" }} <span class='user'><a href='{% url forum.views.post_diff edit.pk %}'>Diff</a></span><br>
 </td></tr>
 {% endfor %}
 <tr><th class="diff_next"><br /></th><th colspan="2" class="diff_header">{% trans "Legend" %}</th></tr>

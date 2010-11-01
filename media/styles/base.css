@@ -392,6 +392,139 @@ html, body {
 .pages > a:hover {
     color: #afafaf;
     text-decoration: none;
+}
+
+/* Posts */
+
+.post {
+    background-color: #232323;
+    margin-bottom: 5px;
+}
+
+.post > .header {
+    padding: 3px;
+    overflow: hidden;
+}
+
+.post .header a {
+    color: #729fcf;
+    text-decoration: underline;
+}
+
+.post .header a:visited {
+    color: #729fcf;
+}
+
+.post .header a:hover {
+    color: #729fcf;
+}
+
+.post > .header > .left {
+    float: left;
+    text-align: left;
+}
+
+.post > .header > .right {
+    float: right;
+    text-align: right;
+}
+
+.post > .content {
+    padding-left: 4px;
+    padding-right: 4px;
+    margin: 0px;
+}
+
+.post > .content > .title {
+    font-weight: bold;
+}
+
+.post > .content > .text {
+    text-align: justify;
+}
+
+.post > .content > .text a {
+    color: #729fcf;
+    text-decoration: underline;
+}
+
+.post > .content > .text a:visited {
+    color: #729fcf;
+}
+
+.post > .content > .text a:hover {
+    color: #729fcf;
+}
+
+.post > .info {
+    font-size: 9pt;
+    padding-left: 4px;
+}
+
+.post > .controls {
+    padding-left: 4px;
+    padding-bottom: 4px;
+}
+
+.post .vote-positive a {
+    color: #71bc2e;
+    text-decoration: none;
+}
+
+.post .vote-positive a:visited {
+    color: #71bc2e;
+}
+
+.post .vote-positive a:hover {
+    color: #71ff2e;
+}
+
+.post .vote-negative a {
+    color: #ae0f0f;
+    text-decoration: none;
+}
+
+.post .vote-negative a:visited {
+    color: #ae0f0f;
+}
+
+.post .vote-negative a:hover {
+    color: #ff0000;
+}
+
+/* Difflib */
+
+
+.diff {
+    width: 100%;
+}
+
+.diff_next {
+    border: 1px solid #3f3f3f;
+}
+
+.diff_this {
+    background-color: #4e5466;
+}
+
+.diff_header {
+    border: 1px solid #3f3f3f;
+    background-color: #3f3f3f;
+}
+
+.diff_chg {
+    background-color: #4e5466;
+}
+
+.diff_add {
+    background-color: #355336;
+}
+
+.diff_sub {
+    background-color: #682828;
+}
+
+
 
 /*
 hr {
@@ -526,44 +659,7 @@ label, th {
     margin-bottom: 10px;
 }
 
-.post {
-    background-color: #232323;
-    border: 1px solid #141414;
-    margin-bottom: 5px;
-}
 
-.diff {
-    width: 100%;
-}
-
-.diff_next {
-    border: 1px solid #3f3f3f;
-}
-
-.diff_this {
-    background-color: #4e5466;
-}
-
-.diff_header {
-    border: 1px solid #3f3f3f;
-    background-color: #3f3f3f;
-}
-
-.diff_chg {
-    background-color: #4e5466;
-}
-
-.diff_add {
-    background-color: #355336;
-}
-
-.diff_sub {
-    background-color: #682828;
-}
-
-a.vote-positive {
-    color: #49d723;
-}
 
 a.vote-positive:visited {
     color: #49d723;

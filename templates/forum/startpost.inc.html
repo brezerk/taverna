@@ -64,13 +64,16 @@
             </span>
             {% endif %}
         </div>
-        {% if edit %}
+        {% if showedits and startpost.is_edited %}
         <div class='editby'>
             {% trans "Last edited by" %}
-            <a href='{% url userauth.views.profile_view edit.user.pk %}'
-               class='plus'>{{ edit.user.profile.get_visible_name }}</a>
+            <span class='user'>
+            <a href='{% url userauth.views.profile_view startpost.postedit_set.all.0.user.pk %}'>{{ startpost.postedit_set.all.0.user.profile.get_html_visible_name|safe }}</a>
+            </span>
             {{ edit.edited|date:"d.m.Y H:i" }} ( 
-            <a class='plus' href='{% url forum.views.post_diff edit.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a> )
+            <span class='comments'>
+            <a href='{% url forum.views.post_diff startpost.postedit_set.all.0.pk %}'>{% trans "Total edits" %}: {{ startpost.postedit_set.all.count }}</a> )
+            </span>
         </div>
         {% endif %}
         {% if startpost.pk %}
@@ -82,7 +85,7 @@
                     [<a href="{% url forum.views.remove startpost.pk %}">{% trans "Remove" %}</a>]
                 {% endif %}
                 {% if user = startpost.owner or user.is_staff %}
-                    [<a href="{% url blog.views.post_edit startpost.pk %}">{% trans "Edit" %}</a>]
+                    [<a href="{{ startpost.get_edit_url }}">{% trans "Edit" %}</a>]
                     {% if startpost.solved %}
                         [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]
                     {% else %}
