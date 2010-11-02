@@ -31,7 +31,7 @@
         </div>
         {% endif %}
         <div>
-            [<span class='vote-positive'><a href='{{ startpost.get_vote_url_positive }}' 
+            [<span class='vote-positive'><a class='vote-positive' href='{{ startpost.get_vote_url_positive }}' 
                 id='positive-{{ startpost.pk }}'>▲</a></span>]
             <span id='rating-{{ startpost.pk }}'>
             {% if startpost.rating %}
@@ -40,7 +40,7 @@
                 0
             {% endif %}
             </span>
-            [<span class='vote-negative'><a href='{{ startpost.get_vote_url_negative }}'
+            [<span class='vote-negative'><a class='vote-negative' href='{{ startpost.get_vote_url_negative }}'
                 id='negative-{{ startpost.pk }}'>▼</a></span>]
             | {% trans "Author" %}:
             <span class='user'>

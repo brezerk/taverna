@@ -327,8 +327,9 @@ def topic_edit(request, topic_id):
     if not topic.reply_to == None:
         raise Http404
 
-    if not topic.owner == request.user:
-        raise Http404
+    if not request.user.is_staff:
+       if not topic.owner == request.user:
+           raise Http404
 
     if request.method == 'POST':
         if request.user.is_staff:

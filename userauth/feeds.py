@@ -52,6 +52,9 @@ class RssNotify(Feed):
     def item_description(self, item):
         return markup(item.text, item.parser)
 
+    def item_link(self, item):
+        return reverse("forum.views.offset", args=[item.thread.pk, item.pk])
+
 class AtomNotify(RssNotify):
     feed_type = Atom1Feed
 
