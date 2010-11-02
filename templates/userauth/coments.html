@@ -12,7 +12,13 @@
             {% trans "Notyfies" %}        
         {% endif %}
     </div>
-
+    <div class='right'>
+        {% if user_info %}
+            [<a href='{% url rss_notify user_info.pk %}'>RSS</a>|<a href='{% url atom_notify user_info.pk %}'>Atom</a>]
+        {% else %}
+            [<a href='{% url rss_notify user.pk %}'>RSS</a>|<a href='{% url atom_notify user.pk %}'>Atom</a>]
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
 
@@ -25,23 +31,15 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
-    {% if post.thread.forum %}
-        {% trans "Forum" %}
-    {% else %}
-        {% trans "Blog" %}
-    {% endif %}
+    {{ post.thread.get_section_type }}
  </td>
  <td>
-    {% if post.thread.forum %}
-        <a href='{% url forum.views.forum post.thread.forum.pk %}'>{{ post.thread.forum.name }}</a>
-    {% else %}
-        <a href='{% url blog.views.view post.thread.blog.pk %}'>{{ post.thread.blog.name }}</a>
-    {% endif %}
+        <a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a>
  </td>
  <td>
   {% if post.removed %}
     <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>
-    <span style='color: red'>✘</span>
+    <span class='removed'>&times;</span>
   {% else %}
     <a href='{% url forum.views.offset post.thread.pk post.id %}'>
   {% endif %}

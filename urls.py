@@ -28,7 +28,7 @@ from django.contrib import admin
 from taverna.blog.feeds import RssBlogTraker, AtomBlogTraker, RssBlog, AtomBlog
 from taverna.blog.sitemaps import BlogSitemap
 from taverna.forum.feeds import RssForum, AtomForum, RssComments, AtomComments
-from taverna.userauth.feeds import RssUser, AtomUser
+from taverna.userauth.feeds import RssUser, AtomUser, RssNotify, AtomNotify
 
 admin.autodiscover()
 
@@ -90,6 +90,9 @@ urlpatterns = patterns('',
     (r'^pam/libprofile-edit.so$', 'userauth.views.profile_edit'),
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
+
+    url(r'^pam/notify/librss-(?P<user_id>\d+).so$', RssNotify(), name='rss_notify'),
+    url(r'^pam/notify/libatom-(?P<user_id>\d+).so$', AtomNotify(), name='atom_notify'),
 
     (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
     (r'^pam/libgraweyard.so$', 'userauth.views.graveyard'),

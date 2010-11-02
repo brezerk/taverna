@@ -25,7 +25,7 @@ from blog.models import Blog, Tag
 from userauth.models import ReasonList
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from taverna.parsers.templatetags import markup
+from parsers.templatetags import markup
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)

@@ -33,6 +33,28 @@ from django.core.paginator import Paginator
 
 from django.conf import settings
 
+class RssNotify(Feed):
+    link = ""
+    description = ""
+    title = ""
+
+    def get_object(self, request, user_id):
+        return get_object_or_404(User, pk=user_id)
+
+    def items(self, obj):
+        self.title =  _("Last user \"%s\" notifyes" % (obj.profile.get_visible_name()))
+        self.link = obj.get_absolute_url()
+        return Post.objects.exclude(owner=obj).filter(forum = None, blog = None, reply_to__owner = obj).order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
+
+    def item_title(self, item):
+        return "%s - %s" % (item.thread.get_section_name(), item.thread.title)
+
+    def item_description(self, item):
+        return markup(item.text, item.parser)
+
+class AtomNotify(RssNotify):
+    feed_type = Atom1Feed
+
 class RssUser(Feed):
     link = ""
     description = ""
