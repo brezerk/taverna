@@ -30,7 +30,7 @@
         {% if blog_info.owner = user %}
             [<a href='{% url blog.views.blog_settings %}'>{% trans "Blog settings" %}</a>]
         {% endif %}
-        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>]
+        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
     {% endif %}
     </div>
 </div>

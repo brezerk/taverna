@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block content %}
-
+<h4>{% trans "Reply to message"%}</h4>
 {% include 'forum/post.inc.html' %}
 
 {% if form.cleaned_data %}
-{% trans "Your message"%}
+<h4>{% trans "Your message preview"%}</h4>
     {% with form.cleaned_data as post %}
         {% include 'forum/post.inc.html' %}
     {% endwith %}

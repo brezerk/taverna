@@ -5,8 +5,8 @@
     <div class="header">
         <div class="left">
             <a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>
-               {{ post.get_flags }}
-               {% if post.reply_to != post.thread %}
+               {{ post.get_flags|safe }}
+               {% if post.reply_to and post.reply_to != post.thread %}
                     {% trans "Reply to" %} <a href="
                     {% if thread %}
                         {% if post.reply_to in thread.object_list %}
@@ -31,7 +31,7 @@
     </div>
     <div class="content">
         <div class="title">{{ post.title }}</div>
-        <div class="text">{{post.text|markup:post.parser|safe}}</div>
+        <div class="text">{{post.text|strip_cut|markup:post.parser|safe}}</div>
     </div>
     <div class="info">
         <span class='user'>

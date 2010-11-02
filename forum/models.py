@@ -132,7 +132,8 @@ class Post(models.Model):
         return ret
 
     def get_text(self):
-        return markup.markup(self.text, self.parser)
+        text = markup.strip_cut(self.text)
+        return markup.markup(text, self.parser)
 
     def get_vote_url_positive(self):
         return reverse("blog.views.vote_generic", args=[self.pk, 0])

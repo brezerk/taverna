@@ -22,10 +22,7 @@
         [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
 
         {% if user.is_authenticated %}
-            {% if user.profile.can_create_topic %}
-                [<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
-            {% endif %}
-            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>]
+            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
         {% endif %}
     </div>
 </div>

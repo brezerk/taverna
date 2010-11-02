@@ -18,6 +18,7 @@
         {% else %}
             [<a href='{% url rss_notify user.pk %}'>RSS</a>|<a href='{% url atom_notify user.pk %}'>Atom</a>]
         {% endif %}
+        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
     </div>
 </div>
 {% endblock %}

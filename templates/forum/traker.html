@@ -4,20 +4,17 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% trans "Recent comments list" %}
-</td>
-<td align='right'>
-{% if showall == "1" %}
-[<a href='?showall=0'>{% trans "Hide removed" %}</a>]
-{% else %}
-[<a href='?showall=1'>{% trans "Show removed" %}</a>]
-{% endif %}
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "Recent comments list" %}
+    </div>
+    <div class='right'>
+        {% if showall == "1" %}
+            [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
+        {% else %}
+            [<a href='?showall=1'>{% trans "Show removed" %}</a>]
+        {% endif %}
+        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
+    </div>
 </div>
 {% endblock %}
 
@@ -30,26 +27,18 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
-    {% if post.thread.forum %}
-        {% trans "Forum" %}
-    {% else %}
-        {% trans "Blog" %}
-    {% endif %}
+    {{ post.thread.get_section_type }}
  </td>
  <td>
-    {% if post.thread.forum %}
-        <a href='{% url forum.views.forum post.thread.forum.pk %}'>{{ post.thread.forum.name }}</a>
-    {% else %}
-        <a href='{% url blog.views.view post.thread.blog.pk %}'>{{ post.thread.blog.name }}</a>
-    {% endif %}
+    <a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a>
  </td>
  <td>
-  {% if post.removed %}
-    <span style='color: red'>✘</span>
- <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>{{post.thread.title}}</a>
-{% else %}
- <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</a>
-  {% endif %}
+    {% if post.removed %}
+        <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>{{post.thread.title}}</a>
+        <span class='removed'>&times;</span>
+    {% else %}
+        <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</a>
+    {% endif %}
  </td>
  <td>{{post.created|timesince}}
  {% trans "by" %} (<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{ post.owner.profile.get_visible_name }}</a>)
