@@ -1,35 +1,28 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Настройки бога пользователя {{ user.username }}{% endblock %}
+{% block title %}{% trans "Blog settings" %}{% endblock %}
 
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td width='300'>
-    {% trans "Blog's list" %}
-</td>
-<td align='right'>
-[<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
-</td>
-</tr>
-</table>
+    <div class='left'>
+        {% trans "Blog settings" %}
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
 
 <h3>{% trans "My blog settings" %}</h3>
-
+<div class='form'>
 <form method="POST">{% csrf_token %}
-<table>
+<table border='0' width='600px'>
     {{form}}
     <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Save" %}"></td></tr>
 </table>
 </form>
-
+</div>
 {% endblock %}
 
 
