@@ -4,9 +4,9 @@
 {% block content %}
 
 <h3>{% trans "Log in page" %}</h3>
-
+<div class='form'>
 <form method=post>
-<table border='0' width='450px'>
+<table border='0' width='600px'>
 {% if error %}
 <tr><td colspan='3'>{{error}}</td></tr>
 {% endif %}
@@ -20,6 +20,5 @@
 <tr><td>&nbsp;</td><td><input type=submit value={% trans "Google" %}></tr>
 </table>
 </form>
-
-
+</div>
 {% endblock %}

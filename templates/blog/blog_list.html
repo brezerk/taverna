@@ -11,6 +11,11 @@
     <div class='left'>
         {% trans "Blog's list" %}
     </div>
+    <div class='right'>
+    {% if user.is_authenticated %}
+        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>]
+    {% endif %}
+    </div>
 </div>
 {% endblock %}
 

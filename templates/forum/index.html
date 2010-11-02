@@ -9,6 +9,7 @@
     <div class='right'>
         {% if user.is_authenticated %}
             [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
+            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>]
         {% endif %}
     </div>
 </div>

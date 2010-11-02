@@ -4,58 +4,30 @@
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td>
-{% if reason %}
-    {% trans "View removed post" %}
-{% else %}
-    {% trans "Remove post" %}
-{% endif %}
-</td>
-<td align='right'>
-[<a href='/'>{% trans "Resource rules" %}</a>]
-</td>
-</tr>
-</table>
-
+    <div class='left'>
+    {% if reason %}
+        {% trans "View removed post" %}
+    {% else %}
+        {% trans "Remove post" %}
+    {% endif %}
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
 
 {% if startpost %}
-{% with startpost.get_section_name as section_name %}
-{% with startpost.title as startpost_title %}
-{% with startpost.text|markup:startpost.parser|strip_cut as startpost_text %}
-{% with startpost.get_tag_url_list as startpost_tags %}
-{% with startpost.postedit_set.all.0 as edit %}
-{% if startpost.blog %}
-    {% url blog.views.view startpost.blog.pk as section_url %}
-{% else %}
-    {% url forum.views.forum startpost.forum.pk as section_url %}
-{% endif %}
-{% url forum.views.thread startpost.pk as startpost_url %}
 {% include "forum/startpost.inc.html" %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
 {% endif %}
 
 {% if post %}
     {% include "forum/post.inc.html" %}
-    {% url forum.views.remove post.pk as form_url %}
 {% endif %}
 
-{% if startpost %}
-    {% url forum.views.remove startpost.pk as form_url %}
-{% endif %}
-
-<div class='page_content'>
+<div class='form'>
 {% if form %}
 <form method="POST" action="">{% csrf_token %}
-<table id='blog_topic'>
+<table border='0' width='600px'>
     {{ form }}
     <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Remove" %}"></td></tr>
 </table>

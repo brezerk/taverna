@@ -122,13 +122,13 @@ class Post(models.Model):
     def get_flags(self):
         ret = ""
         if self.removed:
-            ret = "<span class='removed'>✘</span>"
+            ret = "<span class='removed'>&times;</span>"
         if self.sticked:
-            ret = ret + "<span class='sticked'>⛁</span>"
+            ret = ret + "<span class='sticked'>&curren;</span>"
         if self.closed:
-            ret = ret + "<span class='solved'>⚷</span>"
+            ret = ret + "<span class='solved'>&#33;</span>"
         if self.solved:
-            ret = ret + "<span class='solved'>✔</span>"
+            ret = ret + "<span class='solved'>&#63;</span>"
         return ret
 
     def get_text(self):

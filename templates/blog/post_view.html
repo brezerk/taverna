@@ -25,6 +25,7 @@
             {% if user.profile.can_create_topic %}
                 [<a href='{% url forum.views.reply startpost.pk %}'>{% trans "Add a comment" %}</a>]
             {% endif %}
+            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>]
         {% endif %}
     </div>
 </div>

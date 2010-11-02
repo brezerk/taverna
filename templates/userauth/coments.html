@@ -5,9 +5,14 @@
 {% block menubox %}
 <div class='actionbox'>
     <div class='left'>
-        {% trans "Commetns list of user" %}
-        <a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a>
+        {% if user_info %}
+            {% trans "Commetns list of user" %}
+            <a href='{% url userauth.views.profile_view user_info.pk %}'>{{ user_info.profile.get_visible_name }}</a>
+        {% else %}
+            {% trans "Notyfies" %}        
+        {% endif %}
     </div>
+
 </div>
 {% endblock %}
 
