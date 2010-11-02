@@ -86,10 +86,12 @@
                 {% endif %}
                 {% if user = startpost.owner or user.is_staff %}
                     [<a href="{{ startpost.get_edit_url }}">{% trans "Edit" %}</a>]
-                    {% if startpost.solved %}
-                        [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]
-                    {% else %}
-                        [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as solved" %}</a>]
+                    {% if startpost.forum %}
+                        {% if startpost.solved %}
+                            [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]
+                        {% else %}
+                            [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as solved" %}</a>]
+                        {% endif %}
                     {% endif %}
                 {% endif %}
                 {% if startpost.closed %}

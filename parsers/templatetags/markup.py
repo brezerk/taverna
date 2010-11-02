@@ -21,7 +21,10 @@
 from django import template
 from django.utils.html import linebreaks
 from django.template.defaultfilters import stringfilter
-from django.utils.html import conditional_escape
+from django.utils.html import conditional_escape, urlize
+
+from django.template.defaultfilters import removetags
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
@@ -43,20 +46,22 @@ def strip_cut(value):
 @register.filter
 @stringfilter
 def markup(value, parser):
+    esc = conditional_escape
     if parser == 1:
         from postmarkup import render_bbcode
         value = "<p>" + render_bbcode(value) + "</p>"
         return value
     elif parser == 2:
         from markdown import markdown
+        value = esc(value)
         value = markdown(value)
         return value
     elif parser == 3:
         from wikimarkup import parselite
         value = parselite(value)
     else:
-        esc = conditional_escape
         value = esc(value)
+        value = urlize(value)
         value = linebreaks(value)
     return value
 

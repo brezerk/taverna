@@ -22,14 +22,14 @@
 {% block content %}
 
 {% if public_blogs %}
-    <b>{% trans "public blogs:" %}</b>
+    <h4>{% trans "public blogs:" %}</h4>
     {% with public_blogs as blogs_list %}
         {% include "blog/blog_list_table.html" %}
     {% endwith %}
 {% endif %}
 
 {% if user_blogs %}
-    <b>{% trans "Top 20 user blogs:" %}</b>
+    <h4>{% trans "Top 20 user blogs:" %}</h4>
     {% with user_blogs as blogs_list %}
         {% include "blog/blog_list_table.html" %}
     {% endwith %}
@@ -37,7 +37,7 @@
 
 {% if thread %}
 {% include 'forum/arrows.inc.html' %}
-    <b>{% trans "User blogs:" %}</b>
+    <h4>{% trans "User blogs:" %}</h4>
     {% with thread.object_list as blogs_list %}
         {% include "blog/blog_list_table.html" %}
     {% endwith %}
