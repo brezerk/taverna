@@ -49,7 +49,7 @@ def markup(value, parser):
     esc = conditional_escape
     if parser == 1:
         import postmarkup
-        markup = postmarkup.create(annotate_links=False,exclude=["img"])
+        markup = postmarkup.create(annotate_links=False,exclude=["img"],use_pygments=False)
 
         class ImgTag(postmarkup.TagBase):
             valid_params = ("left", "right")
