@@ -60,7 +60,7 @@
             {% if startpost.thread %}
             |
             <span class='comments'>
-            <a href='{% url forum.views.thread startpost.pk %}'>{% trans "Comments" %}: {{ startpost.get_comments_count }}</a>
+            {{ startpost.get_comments_count|safe }}
             </span>
             {% endif %}
         </div>

@@ -117,7 +117,24 @@ class Post(models.Model):
         return tag_string
 
     def get_comments_count(self):
-        return Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).count()
+        from django.core.paginator import Paginator
+        paginator = Paginator(
+                        Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False),
+                        settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]
+                    )
+
+        thread_url = reverse("forum.views.thread", args = [self.pk])
+        count_url = "<a href='%s'>%s: %s</a>" % (thread_url, _("Comments"), paginator.count)
+
+        if paginator.num_pages > 1:
+            count_url = count_url + " (%s" % (_("page"))
+            for page in paginator.page_range:
+                if page != 1:
+                    page_url = " <a href='%s?offset=%s'>%s</a>" % (thread_url, page, page)
+                    count_url = count_url + page_url
+
+            count_url = count_url + ")"
+        return count_url
 
     def get_flags(self):
         ret = ""
