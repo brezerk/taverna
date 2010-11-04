@@ -48,8 +48,28 @@ def strip_cut(value):
 def markup(value, parser):
     esc = conditional_escape
     if parser == 1:
-        from postmarkup import render_bbcode
-        value = "<p>" + render_bbcode(value) + "</p>"
+        import postmarkup
+        markup = postmarkup.create(annotate_links=False,exclude=["img"])
+
+        class ImgTag(postmarkup.TagBase):
+            valid_params = ("left", "right")
+
+            def __init__(self, name, **kwargs):
+                postmarkup.TagBase.__init__(self, name, inline=True)
+
+            def render_open(self, parser, node_index):
+                contents = self.get_contents(parser)
+                self.skip_contents(parser)
+                contents = postmarkup.strip_bbcode(contents).replace(u'"', "%22")
+
+                if self.params in self.valid_params:
+                    return u'<img class="float-%s" src="%s"></img>' % (self.params, contents)
+                else:
+                    return u'<img src="%s"></img>' % contents
+
+        markup.add_tag(ImgTag, u'img')
+
+        value = "<p>" + markup(value) + "</p>"
         return value
     elif parser == 2:
         from markdown import markdown

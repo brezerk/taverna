@@ -66,17 +66,15 @@ class ThreadForm(forms.ModelForm):
         if not tag_list[-1].strip():
             raise forms.ValidationError(_("Tags is good. But title also required."))
 
-        if len(tag_list[-1].strip()) < 5:
+         if len(tag_list[-1].strip()) < 5:
             raise forms.ValidationError(_("Topic length < 5 is not allowed."))
         return title
 
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
-        txt_len = len(text)
-        if txt_len < 4:
-            raise forms.ValidationError(_("Text length < 4 characters is not allowed."))
-        elif txt_len > 512:
-            raise forms.ValidationError(_("Text length > 512 characters is not allowed."))
+        text_len = len(text)
+        if text_len > 4096:
+            raise forms.ValidationError(_("Text length > 4096 characters is not allowed."))
         return text
 
 class AdminThreadForm(ThreadForm):
@@ -95,13 +93,19 @@ class PostForm(forms.ModelForm):
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
 
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if not title and not self.cleaned_data['text']
+            raise forms.ValidationError(_("Title or text is required."))
+
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
-        txt_len = len(text)
-        if txt_len < 4:
-            raise forms.ValidationError(_("Text length < 4 characters is not allowed."))
-        elif txt_len > 512:
-            raise forms.ValidationError(_("Text length > 512 characters is not allowed."))
+        if not text and not self.cleaned_data['title']
+            raise forms.ValidationError(_("Title or text is required."))
+
+        text_len = len(text)
+        if text_len > 4096:
+            raise forms.ValidationError(_("Text length: %s > 4096 characters") % text_len)
         return text
 
 @rr('forum/index.html')
