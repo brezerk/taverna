@@ -32,7 +32,7 @@ from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post, PostEdit, PostVote
 
-from util import rr, ExtendedPaginator
+from util import rr, ExtendedPaginator, request_cache
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -40,6 +40,8 @@ from django.utils.translation import ugettext as _
 from django.http import Http404
 from django.core.paginator import InvalidPage, EmptyPage
 from django.conf import settings
+
+from django.core.cache import cache
 
 @login_required()
 @rr('blog/settings.html')
@@ -270,21 +272,25 @@ def view_all(request, user_id):
 @rr('blog/blog.html')
 def index(request):
     showall = request.GET.get("showall", 0)
-
-    if showall == "1":
-        posts = Post.objects.exclude(blog = None).order_by('-created')
-    else:
-        posts = Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created')
-
     page = request.GET.get("offset", 1)
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    if cache.has_key('posts.all.page=%s&removed=%s' % (page, showall)):
+        print "Page mem hit!"
+        thread = cache.get('posts.all.page=%s&removed=%s' % (page, showall))
+    else:
+        if showall == "1":
+            posts = request_cache('posts.all.removed', Post.objects.exclude(blog = None).order_by('-created'))
+        else:
+            posts = request_cache('posts.all', Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created'))
 
-    try:
-        thread = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        thread = paginator.page(paginator.num_pages)
+        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
+        try:
+            thread = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            thread = paginator.page(paginator.num_pages)
+
+        cache.set('posts.all.page=%s&removed=%s' % (page, showall), thread)
     return { 'thread': thread, 'showall': showall, 'strippost': True }
 
 @rr('ajax/vote.json', "application/json")

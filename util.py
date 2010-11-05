@@ -30,6 +30,19 @@ from openid.store.filestore import FileOpenIDStore
 from openid.store import sqlstore
 from django.core.paginator import Paginator
 
+from django.core.cache import cache
+
+def request_cache(key, default=None, timeout=None):
+    if cache.has_key(key):
+        print "Key %s mem hit!" % (key)
+        return cache.get(key)
+    else:
+        print "Key %s undefined." % (key)
+        if default:
+            cache.set(key, default, timeout)
+            return default
+    return None
+
 class ExtendedPaginator(Paginator):
 
     page_range = None

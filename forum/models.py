@@ -26,6 +26,7 @@ from userauth.models import ReasonList
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from parsers.templatetags import markup
+from django.db.models.signals import post_save
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
@@ -212,4 +213,12 @@ class PostVote(models.Model):
             return _("(Auto) Reply to: ") + ret
         else:
             return ret
+
+def cache_manager(sender, instance, created, **kwargs):
+    if created:
+        print "news post created"
+    else:
+        print "psot edited"
+
+post_save.connect(cache_manager, sender=Post)
 

@@ -48,7 +48,7 @@ from hashlib import sha512, md5
 
 from openid.store import filestore
 from openid.consumer import consumer
-from openid import sreg
+from openid.extensions import sreg
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
