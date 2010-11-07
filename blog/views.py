@@ -32,7 +32,7 @@ from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post, PostEdit, PostVote
 
-from util import rr, ExtendedPaginator, request_cache
+from util import rr, ExtendedPaginator
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -42,6 +42,7 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.conf import settings
 
 from django.core.cache import cache
+from cache import CacheManager
 
 @login_required()
 @rr('blog/settings.html')
@@ -216,72 +217,24 @@ def post_add(request):
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id):
+    manager = CacheManager()
 
-    showall = request.GET.get("showall", 0)
+    showall = 0 if request.GET.get("showall", 0) == 0 else 1
     page = request.GET.get("offset", 1)
 
-    blog_posts = None
+    tag = manager.request_cache('tag.%s' % (tag_id), Tag.objects.get(pk=tag_id));
 
-    if showall == "1":
-        posts = Post.objects.filter(tags = tag_id).order_by('-created')
-    else:
-        posts = Post.objects.filter(tags = tag_id, removed = False).order_by('-created')
-
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
-    tag = Tag.objects.get(pk=tag_id);
-
-    return {'thread': paginator.page(page), 'tag': tag, 'showall': showall}
-
-@rr('blog/blog.html')
-def view(request, blog_id):
-    blog_posts = None
-    blog_info = None
-
-    showall = request.GET.get("showall", 0)
-    page = request.GET.get("offset", 1)
-
-    blog_info = Blog.objects.get(pk = blog_id)
-    if showall == "1":
-        posts = Post.objects.filter(blog = blog_info).order_by('-created')
-    else:
-        posts = Post.objects.filter(blog = blog_info).exclude(removed = True).order_by('-created')
-
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
-
-    return {'thread': paginator.page(page), 'blog_info': blog_info, 'showall': showall, 'strippost': True }
-
-@rr('blog/blog.html')
-def view_all(request, user_id):
-    blog_posts = None
-    blog_info = None
-
-    showall = request.GET.get("showall", 0)
-    page = request.GET.get("offset", 1)
-
-    posts_owner = User.objects.get(pk = user_id)
-    if showall == "1":
-        posts = Post.objects.exclude(blog = None).filter(owner = user_id, forum = None).order_by('-created')
-    else:
-        from django.db.models import Q
-        posts = Post.objects.exclude(blog = None).filter(owner = user_id, forum = None, removed = False).order_by('-created')
-
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
-
-    return {'thread': paginator.page(page), 'posts_owner': posts_owner, 'showall': showall, 'strippost': True}
-
-@rr('blog/blog.html')
-def index(request):
-    showall = request.GET.get("showall", 0)
-    page = request.GET.get("offset", 1)
-
-    if cache.has_key('posts.all.page=%s&removed=%s' % (page, showall)):
-        print "Page mem hit!"
-        thread = cache.get('posts.all.page=%s&removed=%s' % (page, showall))
+    cache_key = 'posts.blog.tag.%s.removed.%s' % (tag_id, showall)
+    if cache.has_key(cache_key):
+        thread = cache.get(cache_key)
+        print "blog.views.tags_search mem hit!"
     else:
         if showall == "1":
-            posts = request_cache('posts.all.removed', Post.objects.exclude(blog = None).order_by('-created'))
+            posts = manager.request_cache('posts.blog.tag.%s.removed' % (blog_id),
+                    Post.objects.filter(tags = tag_id).order_by('-created'))
         else:
-            posts = request_cache('posts.all', Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created'))
+            posts = manager.request_cache('posts.blog.tag.%s' % (blog_id),
+                    Post.objects.filter(tags = tag_id, removed = False).order_by('-created'))
 
         paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -290,7 +243,70 @@ def index(request):
         except (EmptyPage, InvalidPage):
             thread = paginator.page(paginator.num_pages)
 
-        cache.set('posts.all.page=%s&removed=%s' % (page, showall), thread)
+        manager.request_cache(cache_key, thread)
+
+    return {'thread': thread, 'tag': tag, 'showall': showall}
+
+@rr('blog/blog.html')
+def view(request, blog_id):
+    manager = CacheManager()
+
+    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    page = request.GET.get("offset", 1)
+
+    blog_info = manager.request_cache('blog.pk.%s' % (blog_id), Blog.objects.get(pk = blog_id))
+
+    cache_key = 'posts.blog.%s.page.%s.removed.%s' % (blog_id, page, showall)
+    if cache.has_key(cache_key):
+        thread = cache.get(cache_key)
+        print "blog.views.view -- mem hit!"
+    else:
+        if showall == "1":
+            posts = manager.request_cache('posts.blog.%s.removed' % (blog_id),
+                    Post.objects.filter(blog = blog_info).order_by('-created'))
+        else:
+            posts = manager.request_cache('posts.blog.%s' % (blog_id),
+                    Post.objects.filter(blog = blog_info).exclude(removed = True).order_by('-created'))
+
+        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+
+        try:
+            thread = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            thread = paginator.page(paginator.num_pages)
+
+        manager.request_cache(cache_key, thread)
+
+    return {'thread': thread, 'blog_info': blog_info, 'showall': showall, 'strippost': True }
+
+@rr('blog/blog.html')
+def index(request):
+    manager = CacheManager()
+
+    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    page = request.GET.get("offset", 1)
+
+    cache_key = 'posts.blog.all.page.%s.removed.%s' % (page, showall)
+    if cache.has_key(cache_key):
+        print "blog.views.index -- mem hit!"
+        thread = cache.get(cache_key)
+    else:
+        if showall == "1":
+            posts = manager.request_cache('posts.blog.all.removed',
+                    Post.objects.exclude(blog = None).order_by('-created'))
+        else:
+            posts = manager.request_cache('posts.blog.all',
+                    Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created'))
+
+        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+
+        try:
+            thread = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            thread = paginator.page(paginator.num_pages)
+
+        manager.request_cache(cache_key, thread)
+
     return { 'thread': thread, 'showall': showall, 'strippost': True }
 
 @rr('ajax/vote.json', "application/json")

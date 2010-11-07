@@ -46,7 +46,7 @@ urlpatterns = patterns('',
     (r'^$', 'blog.views.index'),
 
     (r'^blog/libblog-(?P<blog_id>\d+).so$', 'blog.views.view'),
-    (r'^blog/all/libblog-(?P<user_id>\d+).so$', 'blog.views.view_all'),
+#    (r'^blog/all/libblog-(?P<user_id>\d+).so$', 'blog.views.view_all'),
 
     (r'^blog/libdiff-(?P<diff_id>\d+).so$', 'forum.views.post_diff'),
     (r'^blog/librollback-(?P<diff_id>\d+).so$', 'forum.views.post_rollback'),

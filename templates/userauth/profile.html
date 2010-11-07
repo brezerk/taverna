@@ -63,7 +63,7 @@
 
 <h3>{% trans "User messags"%}:</h3>
 <ul>
-    <li><a href='{% url blog.views.view_all user_info.id %}'>{% trans "Topics" %}</a>
+    <li><a href='{% url blog.views.view user_blog.pk %}'>{% trans "Topics" %}</a>
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>
     {% if user == user_info %}
     <li><a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>

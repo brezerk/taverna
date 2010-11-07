@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load markup %}
+
+<div class='news'>
+    <h3>
+        <a href='#'>{{ startpost.title }}</a>
+    </h3>
+    <div class='block'>
+            {{ startpost.text|markup:startpost.parser|show_cut|safe }}
+        <div class='tags'>
+            {% trans "Tags" %}:
+            {{ startpost.tag_string|tags|safe }}
+        </div>
+        <div>
+            [<span class='vote-positive'><a href='#'>▲</a></span>]
+            <span>0</span>
+            [<span class='vote-negative'><a href='#'>▼</a></span>]
+            | {% trans "Author" %}:
+            <span class='user'>
+                <a href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_visible_name|safe }}</a>
+            </span>
+            ( 
+                {%now "d.m.Y H:i:s"%}
+            )
+        </div>
+    </div>
+</div>
+

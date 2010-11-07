@@ -432,10 +432,11 @@ def post_solve(request, post_id):
 @rr('blog/post_view.html')
 def thread(request, post_id):
     page = request.GET.get("offset", 1)
-    showall = request.GET.get("showall", 0)
+    showall = 0 if request.GET.get("showall", 0) == 0 else 1
 
     startpost = Post.objects.get(pk = post_id)
 
+    cache_key = 'posts.blog.tag.%s.removed.%s' % (tag_id, showall):
     if showall == "1":
         paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
     else:
