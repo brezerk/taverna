@@ -70,11 +70,21 @@ class Post(models.Model):
         return reverse("forum.views.thread", args = [self.pk])
 
     def get_section_name(self):
-        print "wwww"
         if self.blog:
             return self.blog.name
         else:
             return self.forum.name
+
+    def get_rating(self):
+        """
+            Bacouse we use cache system,
+            it is more efficeint to droop one model, them 100500 of relatid
+            while rating updates, so here is a hack for it
+        """
+        print "test.get rating for %s" % (self.pk)
+        manager = CacheManager()
+        post = manager.request_cache("posts.%s" % (self.pk), Post.objects.get(pk = self.pk))
+        return post.rating
 
     def get_section_type(self):
         if self.blog:
@@ -253,7 +263,8 @@ def Post_cache_manager(sender, instance, created, **kwargs):
     manager = CacheManager()
 
     if instance.blog is not None:
-        manager.clear_template_cache("post", instance.pk)
+        manager.clear_template_cache("post_main", instance.pk)
+        manager.clear_template_cache("post_free", instance.pk)
         manager.clear_cache("posts.blog.all")
         manager.clear_cache("posts.blog.%s" % (instance.blog.pk))
     elif instance.forum is not None:

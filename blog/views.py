@@ -314,7 +314,12 @@ def vote_async(request, post_id, positive):
     if not request.user.is_authenticated():
         return {"rating": post.rating, "message": _("Registration required.")}
 
-    post = Post.objects.exclude(removed = True).get(pk = post_id)
+    manager = CacheManager()
+    post = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
+
+    if post.removed:
+        raise Http404
+
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
 
@@ -341,7 +346,12 @@ def vote_generic(request, post_id, positive):
     if not request.user.is_authenticated():
         return error(request, _("Registration required."))
 
-    post = Post.objects.exclude(removed = True).get(pk = post_id)
+    manager = CacheManager()
+    post = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
+
+    if post.removed:
+        raise Http404
+
     if post.owner == request.user:
         return error(request, _("You can not vote for own post."))
 

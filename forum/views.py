@@ -42,6 +42,8 @@ import re
 
 from django.contrib.sites.models import Site
 
+from django.core.cache import cache
+from cache import CacheManager
 
 class ForumForm(forms.ModelForm):
     class Meta:
@@ -431,21 +433,33 @@ def post_solve(request, post_id):
 
 @rr('blog/post_view.html')
 def thread(request, post_id):
+    manager = CacheManager()
+
     page = request.GET.get("offset", 1)
     showall = 0 if request.GET.get("showall", 0) == 0 else 1
 
-    startpost = Post.objects.get(pk = post_id)
+    startpost = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
 
-    cache_key = 'posts.blog.tag.%s.removed.%s' % (tag_id, showall):
-    if showall == "1":
-        paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+    cache_key = 'posts.%s.comments.page.%s.removed.%s' % (post_id, page, showall)
+    if cache.has_key(cache_key):
+        thread = cache.get(cache_key)
+        print "forum.views.thread mem hit!"
     else:
-        paginator = ExtendedPaginator(Post.objects.filter(thread = startpost.thread, removed = False).exclude(pk = startpost.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        if showall == "1":
+            posts = manager.request_cache('posts.%s.comments.all.removed' % (startpost.pk),
+                    Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk))
+        else:
+            posts = manager.request_cache('posts.%s.comments.all' % (startpost.pk),
+                    Post.objects.filter(thread = startpost.thread, removed = False).exclude(pk = startpost.pk))
 
-    try:
-        thread = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        thread = paginator.page(paginator.num_pages)
+        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+
+        try:
+            thread = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            thread = paginator.page(paginator.num_pages)
+
+        manager.request_cache(cache_key, thread)
 
     return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True, 'showedits': True }
 
