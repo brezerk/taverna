@@ -28,10 +28,14 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 from taverna.parsers.templatetags.markup import strippost
+from taverna.parsers.templatetags.markup import markup
 
 from django.core.paginator import Paginator
 
 from django.conf import settings
+
+from cache import CacheManager
+from django.core.cache import cache
 
 class RssBlogTraker(Feed):
     title = _("Last 10 blogs topics")
@@ -39,13 +43,25 @@ class RssBlogTraker(Feed):
     description = _("Updates on changes and additions to blogs topics.")
 
     def items(self):
-        return Post.objects.exclude(blog = None, removed = True).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
+        manager = CacheManager()
+
+        cache_key = 'posts.blog.all.feed'
+        if cache.has_key(cache_key):
+            print "Feed hit!"
+            posts = cache.get(cache_key)
+        else:
+            post_list = manager.request_cache('posts.blog.all',
+                    Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created'))
+            posts = post_list[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
+            manager.request_cache(cache_key, posts)
+
+        return posts
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
-        return markup(item.text, item.parser)
+        return strippost(item.text, item)
 
 class AtomBlogTraker(RssBlogTraker):
    feed_type = Atom1Feed
@@ -63,7 +79,13 @@ class RssBlog(Feed):
         self.title = "%s: %s" % (_("Last topics for blog"), obj.name)
         self.description = obj.desc
         self.link = obj.get_absolute_url()
-        return Post.objects.filter(blog=obj, removed = False).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
+
+        manager = CacheManager()
+        posts = manager.request_cache('posts.blog.%s' % (obj.pk),
+                Post.objects.filter(blog = obj).exclude(removed = True).order_by('-created'))
+
+        return posts
+#        return Post.objects.filter(blog=obj, removed = False).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)
@@ -74,4 +96,3 @@ class RssBlog(Feed):
 class AtomBlog(RssBlog):
     feed_type = Atom1Feed
     subtitle = RssBlog.description
-

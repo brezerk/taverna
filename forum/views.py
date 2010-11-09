@@ -174,6 +174,8 @@ def reply(request, post_id):
                 post.thread = post.reply_to.thread
                 post.owner = request.user
                 post.save()
+                from signals import drop_post_cache
+                drop_post_cache(post)
 
                 request.user.profile.use_force("COMMENT_CREATE")
                 request.user.profile.save()
@@ -279,6 +281,8 @@ def modify_rating(post, cost = 1, positive = False):
 
     post.owner.profile.save()
     post.save()
+    manager = CacheManager()
+    manager.delete("posts.%s" % (post.pk))
 
 @login_required()
 @rr('forum/topic_create.html')

@@ -66,7 +66,6 @@ class Post(models.Model):
         return bool(settings.O_REMOVED & self.flags)
 
     def get_absolute_url(self):
-        print "get" . self.pk
         return reverse("forum.views.thread", args = [self.pk])
 
     def get_section_name(self):
@@ -81,7 +80,6 @@ class Post(models.Model):
             it is more efficeint to droop one model, them 100500 of relatid
             while rating updates, so here is a hack for it
         """
-        print "test.get rating for %s" % (self.pk)
         manager = CacheManager()
         post = manager.request_cache("posts.%s" % (self.pk), Post.objects.get(pk = self.pk))
         return post.rating
@@ -262,11 +260,16 @@ class PostVote(models.Model):
 def Post_cache_manager(sender, instance, created, **kwargs):
     manager = CacheManager()
 
+    print sender
+
     if instance.blog is not None:
         manager.clear_template_cache("post_main", instance.pk)
         manager.clear_template_cache("post_free", instance.pk)
+        manager.clear_template_cache("startpost_main", instance.pk)
+        manager.clear_template_cache("startpost_free", instance.pk)
         manager.clear_cache("posts.blog.all")
         manager.clear_cache("posts.blog.%s" % (instance.blog.pk))
+        manager.delete_cache("posts.%s" % (instance.pk))
     elif instance.forum is not None:
         pass
     elif instance.blog is None and instance.forum is None:
@@ -276,6 +279,6 @@ def PostEdit_cache_manager(sender, instance, created, **kwargs):
     manager = CacheManager()
     manager.clear_cache("postedit.%s.all" % instance.post.pk)
 
-post_save.connect(Post_cache_manager, sender=Post, dispatch_uid="Post_cache_manager")
-post_save.connect(PostEdit_cache_manager, sender=PostEdit, dispatch_uid="PostEdit_cache_manager")
+#post_save.connect(Post_cache_manager, sender=Post, dispatch_uid="Post_cache_manager")
+#post_save.connect(PostEdit_cache_manager, sender=PostEdit, dispatch_uid="PostEdit_cache_manager")
 

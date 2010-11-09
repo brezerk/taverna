@@ -8,13 +8,20 @@ class CacheManager:
         args = md5_constructor(u':'.join([urlquote(var) for var in variables]))
         cache_key = 'template.cache.%s.%s' % (key, args.hexdigest())
         cache.delete(cache_key)
+        print "Remove template cache %s" % (cache_key)
+
+    def delete(self, key):
+        print "Remove key: %s" % (key)
+        cache.delete(key)
+        self.pop_key(key)
 
     def clear_cache(self, pattern):
-        print cache.get('keys', set())
+        print "Removeing keys by pattern: %s" % (pattern)
         for item in cache.get('keys', set()):
             if item.find(pattern) >= 0:
                 cache.delete(item)
                 self.pop_key(item)
+                print " + remove item: %s" % (item)
 
     def request_cache(self, key, default=None, timeout=None):
         if cache.has_key(key):

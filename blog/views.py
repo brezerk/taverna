@@ -125,6 +125,8 @@ def post_edit(request, post_id):
             post = super(EditForm, self).save(commit = False, **args)
             post.tags = ""
             post.save()
+            from signals import drop_post_cache
+            drop_post_cache(post)
 
             PostEdit(post = post, user = request.user, old_text = orig_text, new_text = post.text).save()
 
@@ -184,6 +186,9 @@ def post_add(request):
             post.save()
             post.thread = post
             post.save()
+            from signals import drop_post_cache
+            drop_post_cache(post)
+
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:
                     post.tags.add(Tag.objects.get(name = name))
@@ -194,6 +199,8 @@ def post_add(request):
 
             request.user.profile.use_force("TOPIC_CREATE")
             request.user.profile.save()
+
+
             return post.blog.pk
 
     form = PostForm()

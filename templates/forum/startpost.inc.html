@@ -2,7 +2,7 @@
 {% load markup %}
 {% load cache %}
 
-{% cache 86400 post_main startpost.pk %}
+{% cache 86400 startpost_main startpost.pk %}
 
 <div class='news'>
     <h3>
@@ -27,7 +27,7 @@
             <span id='rating-{{ startpost.pk }}'>
 {% endcache %}
                 {{ startpost.get_rating }}
-{% cache 86400 post_free startpost.pk %}
+{% cache 86400 startpost_free startpost.pk %}
             </span>
             [<span class='vote-negative'><a class='vote-negative' 
                    href='{% url blog.views.vote_generic startpost.pk 1 %}'

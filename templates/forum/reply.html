@@ -16,7 +16,7 @@
 {% if form.cleaned_data %}
 <h4>{% trans "Your message preview"%}</h4>
     {% with form.cleaned_data as post %}
-        {% include 'forum/post.inc.html' %}
+        {% include 'forum/post.view.inc.html' %}
     {% endwith %}
 {% endif %}
 
