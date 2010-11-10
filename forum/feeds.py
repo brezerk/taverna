@@ -30,6 +30,7 @@ from taverna.parsers.templatetags.markup import markup
 from django.conf import settings
 
 from django.core.paginator import Paginator
+from cache import CacheManager
 
 class RssForum(Feed):
     link = ""
@@ -37,13 +38,20 @@ class RssForum(Feed):
     title = ""
 
     def get_object(self, request, forum_id):
-        return get_object_or_404(Forum, pk=forum_id)
+        manager = CacheManager()
+        forum = manager.request_cache("forum.%s" % (forum_id), Forum.objects.get(pk = forum_id))
+        return forum
 
     def items(self, obj):
         self.title = _("Last topics in form: %s" % (obj.name))
         self.description = obj.description
         self.link = obj.get_absolute_url()
-        return Post.objects.filter(forum=obj, reply_to = None, removed = False).order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
+
+        manager = CacheManager()
+        topics = manager.request_cache('posts.forum.%s' % (obj.pk),
+                 Post.objects.filter(reply_to = None, forum = obj, removed = False).order_by('-sticked', '-created'))
+
+        return topics[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
     def item_title(self, item):
         return item.title
@@ -64,18 +72,20 @@ class RssComments(Feed):
     paginator = None
 
     def get_object(self, request, post_id):
-        return get_object_or_404(Post, pk=post_id)
+        manager = CacheManager()
+        startpost = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
+        return startpost
 
     def items(self, obj):
         self.title = obj.title
         self.description = markup(obj.text, obj.parser)
 
-        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk, removed = True)
+        manager = CacheManager()
+        thread_list = manager.request_cache('posts.%s.comments.all.reverse' % (obj.pk),
+                      Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk, removed = True).order_by('-created'))
 
         self.paginator = Paginator(thread_list, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
-
-
-        return thread_list.order_by('-created')[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
+        return thread_list[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
 
     def item_title(self, item):
         if item.title:

@@ -1,15 +1,18 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load markup %}
+{% load cache %}
 
 {% block menubox %}
 <div class='actionbox'>
     <div class='left'>
+    {% cache 2678400 forum_index forum.pk %}
         <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
         <a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a> {{ forum.description }}
     </div>
     <div class='right'>
         [<a href='{% url rss_forum_traker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_traker forum.pk %}'>Atom</a>]
+    {% endcache %}
         {% if showall == "1" %}
             [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
         {% else %}
@@ -33,11 +36,13 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
+{% cache 2678400 forum_item post.pk %}
   {{post.get_flags|safe}}
   {{post|forumtags|safe}} 
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
+{% endcache %}
  </td>
- <td>{{post.created|timesince}} {% trans "ago" %}</td>
+ <td>{{post.get_last_comment_date|timesince}} {% trans "ago" %}</td>
 </tr>
 {% endfor %}
 </table>

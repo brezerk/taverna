@@ -128,6 +128,17 @@ class Post(models.Model):
 
         return tag_string
 
+    def get_last_comment_date(self):
+        manager = CacheManager()
+
+        comments = manager.request_cache("posts.%s.comments.all.reverse" % (self.pk),
+                   Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).order_by('-created'))
+
+        try:
+            return comments[0].created
+        except IndexError:
+            return self.created
+
     def get_comments_count(self):
         manager = CacheManager()
         count_url = manager.get("posts.%s.comments.url" % (self.pk))
@@ -255,3 +266,8 @@ class PostVote(models.Model):
         else:
             return ret
 
+def Forum_cache_manager(sender, instance, created, **kwargs):
+    manager = CacheManager()
+    manager.delete("forum.all")
+
+post_save.connect(Forum_cache_manager, sender=Forum, dispatch_uid="Forum_cache_manager")

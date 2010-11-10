@@ -7,10 +7,12 @@
     </h3>
     <div class='block'>
             {{ startpost.text|markup:startpost.parser|show_cut|safe }}
+        {% if startpost.tag_string %}
         <div class='tags'>
             {% trans "Tags" %}:
             {{ startpost.tag_string|tags|safe }}
         </div>
+        {% endif %}
         <div>
             [<span class='vote-positive'><a href='#'>▲</a></span>]
             <span>0</span>

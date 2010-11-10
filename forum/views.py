@@ -103,27 +103,41 @@ class PostForm(forms.ModelForm):
 
 @rr('forum/index.html')
 def index(request):
-    return {'forums': Forum.objects.all().order_by('name')}
+    manager = CacheManager()
+    forums = manager.request_cache("forum.all", Forum.objects.all().order_by('name'))
+    return {'forums': forums}
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
+    manager = CacheManager()
 
+    showall = 0 if request.GET.get("showall", 0) == 0 else 1
     page = request.GET.get("offset", 1)
-    showall = request.GET.get("showall", 1)
 
-    forum = Forum.objects.get(pk = forum_id)
-    if showall == "1":
-        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created')
-    else:
-        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-sticked', '-created')
+    forum = manager.request_cache("forum.%s" % (forum_id), Forum.objects.get(pk = forum_id))
 
-    paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    cache_key = 'posts.forum.%s.page.%s.removed.%s' % (forum_id, page, showall)
+    thread = manager.get(cache_key)
 
-    posts = paginator.page(page)
+    if thread is None:
+        if showall == "1":
+            pages = manager.request_cache('posts.forum.%s.removed' % (forum_id),
+                    Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created'))
+        else:
+            pages = manager.request_cache('posts.forum.%s' % (forum_id),
+                    Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-sticked', '-created'))
+
+        paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+        try:
+            thread = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            thread = paginator.page(paginator.num_pages)
+        manager.set(cache_key, thread)
 
     return {
         'forum': forum,
-        'thread': posts,
+        'thread': thread,
         'form': PostForm(),
         'showall': showall,
     }
@@ -305,6 +319,9 @@ def topic_create(request, forum_id):
                 post.title = strip_tags(post.title)
                 post.save()
 
+                from signals import drop_post_cache
+                drop_post_cache(post)
+
                 request.user.profile.use_force("TOPIC_CREATE")
                 request.user.profile.save()
 
@@ -341,6 +358,10 @@ def topic_edit(request, topic_id):
             if request.POST['submit']==_("Save"):
                 orig_text = Post.objects.get(pk = topic_id).text
                 post = form.save()
+
+                from signals import drop_post_cache
+                drop_post_cache(post)
+
                 if orig_text != post.text:
                     PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
 

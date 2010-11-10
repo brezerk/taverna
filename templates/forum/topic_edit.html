@@ -13,7 +13,7 @@
 {% block content %}
 {% if form.cleaned_data %}
     {% with form.cleaned_data as startpost %}
-        {% include "forum/startpost.inc.html" %}
+        {% include "forum/startpost.preview.inc.html" %}
     {% endwith %}
 {% endif %}
 
