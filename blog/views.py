@@ -41,7 +41,6 @@ from django.http import Http404
 from django.core.paginator import InvalidPage, EmptyPage
 from django.conf import settings
 
-from django.core.cache import cache
 from cache import CacheManager
 
 @login_required()
@@ -125,8 +124,9 @@ def post_edit(request, post_id):
             post = super(EditForm, self).save(commit = False, **args)
             post.tags = ""
             post.save()
-            from signals import drop_post_cache
+            from signals import drop_post_cache, drop_postedit_cache
             drop_post_cache(post)
+            drop_postedit_cache(post)
 
             PostEdit(post = post, user = request.user, old_text = orig_text, new_text = post.text).save()
 
@@ -186,7 +186,7 @@ def post_add(request):
             post.save()
             post.thread = post
             post.save()
-            from signals import drop_post_cache
+            from signals import drop_post_cache, drop_post_tag_cache
             drop_post_cache(post)
 
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
@@ -196,6 +196,7 @@ def post_add(request):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
+                drop_post_tag_cache(name)
 
             request.user.profile.use_force("TOPIC_CREATE")
             request.user.profile.save()
@@ -231,16 +232,14 @@ def tags_search(request, tag_id):
 
     tag = manager.request_cache('tag.%s' % (tag_id), Tag.objects.get(pk=tag_id));
 
-    cache_key = 'posts.blog.tag.%s.removed.%s' % (tag_id, showall)
-    if cache.has_key(cache_key):
-        thread = cache.get(cache_key)
-        print "blog.views.tags_search mem hit!"
-    else:
+    cache_key = 'posts.blog.tag.%s.page.%s.removed.%s' % (tag_id, page, showall)
+    thread = manager.get(cache_key)
+    if thread is None:
         if showall == "1":
-            posts = manager.request_cache('posts.blog.tag.%s.removed' % (blog_id),
+            posts = manager.request_cache('posts.blog.tag.%s.removed' % (tag.pk),
                     Post.objects.filter(tags = tag_id).order_by('-created'))
         else:
-            posts = manager.request_cache('posts.blog.tag.%s' % (blog_id),
+            posts = manager.request_cache('posts.blog.tag.%s' % (tag.pk),
                     Post.objects.filter(tags = tag_id, removed = False).order_by('-created'))
 
         paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
@@ -250,7 +249,7 @@ def tags_search(request, tag_id):
         except (EmptyPage, InvalidPage):
             thread = paginator.page(paginator.num_pages)
 
-        manager.request_cache(cache_key, thread)
+        manager.set(cache_key, thread)
 
     return {'thread': thread, 'tag': tag, 'showall': showall}
 
@@ -264,10 +263,9 @@ def view(request, blog_id):
     blog_info = manager.request_cache('blog.pk.%s' % (blog_id), Blog.objects.get(pk = blog_id))
 
     cache_key = 'posts.blog.%s.page.%s.removed.%s' % (blog_id, page, showall)
-    if cache.has_key(cache_key):
-        thread = cache.get(cache_key)
-        print "blog.views.view -- mem hit!"
-    else:
+
+    thread = manager.get(cache_key)
+    if thread is None:
         if showall == "1":
             posts = manager.request_cache('posts.blog.%s.removed' % (blog_id),
                     Post.objects.filter(blog = blog_info).order_by('-created'))
@@ -282,7 +280,7 @@ def view(request, blog_id):
         except (EmptyPage, InvalidPage):
             thread = paginator.page(paginator.num_pages)
 
-        manager.request_cache(cache_key, thread)
+        manager.set(cache_key, thread)
 
     return {'thread': thread, 'blog_info': blog_info, 'showall': showall, 'strippost': True }
 
@@ -294,10 +292,9 @@ def index(request):
     page = request.GET.get("offset", 1)
 
     cache_key = 'posts.blog.all.page.%s.removed.%s' % (page, showall)
-    if cache.has_key(cache_key):
-        print "blog.views.index -- mem hit!"
-        thread = cache.get(cache_key)
-    else:
+
+    thread = manager.get(cache_key)
+    if thread is None:
         if showall == "1":
             posts = manager.request_cache('posts.blog.all.removed',
                     Post.objects.exclude(blog = None).order_by('-created'))
@@ -312,7 +309,7 @@ def index(request):
         except (EmptyPage, InvalidPage):
             thread = paginator.page(paginator.num_pages)
 
-        manager.request_cache(cache_key, thread)
+        manager.set(cache_key, thread)
 
     return { 'thread': thread, 'showall': showall, 'strippost': True }
 

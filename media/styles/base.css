@@ -25,7 +25,7 @@ html, body {
     padding: 0px;
     font-family:Verdana,Trebuchet MS,sans-serif;
     font-size:medium;
-    line-height:1.4
+/*    line-height:1.4*/
 }
 
 /* Title box */
@@ -192,6 +192,10 @@ html, body {
     margin-left: 50px;
     margin-right: 50px;
     text-align: justify;
+}
+
+.news > .block > .text {
+    overflow: hidden;
 }
 
 .news > .block > .tags {

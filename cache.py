@@ -23,17 +23,27 @@ class CacheManager:
                 self.pop_key(item)
                 print " + remove item: %s" % (item)
 
+    def set(self, key, value):
+        print "Set key: %s" % (key)
+        cache.set(key, value)
+        self.push_key(key)
+
+    def get(self, key):
+        print "Get key %s" % (key)
+        return cache.get(key)
+
     def request_cache(self, key, default=None, timeout=None):
-        if cache.has_key(key):
+        ret = cache.get(key)
+
+        if ret is not None:
             print "Key %s mem hit!" % (key)
-            return cache.get(key)
         else:
             print "Key %s undefined." % (key)
             if default is not None:
                 cache.set(key, default, timeout)
                 self.push_key(key)
                 return default
-        return None
+        return ret
 
     def push_key(self, key):
         keys = cache.get('keys', set())

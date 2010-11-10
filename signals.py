@@ -3,10 +3,6 @@ from cache import CacheManager
 def drop_post_cache(instance):
     manager = CacheManager()
 
-    print instance.blog
-    print instance.forum
-    print instance.thread
-
     if instance.blog is not None:
         manager.clear_template_cache("post_main", instance.pk)
         manager.clear_template_cache("post_free", instance.pk)
@@ -19,4 +15,15 @@ def drop_post_cache(instance):
         pass
     elif instance.thread is not None:
         manager.clear_cache("posts.%s.comments" % instance.thread.pk)
+
+def drop_postedit_cache(instance):
+    manager = CacheManager()
+    manager.clear_cache("postedit.%s.all" % instance.pk)
+
+def drop_post_tag_cache(name):
+    manager = CacheManager()
+
+    from taverna.blog.models import Tag
+    tag = Tag.objects.get(name = name)
+    manager.clear_cache("posts.blog.tag.%s" % tag.pk)
 

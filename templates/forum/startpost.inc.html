@@ -11,11 +11,13 @@
         <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
     </h3>
     <div class='block'>
-        {% if strippost %}
-            {{ startpost.get_strip_text|safe }}
-        {% else %}
-            {{ startpost.get_text|safe }}
-        {% endif %}
+        <div class='text'>
+            {% if strippost %}
+                {{ startpost.get_strip_text|safe }}
+            {% else %}
+                {{ startpost.get_text|safe }}
+            {% endif %}
+        </div>
         <div class='tags'>
             {% trans "Tags" %}:
             {{ startpost.get_tag_url_list|safe }}

@@ -35,7 +35,6 @@ from django.core.paginator import Paginator
 from django.conf import settings
 
 from cache import CacheManager
-from django.core.cache import cache
 
 class RssBlogTraker(Feed):
     title = _("Last 10 blogs topics")
@@ -46,14 +45,13 @@ class RssBlogTraker(Feed):
         manager = CacheManager()
 
         cache_key = 'posts.blog.all.feed'
-        if cache.has_key(cache_key):
-            print "Feed hit!"
-            posts = cache.get(cache_key)
-        else:
+        posts = manager.get(cache_key)
+
+        if posts is None:
             post_list = manager.request_cache('posts.blog.all',
                     Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created'))
             posts = post_list[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
-            manager.request_cache(cache_key, posts)
+            manager.set(cache_key, posts)
 
         return posts
 
@@ -81,11 +79,17 @@ class RssBlog(Feed):
         self.link = obj.get_absolute_url()
 
         manager = CacheManager()
-        posts = manager.request_cache('posts.blog.%s' % (obj.pk),
-                Post.objects.filter(blog = obj).exclude(removed = True).order_by('-created'))
+
+        cache_key = 'posts.blog.%s.feed' % (obj.pk)
+        posts = manager.get(cache_key)
+
+        if posts is None:
+            post_list = manager.request_cache('posts.blog.%s' % (obj.pk),
+                    Post.objects.filter(blog = obj).exclude(removed = True).order_by('-created'))
+            posts = post_list[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
+            manager.set(cache_key, posts)
 
         return posts
-#        return Post.objects.filter(blog=obj, removed = False).order_by('-created')[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)

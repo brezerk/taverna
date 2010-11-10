@@ -42,7 +42,6 @@ import re
 
 from django.contrib.sites.models import Site
 
-from django.core.cache import cache
 from cache import CacheManager
 
 class ForumForm(forms.ModelForm):
@@ -445,10 +444,9 @@ def thread(request, post_id):
     startpost = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
 
     cache_key = 'posts.%s.comments.page.%s.removed.%s' % (post_id, page, showall)
-    if cache.has_key(cache_key):
-        thread = cache.get(cache_key)
-        print "forum.views.thread mem hit!"
-    else:
+    thread = manager.get(cache_key)
+
+    if thread is None:
         if showall == "1":
             posts = manager.request_cache('posts.%s.comments.all.removed' % (startpost.pk),
                     Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk))
@@ -463,7 +461,7 @@ def thread(request, post_id):
         except (EmptyPage, InvalidPage):
             thread = paginator.page(paginator.num_pages)
 
-        manager.request_cache(cache_key, thread)
+        manager.set(cache_key, thread)
 
     return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True, 'showedits': True }
 

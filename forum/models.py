@@ -28,8 +28,6 @@ from django.core.urlresolvers import reverse
 from parsers.templatetags import markup
 from django.db.models.signals import post_save
 from cache import CacheManager
-from django.core.cache import cache
-
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
@@ -132,7 +130,7 @@ class Post(models.Model):
 
     def get_comments_count(self):
         manager = CacheManager()
-        count_url = manager.request_cache("posts.%s.comments.url" % (self.pk))
+        count_url = manager.get("posts.%s.comments.url" % (self.pk))
 
         if count_url is None:
             from django.core.paginator import Paginator
@@ -153,7 +151,7 @@ class Post(models.Model):
                         count_url = count_url + page_url
 
                 count_url = count_url + ")"
-            manager.request_cache("posts.%s.comments.url" % (self.pk), count_url)
+            manager.set("posts.%s.comments.url" % (self.pk), count_url)
 
         return count_url
 
@@ -256,29 +254,4 @@ class PostVote(models.Model):
             return _("(Auto) Reply to: ") + ret
         else:
             return ret
-
-def Post_cache_manager(sender, instance, created, **kwargs):
-    manager = CacheManager()
-
-    print sender
-
-    if instance.blog is not None:
-        manager.clear_template_cache("post_main", instance.pk)
-        manager.clear_template_cache("post_free", instance.pk)
-        manager.clear_template_cache("startpost_main", instance.pk)
-        manager.clear_template_cache("startpost_free", instance.pk)
-        manager.clear_cache("posts.blog.all")
-        manager.clear_cache("posts.blog.%s" % (instance.blog.pk))
-        manager.delete_cache("posts.%s" % (instance.pk))
-    elif instance.forum is not None:
-        pass
-    elif instance.blog is None and instance.forum is None:
-        manager.clear_cache("posts.%s.comments" % instance.pk)
-
-def PostEdit_cache_manager(sender, instance, created, **kwargs):
-    manager = CacheManager()
-    manager.clear_cache("postedit.%s.all" % instance.post.pk)
-
-#post_save.connect(Post_cache_manager, sender=Post, dispatch_uid="Post_cache_manager")
-#post_save.connect(PostEdit_cache_manager, sender=PostEdit, dispatch_uid="PostEdit_cache_manager")
 
