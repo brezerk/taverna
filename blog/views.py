@@ -124,7 +124,7 @@ def post_edit(request, post_id):
             post = super(EditForm, self).save(commit = False, **args)
             post.tags = ""
             post.save()
-            from signals import drop_post_cache, drop_postedit_cache
+            from signals import drop_post_cache, drop_postedit_cache, drop_blog_tag_cache
             drop_post_cache(post)
             drop_postedit_cache(post)
 
@@ -137,6 +137,7 @@ def post_edit(request, post_id):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
+                drop_blog_tag_cache(name)
 
             request.user.profile.use_force("TOPIC_EDIT")
             request.user.profile.save()
@@ -186,7 +187,7 @@ def post_add(request):
             post.save()
             post.thread = post
             post.save()
-            from signals import drop_post_cache, drop_post_tag_cache
+            from signals import drop_post_cache, drop_blog_tag_cache
             drop_post_cache(post)
 
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
@@ -196,7 +197,7 @@ def post_add(request):
                     tag = Tag(name = name)
                     tag.save()
                     post.tags.add(tag)
-                drop_post_tag_cache(name)
+                drop_blog_tag_cache(name)
 
             request.user.profile.use_force("TOPIC_CREATE")
             request.user.profile.save()
@@ -237,10 +238,10 @@ def tags_search(request, tag_id):
     if thread is None:
         if showall == "1":
             posts = manager.request_cache('posts.blog.tag.%s.removed' % (tag.pk),
-                    Post.objects.filter(tags = tag_id).order_by('-created'))
+                    Post.objects.filter(forum = None, tags = tag_id).order_by('-created'))
         else:
             posts = manager.request_cache('posts.blog.tag.%s' % (tag.pk),
-                    Post.objects.filter(tags = tag_id, removed = False).order_by('-created'))
+                    Post.objects.filter(forum = None, tags = tag_id, removed = False).order_by('-created'))
 
         paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 

@@ -8,6 +8,7 @@
     <h3>
         {{ startpost.get_flags|safe }}
         <a href='{{ startpost.get_section_url }}'>{{ startpost.get_section_name }}</a> →
+        {{ startpost.get_forumtags|safe }}
         <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
     </h3>
     <div class='block'>

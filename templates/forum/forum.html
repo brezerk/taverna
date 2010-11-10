@@ -38,7 +38,8 @@
  <td>
 {% cache 2678400 forum_item post.pk %}
   {{post.get_flags|safe}}
-  {{post|forumtags|safe}} 
+  {{post.get_forumtags|safe}}
+  <a href='{% url forum.views.thread post.pk %}'>{{post.title}}</a>
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
 {% endcache %}
  </td>

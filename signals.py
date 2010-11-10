@@ -26,10 +26,16 @@ def drop_postedit_cache(instance):
     manager = CacheManager()
     manager.clear_cache("postedit.%s.all" % instance.pk)
 
-def drop_post_tag_cache(name):
+def drop_blog_tag_cache(name):
     manager = CacheManager()
 
     from taverna.blog.models import Tag
     tag = Tag.objects.get(name = name)
     manager.clear_cache("posts.blog.tag.%s" % tag.pk)
 
+def drop_forum_tag_cache(name):
+    manager = CacheManager()
+
+    from taverna.blog.models import Tag
+    tag = Tag.objects.get(name = name)
+    manager.clear_cache("posts.forum.tag.%s" % tag.pk)

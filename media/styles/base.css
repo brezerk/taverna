@@ -163,7 +163,9 @@ html, body {
 
 .news > h3 a {
     color: #c1c1c1;
-    text-decoration: none
+    text-decoration: none;
+    padding: 0px;
+    margin: 0px;
 }
 
 .news > h3 a:visited {

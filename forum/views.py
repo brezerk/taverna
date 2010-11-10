@@ -22,7 +22,7 @@ from models import *
 from util import rr
 from django import forms
 from django.conf import settings
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, CharField
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
@@ -315,8 +315,22 @@ def topic_create(request, forum_id):
                 post.forum = forum
                 post.owner = request.user
                 post.save()
+
+                import re
+                from signals import drop_forum_tag_cache
+                split_str = re.split('\[(.*?)\]', post.title)
+                for name in split_str[1:-1]:
+                    if name:
+                        try:
+                            post.tags.add(Tag.objects.get(name = name))
+                        except Tag.DoesNotExist:
+                            tag = Tag(name = name)
+                            tag.save()
+                            post.tags.add(tag)
+                        drop_forum_tag_cache(name)
+
+                post.title = split_str[-1]
                 post.thread = post
-                post.title = strip_tags(post.title)
                 post.save()
 
                 from signals import drop_post_cache
@@ -398,21 +412,36 @@ def forum_create(request):
     return {'form': ForumForm()}
 
 @rr('forum/tag_search.html')
-def tags_search(request, tag_name):
+def tags_search(request, tag_id):
+    manager = CacheManager()
 
     page = request.GET.get("offset", 1)
-    showall = request.GET.get("showall", 0)
+    showall = 0 if request.GET.get("showall", 0) == 0 else 1
 
-    if showall == "1":
-        posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name)).order_by('-created')
-    else:
-        posts = Post.objects.filter(title__contains = u"[%s]" % (tag_name), removed = False).order_by('-created')
+    tag = manager.request_cache('tag.%s' % (tag_id), Tag.objects.get(pk=tag_id));
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    cache_key = 'posts.forum.tag.%s.page.%s.removed.%s' % (tag_id, page, showall)
+    thread = manager.get(cache_key)
+    if thread is None:
+        if showall == "1":
+            posts = manager.request_cache('posts.forum.tag.%s.removed' % (tag.pk),
+                    Post.objects.filter(blog = None, tags = tag_id).order_by('-created'))
+        else:
+            posts = manager.request_cache('posts.forum.tag.%s' % (tag.pk),
+                    Post.objects.filter(blog = None, tags = tag_id, removed = False).order_by('-created'))
+
+        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+
+        try:
+            thread = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            thread = paginator.page(paginator.num_pages)
+
+        manager.set(cache_key, thread)
 
     return {
-        'thread': paginator.page(page),
-        'search_tag': tag_name,
+        'thread': thread,
+        'search_tag': tag.name,
         'showall': showall
     }
 

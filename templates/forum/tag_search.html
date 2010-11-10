@@ -1,26 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load markup %}
+{% load cache %}
 
 {% block menubox %}
 <div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-<a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → {% trans "Search results for tag" %}: "{{ search_tag }}"
-</td>
+    <div class='left'>
+        <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → {% trans "Search results for tag" %}: "{{ search_tag }}"
+    </div>
+    <div class='right'>
+        {% if showall == "1" %}
+            [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
+        {% else %}
+            [<a href='?showall=1'>{% trans "Show removed" %}</a>]
+        {% endif %}
 
-<td align='right'>
-    {% if showall == "1" %}
-        [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
-    {% else %}
-        [<a href='?showall=1'>{% trans "Show removed" %}</a>]
-    {% endif %}
-
-    [<a href='{% url forum.views.index %}'>{% trans "Back" %}</a>]
-</td>
-</tr>
-</table>
+        [<a href='{% url forum.views.index %}'>{% trans "Back" %}</a>]
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -32,14 +29,15 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
-  {% if post.is_removed %}
-  [<span style='color: red'>✘</span>]
-  {% endif %}
-  {{post|forumtags|safe}} 
+ {% cache 2678400 forum_item post.pk %}
+    {{post.get_flags|safe}}
+    {{post.get_forumtags|safe}}
+    <a href='{% url forum.views.thread post.pk %}'>{{post.title}}</a>
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
+  {% endcache %}
  </td>
  <td><a href='{% url forum.views.forum post.forum.pk %}'>{{post.forum.name}}</a></td>
- <td>{{post.created|timesince}} {% trans "ago" %}</td>
+ <td>{{post.get_last_comment_date|timesince}} {% trans "ago" %}</td>
 </tr>
 {% endfor %}
 </table>

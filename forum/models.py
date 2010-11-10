@@ -117,6 +117,9 @@ class Post(models.Model):
     def get_tag_url_list(self):
         tag_string = ""
 
+        if self.forum is not None:
+            return ""
+
         first = True
 
         for tag in self.tags.all():
@@ -127,6 +130,18 @@ class Post(models.Model):
             tag_string = tag_string + "<a href='%s'>%s</a>" % (reverse("blog.views.tags_search", args = [tag.pk]) ,tag.name)
 
         return tag_string
+
+    def get_forumtags(self):
+        tag_string = ""
+
+        if self.blog is not None:
+            return ""
+
+        for tag in self.tags.all():
+            tag_string = tag_string + "[<a href='%s'>%s</a>]" % (reverse("forum.views.tags_search", args = [tag.pk]), tag.name)
+
+        return tag_string
+
 
     def get_last_comment_date(self):
         manager = CacheManager()

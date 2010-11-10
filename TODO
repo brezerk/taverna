@@ -1,9 +1,8 @@
  == General ==
 
      * Sitemap implementation (brezerk: done, need discusss);
-     * Title fix for different pages;
      * some cleanup and tests;
-     * transplate int russtian and ukrainian languages;
+     * transplate into russtian and ukrainian languages;
 
  == Admin ===
 
@@ -18,4 +17,12 @@
 
  == Redesign ==
      * redesing url loook like. e.t.c.
+
+== Cache ==
+    * forum post edit;
+    * userprofile;
+    * blog settings;
+    * blog views;
+    * user notify and tracker;
+    * grave yard;
 
