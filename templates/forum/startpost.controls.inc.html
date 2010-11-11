@@ -1,0 +1,26 @@
+{% load i18n %}
+
+        <div class='controls'>
+            {% if startpost.removed %}
+                [<a href="{% url userauth.views.rewards startpost.owner.pk %}">{% trans "This post was removed" %}</a>]
+            {% else %}
+                {% if user.is_staff %} 
+                    [<a href="{% url forum.views.remove startpost.pk %}">{% trans "Remove" %}</a>]
+                {% endif %}
+                {% if user = startpost.owner or user.is_staff %}
+                    [<a href="{{ startpost.get_edit_url }}">{% trans "Edit" %}</a>]
+                    {% if startpost.forum %}
+                        {% if startpost.solved %}
+                            [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]
+                        {% else %}
+                            [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as solved" %}</a>]
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if startpost.closed %}
+                    [<a href="{{ startpost.get_section_url }}">{% trans "This topic is closed" %}</a>]
+                {% else %}
+                        [<a href="{% url forum.views.reply startpost.pk %}">{% trans "Add a comment" %}</a>]
+                {% endif %}
+            {% endif %}
+        </div>
