@@ -1,8 +1,5 @@
 {% load i18n %}
 {% load markup %}
-{% load cache %}
-
-{% cache 86400 startpost_main startpost.pk %}
 
 <div class='news'>
     <h3>
@@ -30,9 +27,7 @@
                    href='{% url blog.views.vote_generic startpost.pk 0 %}' 
                    id='positive-{{ startpost.pk }}'>▲</a></span>]
             <span id='rating-{{ startpost.pk }}'>
-{% endcache %}
                 {{ startpost.get_rating }}
-{% cache 86400 startpost_free startpost.pk %}
             </span>
             [<span class='vote-negative'><a class='vote-negative' 
                    href='{% url blog.views.vote_generic startpost.pk 1 %}'
@@ -46,7 +41,6 @@
             ( 
                 {{ startpost.created|date:"d.m.Y H:i" }}
             )
-{% endcache %}
             {% if startpost.thread %}
             |
             <span class='comments'>

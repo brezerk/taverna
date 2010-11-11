@@ -30,7 +30,6 @@ from taverna.parsers.templatetags.markup import markup
 from django.conf import settings
 
 from django.core.paginator import Paginator
-from cache import CacheManager
 
 class RssForum(Feed):
     link = ""
@@ -38,8 +37,7 @@ class RssForum(Feed):
     title = ""
 
     def get_object(self, request, forum_id):
-        manager = CacheManager()
-        forum = manager.request_cache("forum.%s" % (forum_id), Forum.objects.get(pk = forum_id))
+        forum = Forum.objects.get(pk = forum_id)
         return forum
 
     def items(self, obj):
@@ -47,9 +45,7 @@ class RssForum(Feed):
         self.description = obj.description
         self.link = obj.get_absolute_url()
 
-        manager = CacheManager()
-        topics = manager.request_cache('posts.forum.%s' % (obj.pk),
-                 Post.objects.filter(reply_to = None, forum = obj, removed = False).order_by('-sticked', '-created'))
+        topics = Post.objects.filter(reply_to = None, forum = obj, removed = False).order_by('-sticked', '-created')
 
         return topics[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
@@ -72,17 +68,14 @@ class RssComments(Feed):
     paginator = None
 
     def get_object(self, request, post_id):
-        manager = CacheManager()
-        startpost = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
+        startpost = Post.objects.get(pk = post_id)
         return startpost
 
     def items(self, obj):
         self.title = obj.title
         self.description = markup(obj.text, obj.parser)
 
-        manager = CacheManager()
-        thread_list = manager.request_cache('posts.%s.comments.all.reverse' % (obj.pk),
-                      Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk, removed = True).order_by('-created'))
+        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk, removed = True).order_by('-created')
 
         self.paginator = Paginator(thread_list, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         return thread_list[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]

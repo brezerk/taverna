@@ -55,6 +55,17 @@ class ExtendedPaginator(Paginator):
 
         return Paginator.page(self, number)
 
+
+def clear_template_cache(key, *variables):
+    from django.utils.http import urlquote
+    from django.utils.hashcompat import md5_constructor
+    from django.core.cache import cache
+
+    args = md5_constructor(u':'.join([urlquote(var) for var in variables]))
+    cache_key = 'template.cache.%s.%s' % (key, args.hexdigest())
+    cache.delete(cache_key)
+    print "Remove template cache %s" % (cache_key)
+
 def rr(template, mimetype=None):
     def decor(view):
         def wrapper(request, *args, **kwargs):

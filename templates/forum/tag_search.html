@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load markup %}
-{% load cache %}
 
 {% block menubox %}
 <div class='actionbox'>
@@ -29,12 +28,10 @@
 {% for post in thread.object_list %}
 <tr class="{% cycle "odd" "even" %}">
  <td>
- {% cache 2678400 forum_item post.pk %}
     {{post.get_flags|safe}}
     {{post.get_forumtags|safe}}
     <a href='{% url forum.views.thread post.pk %}'>{{post.title}}</a>
   [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
-  {% endcache %}
  </td>
  <td><a href='{% url forum.views.forum post.forum.pk %}'>{{post.forum.name}}</a></td>
  <td>{{post.get_last_comment_date|timesince}} {% trans "ago" %}</td>

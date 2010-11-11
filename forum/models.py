@@ -27,7 +27,6 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from parsers.templatetags import markup
 from django.db.models.signals import post_save
-from cache import CacheManager
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
@@ -73,14 +72,7 @@ class Post(models.Model):
             return self.forum.name
 
     def get_rating(self):
-        """
-            Bacouse we use cache system,
-            it is more efficeint to droop one model, them 100500 of relatid
-            while rating updates, so here is a hack for it
-        """
-        manager = CacheManager()
-        post = manager.request_cache("posts.%s" % (self.pk), Post.objects.get(pk = self.pk))
-        return post.rating
+        return self.rating
 
     def get_section_type(self):
         if self.blog:
@@ -144,10 +136,7 @@ class Post(models.Model):
 
 
     def get_last_comment_date(self):
-        manager = CacheManager()
-
-        comments = manager.request_cache("posts.%s.comments.all.reverse" % (self.pk),
-                   Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).order_by('-created'))
+        comments = Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).order_by('-created')
 
         try:
             return comments[0].created
@@ -155,29 +144,23 @@ class Post(models.Model):
             return self.created
 
     def get_comments_count(self):
-        manager = CacheManager()
-        count_url = manager.get("posts.%s.comments.url" % (self.pk))
-
-        if count_url is None:
-            from django.core.paginator import Paginator
-            paginator = Paginator(
-                        manager.request_cache("posts.%s.comments.all" % (self.pk),
-                        Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False)),
+        from django.core.paginator import Paginator
+        paginator = Paginator(
+                        Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False),
                         settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]
                     )
 
-            thread_url = reverse("forum.views.thread", args = [self.pk])
-            count_url = "<a href='%s'>%s: %s</a>" % (thread_url, _("Comments"), paginator.count)
+        thread_url = reverse("forum.views.thread", args = [self.pk])
+        count_url = "<a href='%s'>%s: %s</a>" % (thread_url, _("Comments"), paginator.count)
 
-            if paginator.num_pages > 1:
-                count_url = count_url + " (%s" % (_("page"))
-                for page in paginator.page_range:
-                    if page != 1:
-                        page_url = " <a href='%s?offset=%s'>%s</a>" % (thread_url, page, page)
-                        count_url = count_url + page_url
+        if paginator.num_pages > 1:
+            count_url = count_url + " (%s" % (_("page"))
+            for page in paginator.page_range:
+                if page != 1:
+                    page_url = " <a href='%s?offset=%s'>%s</a>" % (thread_url, page, page)
+                    count_url = count_url + page_url
 
-                count_url = count_url + ")"
-            manager.set("posts.%s.comments.url" % (self.pk), count_url)
+            count_url = count_url + ")"
 
         return count_url
 
@@ -207,8 +190,7 @@ class Post(models.Model):
         return markup.strippost(self.text, self)
 
     def is_edited(self):
-        manager = CacheManager()
-        lastedit = manager.request_cache("postedit.%s.all" % (self.pk), self.postedit_set.all())
+        lastedit = self.postedit_set.all()
 
         if lastedit:
             return True
@@ -216,29 +198,24 @@ class Post(models.Model):
             return False
 
     def get_last_edit_user_url(self):
-        manager = CacheManager()
-        edits = manager.request_cache("postedit.%s.all" % (self.pk), self.postedit_set.all())
+        edits = self.postedit_set.all()
 
         return reverse("userauth.views.profile_view", args=[edits[0].user.pk])
 
     def get_last_edit_user(self):
-        manager = CacheManager()
-        edits = manager.request_cache("postedit.%s.all" % (self.pk), self.postedit_set.all())
+        edits = self.postedit_set.all()
         return edits[0].user.profile.visible_name
 
     def get_last_edit_date(self):
-        manager = CacheManager()
-        edits = manager.request_cache("postedit.%s.all" % (self.pk), self.postedit_set.all())
+        edits = self.postedit_set.all()
         return edits[0].edited
 
     def get_last_edit_url(self):
-        manager = CacheManager()
-        edits = manager.request_cache("postedit.%s.all" % (self.pk), self.postedit_set.all())
+        edits = self.postedit_set.all()
         return reverse("forum.views.post_diff", args=[edits[0].pk])
 
     def get_edited_count(self):
-        manager = CacheManager()
-        edits = manager.request_cache("postedit.%s.all" % (self.pk), self.postedit_set.all())
+        edits = self.postedit_set.all()
         return edits.count()
 
 class PostEdit(models.Model):
@@ -281,8 +258,3 @@ class PostVote(models.Model):
         else:
             return ret
 
-def Forum_cache_manager(sender, instance, created, **kwargs):
-    manager = CacheManager()
-    manager.delete("forum.all")
-
-post_save.connect(Forum_cache_manager, sender=Forum, dispatch_uid="Forum_cache_manager")

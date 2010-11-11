@@ -1,9 +1,6 @@
 {% load i18n %}
 {% load markup %}
 
-{% load cache %}
-
-{% cache 86400 post_free post.pk %}
 <div class="post" id="post_{{post.pk}}">
     <div class="header">
         <div class="left">
@@ -26,12 +23,10 @@
                 {% endif %}
         </div>
         <div class="right">
-{% endcache %}
             {% if post.pk%}
             <span id='rating-{{ post.pk }}'>{{ post.get_rating }}</span>
             <span class="vote-positive"><a class='vote-positive' href='{% url blog.views.vote_generic post.pk 0 %}' id='positive-{{ post.pk }}'>&#43;</a></span>&#47;<span class="vote-negative"><a class='vote-negative' id='negative-{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a></span>
             {% endif %}
-{% cache 86400 post_main post.pk %}
         </div>
     </div>
     <div class="content">
@@ -55,7 +50,6 @@
             {%now "d.m.Y H:i:s"%}            
         {% endif %}
     </div>
-{% endcache %}
     <div class="controls">
     {% if post.pk %}
         {% if post.removed %}

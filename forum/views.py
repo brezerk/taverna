@@ -42,8 +42,6 @@ import re
 
 from django.contrib.sites.models import Site
 
-from cache import CacheManager
-
 class ForumForm(forms.ModelForm):
     class Meta:
         model = Forum
@@ -103,37 +101,27 @@ class PostForm(forms.ModelForm):
 
 @rr('forum/index.html')
 def index(request):
-    manager = CacheManager()
-    forums = manager.request_cache("forum.all", Forum.objects.all().order_by('name'))
+    forums = Forum.objects.all().order_by('name')
     return {'forums': forums}
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
-    manager = CacheManager()
-
     showall = 0 if request.GET.get("showall", 0) == 0 else 1
     page = request.GET.get("offset", 1)
 
-    forum = manager.request_cache("forum.%s" % (forum_id), Forum.objects.get(pk = forum_id))
+    forum = Forum.objects.get(pk = forum_id)
 
-    cache_key = 'posts.forum.%s.page.%s.removed.%s' % (forum_id, page, showall)
-    thread = manager.get(cache_key)
+    if showall == "1":
+        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created')
+    else:
+        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-sticked', '-created')
 
-    if thread is None:
-        if showall == "1":
-            pages = manager.request_cache('posts.forum.%s.removed' % (forum_id),
-                    Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created'))
-        else:
-            pages = manager.request_cache('posts.forum.%s' % (forum_id),
-                    Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-sticked', '-created'))
+    paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
-        paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
-
-        try:
-            thread = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            thread = paginator.page(paginator.num_pages)
-        manager.set(cache_key, thread)
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
 
     return {
         'forum': forum,
@@ -187,8 +175,6 @@ def reply(request, post_id):
                 post.thread = post.reply_to.thread
                 post.owner = request.user
                 post.save()
-                from signals import drop_post_cache
-                drop_post_cache(post)
 
                 request.user.profile.use_force("COMMENT_CREATE")
                 request.user.profile.save()
@@ -294,8 +280,6 @@ def modify_rating(post, cost = 1, positive = False):
 
     post.owner.profile.save()
     post.save()
-    manager = CacheManager()
-    manager.delete("posts.%s" % (post.pk))
 
 @login_required()
 @rr('forum/topic_create.html')
@@ -317,7 +301,6 @@ def topic_create(request, forum_id):
                 post.save()
 
                 import re
-                from signals import drop_forum_tag_cache
                 split_str = re.split('\[(.*?)\]', post.title)
                 for name in split_str[1:-1]:
                     if name:
@@ -327,14 +310,10 @@ def topic_create(request, forum_id):
                             tag = Tag(name = name)
                             tag.save()
                             post.tags.add(tag)
-                        drop_forum_tag_cache(name)
 
                 post.title = split_str[-1]
                 post.thread = post
                 post.save()
-
-                from signals import drop_post_cache
-                drop_post_cache(post)
 
                 request.user.profile.use_force("TOPIC_CREATE")
                 request.user.profile.save()
@@ -373,9 +352,6 @@ def topic_edit(request, topic_id):
                 orig_text = Post.objects.get(pk = topic_id).text
                 post = form.save()
 
-                from signals import drop_post_cache
-                drop_post_cache(post)
-
                 if orig_text != post.text:
                     PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
 
@@ -413,31 +389,23 @@ def forum_create(request):
 
 @rr('forum/tag_search.html')
 def tags_search(request, tag_id):
-    manager = CacheManager()
 
     page = request.GET.get("offset", 1)
     showall = 0 if request.GET.get("showall", 0) == 0 else 1
 
-    tag = manager.request_cache('tag.%s' % (tag_id), Tag.objects.get(pk=tag_id));
+    tag = Tag.objects.get(pk=tag_id)
 
-    cache_key = 'posts.forum.tag.%s.page.%s.removed.%s' % (tag_id, page, showall)
-    thread = manager.get(cache_key)
-    if thread is None:
-        if showall == "1":
-            posts = manager.request_cache('posts.forum.tag.%s.removed' % (tag.pk),
-                    Post.objects.filter(blog = None, tags = tag_id).order_by('-created'))
-        else:
-            posts = manager.request_cache('posts.forum.tag.%s' % (tag.pk),
-                    Post.objects.filter(blog = None, tags = tag_id, removed = False).order_by('-created'))
+    if showall == "1":
+        posts = Post.objects.filter(blog = None, tags = tag_id).order_by('-created')
+    else:
+        posts = Post.objects.filter(blog = None, tags = tag_id, removed = False).order_by('-created')
 
-        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
-        try:
-            thread = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            thread = paginator.page(paginator.num_pages)
-
-        manager.set(cache_key, thread)
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
 
     return {
         'thread': thread,
@@ -486,32 +454,22 @@ def post_solve(request, post_id):
 
 @rr('blog/post_view.html')
 def thread(request, post_id):
-    manager = CacheManager()
-
     page = request.GET.get("offset", 1)
     showall = 0 if request.GET.get("showall", 0) == 0 else 1
 
-    startpost = manager.request_cache("posts.%s" % (post_id), Post.objects.get(pk = post_id))
+    startpost = Post.objects.get(pk = post_id)
 
-    cache_key = 'posts.%s.comments.page.%s.removed.%s' % (post_id, page, showall)
-    thread = manager.get(cache_key)
+    if showall == "1":
+        posts = Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk)
+    else:
+        posts = Post.objects.filter(thread = startpost.thread, removed = False).exclude(pk = startpost.pk)
 
-    if thread is None:
-        if showall == "1":
-            posts = manager.request_cache('posts.%s.comments.all.removed' % (startpost.pk),
-                    Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk))
-        else:
-            posts = manager.request_cache('posts.%s.comments.all' % (startpost.pk),
-                    Post.objects.filter(thread = startpost.thread, removed = False).exclude(pk = startpost.pk))
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
-        paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
-
-        try:
-            thread = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            thread = paginator.page(paginator.num_pages)
-
-        manager.set(cache_key, thread)
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
 
     return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True, 'showedits': True }
 
