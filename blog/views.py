@@ -236,13 +236,14 @@ def tags_search(request, tag_id):
 
 @rr('blog/blog.html')
 def view(request, blog_id):
-    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
+    blog_info = Blog.objects.get(pk = blog_id)
 
-    if showall == "1":
-        posts = Post.objects.filter(blog = blog_info).order_by('-created')
-    else:
-        posts = Post.objects.filter(blog = blog_info).exclude(removed = True).order_by('-created')
+    posts = Post.objects.filter(blog = blog_info).order_by('-created')
+
+    if not showall:
+        posts = posts.exclude(removed = True)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -255,13 +256,13 @@ def view(request, blog_id):
 
 @rr('blog/blog.html')
 def index(request):
-    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
 
-    if showall == "1":
-        posts = Post.objects.exclude(blog = None).order_by('-created')
-    else:
-        posts = Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created')
+    posts = Post.objects.exclude(blog = None).order_by('-created')
+
+    if not showall:
+        posts = posts.exclude(blog = None)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
