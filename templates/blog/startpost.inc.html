@@ -29,7 +29,7 @@
             | {% trans "Author" %}:
             <span class='user'>
                 <a href='{% url userauth.views.profile_view startpost.owner.pk %}'>
-                    {{ startpost.owner.profile.get_html_visible_name|safe }}
+                    {{ startpost.owner.profile.visible_name }}
                 </a>
             </span>
             ( 

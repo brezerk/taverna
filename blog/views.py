@@ -236,14 +236,10 @@ def tags_search(request, tag_id):
 
 @rr('blog/blog.html')
 def view(request, blog_id):
-    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
     blog_info = Blog.objects.get(pk = blog_id)
 
-    posts = Post.objects.filter(blog = blog_info).order_by('-created')
-
-    if not showall:
-        posts = posts.exclude(removed = True)
+    posts = Post.objects.filter(blog = blog_info).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -252,17 +248,13 @@ def view(request, blog_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'blog_info': blog_info, 'showall': showall, 'strippost': True }
+    return {'thread': thread, 'blog_info': blog_info}
 
-@rr('blog/blog.html')
+@rr('blog/index.html')
 def index(request):
-    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
 
-    posts = Post.objects.exclude(blog = None).order_by('-created').select_related()
-
-    if not showall:
-        posts = posts.exclude(blog = None)
+    posts = Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -271,7 +263,7 @@ def index(request):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return { 'thread': thread, 'showall': showall, 'strippost': True }
+    return { 'thread': thread }
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):

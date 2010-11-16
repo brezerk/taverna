@@ -14,9 +14,6 @@
         {% if user.pk == user_info.pk %}
             [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit" %}</a>]
         {% endif %}
-        {% if user.is_staff %}
-            [<a href='{% url userauth.views.rewards user_info.pk %}'>{% trans "Bury user" %}</a>]
-        {% endif %}
     </div>
 </div>
 {% endblock %}
