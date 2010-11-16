@@ -259,7 +259,7 @@ def index(request):
     showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
 
-    posts = Post.objects.exclude(blog = None).order_by('-created')
+    posts = Post.objects.exclude(blog = None).order_by('-created').select_related()
 
     if not showall:
         posts = posts.exclude(blog = None)

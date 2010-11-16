@@ -106,15 +106,15 @@ def index(request):
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
-    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
 
     forum = Forum.objects.get(pk = forum_id)
 
-    if showall == "1":
-        pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created')
-    else:
-        pages = Post.objects.filter(reply_to = None, forum = forum, removed = False).order_by('-sticked', '-created')
+    pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created')
+
+    if not showall:
+        pages = pages.exclude(removed = True)
 
     paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -139,12 +139,12 @@ def traker(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    showall = request.GET.get("showall", 1)
+    showall = request.GET.get("showall", False)
 
-    if showall == "1":
-        pages = Post.objects.filter(blog = None).exclude(owner = user_info).order_by('-created')
-    else:
-        pages = Post.objects.filter(blog = None, removed = False).exclude(owner = user_info).order_by('-created')
+    pages = Post.objects.filter(blog = None).exclude(owner = user_info).order_by('-created')
+
+    if not showall:
+        pages = pages.exclude(removed = True)
 
     paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -391,14 +391,14 @@ def forum_create(request):
 def tags_search(request, tag_id):
 
     page = request.GET.get("offset", 1)
-    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    showall = request.GET.get("showall", False)
 
     tag = Tag.objects.get(pk=tag_id)
 
-    if showall == "1":
-        posts = Post.objects.filter(blog = None, tags = tag_id).order_by('-created')
-    else:
-        posts = Post.objects.filter(blog = None, tags = tag_id, removed = False).order_by('-created')
+    posts = Post.objects.filter(blog = None, tags = tag_id).order_by('-created')
+
+    if not showall:
+        posts = posts.exclude(removed = True)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -455,14 +455,14 @@ def post_solve(request, post_id):
 @rr('blog/post_view.html')
 def thread(request, post_id):
     page = request.GET.get("offset", 1)
-    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    showall = request.GET.get("showall", False)
 
     startpost = Post.objects.get(pk = post_id)
 
-    if showall == "1":
-        posts = Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk)
-    else:
-        posts = Post.objects.filter(thread = startpost.thread, removed = False).exclude(pk = startpost.pk)
+    posts = Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk)
+
+    if not showall:
+        posts = posts.exclude(removed = True)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
@@ -481,12 +481,12 @@ def offset(request, root_id, offset_id):
     if offset_id == root_id:
         return HttpResponseRedirect(reverse('forum.views.thread', args = [root_id]))
     else:
-        showall = request.GET.get("showall", 0)
+        showall = request.GET.get("showall", False)
 
-        if showall == "1":
-            pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id)
-        else:
-            pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id, removed = True)
+        pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id)
+
+        if not showall:
+            pages = pages.exclude(removed = True)
 
         paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         post = Post.objects.get(pk=offset_id)
@@ -496,6 +496,7 @@ def offset(request, root_id, offset_id):
                 if showall == "1":
                    return HttpResponseRedirect("%s?showall=1&offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
                 else:
-                    return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
+                   return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
 
     raise Http404
+
