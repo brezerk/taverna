@@ -217,13 +217,13 @@ def post_add(request):
 
 @rr('blog/blog.html')
 def tags_search(request, tag_id):
-    showall = 0 if request.GET.get("showall", 0) == 0 else 1
+    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
 
-    if showall == "1":
-        posts = Post.objects.filter(forum = None, tags = tag_id).order_by('-created')
-    else:
-        posts = Post.objects.filter(forum = None, tags = tag_id, removed = False).order_by('-created')
+    posts = Post.objects.filter(forum = None, tags = tag_id).order_by('-created')
+
+    if not showall:
+        posts = posts.exclude(removed = True)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
