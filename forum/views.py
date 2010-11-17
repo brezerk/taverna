@@ -415,7 +415,7 @@ def tags_search(request, tag_id):
 
 @rr('blog/post_diff.html')
 def post_diff(request, diff_id):
-    edit_post = PostEdit.objects.get(pk = diff_id)
+    edit_post = PostEdit.objects.select_related('user__profile', 'post__owner__profile', 'post__blog').get(pk = diff_id)
     return {'startpost': edit_post.post, 'edit_post': edit_post}
 
 def post_rollback(request, diff_id):
