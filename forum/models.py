@@ -189,34 +189,17 @@ class Post(models.Model):
     def get_strip_text(self):
         return markup.strippost(self.text, self)
 
-    def is_edited(self):
+    def get_edits(self):
         lastedit = self.postedit_set.all()
 
         if lastedit:
-            return True
-        else:
-            return False
+            from django.template.loader import get_template
+            from django.template import Context
 
-    def get_last_edit_user_url(self):
-        edits = self.postedit_set.all()
+            t = get_template('forum/postedit.inc.html')
+            return t.render(Context({'edit_url': "http://lol", 'edit_count': 1, 'edit_date': lastedit[0].edited }))
 
-        return reverse("userauth.views.profile_view", args=[edits[0].user.pk])
-
-    def get_last_edit_user(self):
-        edits = self.postedit_set.all()
-        return edits[0].user.profile.visible_name
-
-    def get_last_edit_date(self):
-        edits = self.postedit_set.all()
-        return edits[0].edited
-
-    def get_last_edit_url(self):
-        edits = self.postedit_set.all()
-        return reverse("forum.views.post_diff", args=[edits[0].pk])
-
-    def get_edited_count(self):
-        edits = self.postedit_set.all()
-        return edits.count()
+        return None
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
