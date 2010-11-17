@@ -3,25 +3,17 @@
 
 <div class='news'>
     <h3>
-        {{ startpost.get_flags|safe }}
-        <a href='{{ startpost.get_section_url }}'>{{ startpost.get_section_name }}</a> →
         {{ startpost.get_forumtags|safe }}
         <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
     </h3>
     <div class='block'>
         <div class='text'>
-            {% if strippost %}
-                {{ startpost.get_strip_text|safe }}
-            {% else %}
-                {{ startpost.get_text|safe }}
-            {% endif %}
+            {{ startpost.get_text|safe }}
         </div>
-        {% if startpost.get_tag_url_list %}
         <div class='tags'>
             {% trans "Tags" %}:
             {{ startpost.get_tag_url_list|safe }}
         </div>
-        {% endif %}
         <div>
             [<span class='vote-positive'><a class='vote-positive' 
                    href='{% url blog.views.vote_generic startpost.pk 0 %}' 
@@ -41,28 +33,7 @@
             ( 
                 {{ startpost.created|date:"d.m.Y H:i" }}
             )
-            {% if startpost.thread %}
-            |
-            <span class='comments'>
-            {{ startpost.get_comments_count|safe }}
-            </span>
-            {% endif %}
         </div>
-        {% if startpost.is_edited %}
-        <div class='editby'>
-            {% trans "Last edited by" %}
-            <span class='user'>
-            <a href='{{ startpost.get_last_edit_user_url }}'>{{ startpost.get_last_edit_user }}</a>
-            </span>
-            {{ startpost.get_last_edit_date|date:"d.m.Y H:i" }} 
-            (
-            <span class='comments'>
-            <a href='{{ startpost.get_last_edit_url }}'>{% trans "Total edits" %}: {{ startpost.get_edited_count }}</a>
-            </span>
-            )
-        </div>
-        {% endif %}
-
         <div class='controls'>
             {% if startpost.removed %}
                 [<a href="{% url userauth.views.rewards startpost.owner.pk %}">{% trans "This post was removed" %}</a>]

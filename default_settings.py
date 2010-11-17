@@ -168,3 +168,5 @@ FORCE_REGEN = {
     'BORDER': 1,
 }
 
+MIN_RATING = -10
+

@@ -457,9 +457,9 @@ def thread(request, post_id):
     page = request.GET.get("offset", 1)
     showall = request.GET.get("showall", False)
 
-    startpost = Post.objects.get(pk = post_id)
+    startpost = Post.objects.select_related('owner__profile','blog','forum','thread').get(pk = post_id)
 
-    posts = Post.objects.filter(thread = startpost.thread).exclude(pk = startpost.pk)
+    posts = Post.objects.filter(thread = startpost.thread.pk).exclude(pk = startpost.pk).select_related('owner__profile', 'reply_to__owner__profile', 'thread')
 
     if not showall:
         posts = posts.exclude(removed = True)
