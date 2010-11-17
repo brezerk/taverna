@@ -40,12 +40,12 @@ sitemaps = {
 urlpatterns = patterns('',
     (r'^sudo/', include(admin.site.urls)),
 
-    (r'^libthread-(?P<post_id>\d+).so$', 'forum.views.thread'),
-    (r'^libcups-(?P<post_id>\d+).so$', 'forum.views.print_post'),
+    (r'^libthread.so.(?P<post_id>\d+).0$', 'forum.views.thread'),
+    (r'^libcups.so.(?P<post_id>\d+)$', 'forum.views.print_post'),
 
     (r'^$', 'blog.views.index'),
 
-    (r'^blog/libblog-(?P<blog_id>\d+).so$', 'blog.views.view'),
+    (r'^blog/libblog.so.(?P<blog_id>\d+).0$', 'blog.views.view'),
 #    (r'^blog/all/libblog-(?P<user_id>\d+).so$', 'blog.views.view_all'),
 
     (r'^blog/libdiff-(?P<diff_id>\d+).so$', 'forum.views.post_diff'),
@@ -54,16 +54,16 @@ urlpatterns = patterns('',
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
 
-    (r'^blogs/$', 'blog.views.list'),
-    (r'^blogs/public/$', 'blog.views.list_public'),
-    (r'^blogs/usr/libblog.so$', 'blog.views.list_users'),
+    (r'^share/$', 'blog.views.list'),
+    (r'^share/local/$', 'blog.views.list_public'),
+    (r'^share/usr/$', 'blog.views.list_users'),
     (r'^blog/libpost-new.so$', 'blog.views.post_add'),
     (r'^blog/libpost-edit-(?P<post_id>\d+).so$', 'blog.views.post_edit'),
     (r'^blog/libsettings.so$', 'blog.views.blog_settings'),
     (r'^blog/libtag-(?P<tag_id>\d+).so$', 'blog.views.tags_search'),
 
-    (r'^forum.so$', 'forum.views.index'),
-    (r'^forum-(?P<forum_id>\d+).so$', 'forum.views.forum'),
+    (r'^forum/$', 'forum.views.index'),
+    (r'^forum/libforum.so.(?P<forum_id>\d+).0$', 'forum.views.forum'),
 
     url(r'^forum/librss-(?P<forum_id>\d+).so$', RssForum(), name='rss_forum_traker'),
     url(r'^forum/libatom-(?P<forum_id>\d+).so$', AtomForum(), name='atom_forum_traker'),
@@ -87,6 +87,7 @@ urlpatterns = patterns('',
 
     (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
     (r'^pam/libprofile-(?P<user_id>\d+).so$', 'userauth.views.profile_view'),
+    (r'^~$', 'userauth.views.profile_view'),
     (r'^pam/libprofile-edit.so$', 'userauth.views.profile_edit'),
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
     (r'^pam/libnotify.so$', 'userauth.views.notify'),
@@ -96,6 +97,7 @@ urlpatterns = patterns('',
 
     (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
     (r'^pam/libgraweyard.so$', 'userauth.views.graveyard'),
+    (r'^index.php$', 'blog.views.firebox'),
 
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
     (r'^blog/libvote-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_generic'),

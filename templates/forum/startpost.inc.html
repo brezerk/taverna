@@ -10,10 +10,12 @@
         <div class='text'>
             {{ startpost.get_text|safe }}
         </div>
+        {% if startpost.blog %}
         <div class='tags'>
             {% trans "Tags" %}:
             {{ startpost.get_tag_url_list|safe }}
         </div>
+        {% endif %}
         <div>
             [<span class='vote-positive'><a class='vote-positive' 
                    href='{% url blog.views.vote_generic startpost.pk 0 %}' 

@@ -106,17 +106,17 @@ def index(request):
 
 @rr('forum/forum.html')
 def forum(request, forum_id):
-    showall = request.GET.get("showall", False)
+    showall = request.GET.get("showall", "0")
     page = request.GET.get("offset", 1)
 
     forum = Forum.objects.get(pk = forum_id)
 
-    pages = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created')
+    posts = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created').select_related('owner__profile', 'thread')
 
-    if not showall:
-        pages = pages.exclude(removed = True)
+    if showall == "0":
+        posts = posts.exclude(rating__lte = settings.MIN_RATING)
 
-    paginator = ExtendedPaginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         thread = paginator.page(page)
@@ -391,14 +391,14 @@ def forum_create(request):
 def tags_search(request, tag_id):
 
     page = request.GET.get("offset", 1)
-    showall = request.GET.get("showall", False)
+    showall = request.GET.get("showall", "0")
 
     tag = Tag.objects.get(pk=tag_id)
 
-    posts = Post.objects.filter(blog = None, tags = tag_id).order_by('-created')
+    posts = Post.objects.filter(blog = None, tags = tag_id).order_by('-created').select_related('owner__profile', 'thread', 'forum')
 
-    if not showall:
-        posts = posts.exclude(removed = True)
+    if showall == "0":
+        posts = posts.exclude(rating__lte = settings.MIN_RATING)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
@@ -452,17 +452,17 @@ def post_solve(request, post_id):
     else:
         raise Http404
 
-@rr('blog/post_view.html')
+@rr('blog/thread.html')
 def thread(request, post_id):
     page = request.GET.get("offset", 1)
-    showall = request.GET.get("showall", False)
+    showall = request.GET.get("showall", "0")
 
     startpost = Post.objects.select_related('owner__profile','blog','forum','thread').get(pk = post_id)
 
     posts = Post.objects.filter(thread = startpost.thread.pk).exclude(pk = startpost.pk).select_related('owner__profile', 'reply_to__owner__profile', 'thread')
 
-    if not showall:
-        posts = posts.exclude(removed = True)
+    if showall == "0":
+        posts = posts.exclude(rating__lte = settings.MIN_RATING)
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
 
@@ -471,7 +471,7 @@ def thread(request, post_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return { 'startpost': startpost, 'thread': thread, 'showall': showall, 'blog_info': True, 'showedits': True }
+    return { 'startpost': startpost, 'thread': thread, 'showall': showall}
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):

@@ -63,8 +63,11 @@ def openid_logout(request):
 
 @login_required()
 @rr ('userauth/profile.html')
-def profile_view(request, user_id):
-    user_info = User.objects.get(pk = user_id)
+def profile_view(request, user_id = None):
+    if user_id:
+        user_info = User.objects.get(pk = user_id)
+    else:
+        user_info = request.user
 
     try:
         user_blog = Blog.objects.get(owner = user_info)

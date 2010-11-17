@@ -9,12 +9,10 @@
     </div>
     <div class='right'>
         {% if showall == "1" %}
-            [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
+            [<a href='?showall=0'>{% trans "grep positive" %}</a>]
         {% else %}
-            [<a href='?showall=1'>{% trans "Show removed" %}</a>]
+            [<a href='?showall=1'>{% trans "ls *" %}</a>]
         {% endif %}
-
-        [<a href='{% url forum.views.index %}'>{% trans "Back" %}</a>]
     </div>
 </div>
 {% endblock %}

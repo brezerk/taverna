@@ -4,7 +4,7 @@
 {% block menubox %}
 <div class='actionbox'>
     <div class='left'>
-        {% trans "Blogs traker" %}
+        <a href='{% url blog.views.index %}'>{% trans "Blogs traker" %}</a> → {% trans "Search results for tag" %}: "<b>{{ tag.name }}</b>"
     </div>
     <div class='right'>
         [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]

@@ -136,7 +136,7 @@ class Post(models.Model):
 
 
     def get_last_comment_date(self):
-        comments = Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).order_by('-created')
+        comments = Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).order_by('-created')[:1]
 
         try:
             return comments[0].created
@@ -146,7 +146,7 @@ class Post(models.Model):
     def get_comments_count(self):
         from django.core.paginator import Paginator
         paginator = Paginator(
-                        Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False),
+                        Post.objects.exclude(pk=self.pk).filter(thread=self.pk).exclude(rating__lte = settings.MIN_RATING),
                         settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]
                     )
 
@@ -166,7 +166,7 @@ class Post(models.Model):
 
     def get_flags(self):
         ret = ""
-        if self.removed:
+        if self.rating < settings.MIN_RATING:
             ret = "<span class='removed'>&times;</span>"
         if self.sticked:
             ret = ret + "<span class='sticked'>&curren;</span>"
@@ -197,7 +197,7 @@ class Post(models.Model):
             from django.template import Context
 
             t = get_template('forum/postedit.inc.html')
-            return t.render(Context({'edit_url': "http://lol", 'edit_count': 1, 'edit_date': lastedit[0].edited }))
+            return t.render(Context({'edit_url': reverse("forum.views.post_diff", args=[lastedit[0].pk]), 'edit_count': 1, 'edit_date': lastedit[0].edited }))
 
         return None
 

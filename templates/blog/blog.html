@@ -9,7 +9,7 @@
     <div class='right'>
         [<a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
     {% if user.is_authenticated %}
-        [<a href='{% url blog.views.post_add %}'>{% trans "Add topic" %}</a>]
+        [<a href='{% url blog.views.post_add %}'>{% trans "vim" %}</a>]
         [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
     {% endif %}
     </div>

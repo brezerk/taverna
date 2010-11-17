@@ -215,15 +215,12 @@ def post_add(request):
         'blog_info': True,
         'dont_strip': True}
 
-@rr('blog/blog.html')
+@rr('blog/tag_search.html')
 def tags_search(request, tag_id):
-    showall = request.GET.get("showall", False)
     page = request.GET.get("offset", 1)
 
-    posts = Post.objects.filter(forum = None, tags = tag_id).order_by('-created')
-
-    if not showall:
-        posts = posts.exclude(removed = True)
+    tag = Tag.objects.get(pk = tag_id)
+    posts = Post.objects.filter(forum = None, tags = tag_id).order_by('-created').select_related('owner__profile','blog','thread')
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -232,7 +229,7 @@ def tags_search(request, tag_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'tag': tag, 'showall': showall}
+    return {'thread': thread, 'tag': tag}
 
 @rr('blog/blog.html')
 def view(request, blog_id):
@@ -255,6 +252,20 @@ def index(request):
     page = request.GET.get("offset", 1)
 
     posts = Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
+
+    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+
+    try:
+        thread = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        thread = paginator.page(paginator.num_pages)
+
+    return { 'thread': thread }
+
+@rr('blog/firebox.html')
+def firebox(request):
+    page = request.GET.get("offset", 1)
+    posts = Post.objects.exclude(blog = None).exclude(rating__gte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
 
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
