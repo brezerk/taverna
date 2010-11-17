@@ -44,11 +44,7 @@
         {% endif %}
         </a></span>
         @ 
-        {% if post.created %}
-            {{post.created|date:"d.m.Y H:i:s"}}
-        {% else %}
-            {%now "d.m.Y H:i:s"%}            
-        {% endif %}
+        {{post.created|date:"d.m.Y H:i:s"}}
     </div>
     <div class="controls">
     {% if post.pk %}
