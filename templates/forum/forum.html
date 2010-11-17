@@ -11,13 +11,13 @@
     <div class='right'>
         [<a href='{% url rss_forum_traker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_traker forum.pk %}'>Atom</a>]
         {% if showall == "1" %}
-            [<a href='?showall=0'>{% trans "grep positive" %}</a>]
+            [<a href='?showall=0'>grep positive</a>]
         {% else %}
-            [<a href='?showall=1'>{% trans "ls *" %}</a>]
+            [<a href='?showall=1'>ls *</a>]
         {% endif %}
 
         {% if user.is_authenticated %}
-            [<a href='{% url forum.views.topic_create forum.pk %}'>{% trans "vim" %}</a>]
+            [<a href='{% url forum.views.topic_create forum.pk %}'>vim</a>]
             [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
         {% endif %}
     </div>

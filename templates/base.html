@@ -54,7 +54,7 @@
                 positive == 1;
             }
             var voite_id = "#rating-" + post_id;
-            $.getJSON('libajax-' + post_id + '-' + positive + '.so', {}, function(json){
+            $.getJSON('/lib/ajax.so.' + post_id + '.' + positive, {}, function(json){
                 $(voite_id).html(json.vote.rating);
                 if (json.vote.message){
                     alert (json.vote.message);

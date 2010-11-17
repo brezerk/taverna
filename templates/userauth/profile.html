@@ -65,9 +65,6 @@
     {% if user == user_info %}
     <li><a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>
     {% endif %}
-    {% if user == user_info or user.is_staff %}
-    <li><a href='{% url userauth.views.rewards user_info.id %}'>{% trans "Karma rewards" %}</a>
-    {% endif %}
 </ul>
 
 {% endblock %}

@@ -8,7 +8,7 @@
     </div>
     <div class='right'>
         {% if user.is_authenticated %}
-            [<a href='{% url forum.views.forum_create %}'>{% trans "Create forum" %}</a>]
+            [<a href='{% url forum.views.forum_create %}'>mkdir</a>]
             [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
         {% endif %}
     </div>

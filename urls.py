@@ -38,7 +38,7 @@ sitemaps = {
 }
 
 urlpatterns = patterns('',
-    (r'^sudo/', include(admin.site.urls)),
+    (r'^sbin/sudo$', include(admin.site.urls)),
 
     (r'^lib/thread.so.(?P<post_id>\d+)$', 'forum.views.thread'),
     (r'^lib/cups.so.(?P<post_id>\d+)$', 'forum.views.print_post'),
@@ -51,8 +51,8 @@ urlpatterns = patterns('',
     (r'^lib/diff.so.(?P<diff_id>\d+)$', 'forum.views.post_diff'),
     (r'^lib/rollback.so.(?P<diff_id>\d+)$', 'forum.views.post_rollback'),
 
-    url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
-    url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
+    url(r'^lib/librss.so$', RssBlogTraker(), name='rss_blog_traker'),
+    url(r'^lib/libatom.so$', AtomBlogTraker(), name='atom_blog_traker'),
 
     (r'^share/$', 'blog.views.list'),
     (r'^share/local/$', 'blog.views.list_public'),
@@ -63,47 +63,46 @@ urlpatterns = patterns('',
     (r'^sahre/libtag.so.(?P<tag_id>\d+)$', 'blog.views.tags_search'),
 
     (r'^forum/$', 'forum.views.index'),
-    (r'^forum/libforum.so.(?P<forum_id>\d+).0$', 'forum.views.forum'),
+    (r'^forum/libforum.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
 
-    url(r'^forum/librss-(?P<forum_id>\d+).so$', RssForum(), name='rss_forum_traker'),
-    url(r'^forum/libatom-(?P<forum_id>\d+).so$', AtomForum(), name='atom_forum_traker'),
+    url(r'^lib/forum/librss.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
+    url(r'^lib/forum/libatom.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_traker'),
 
-    (r'^forum/posting.so$', 'forum.views.reply'),
     (r'^lib/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
 
-    url(r'^thread/librss-(?P<post_id>\d+).so$', RssComments(), name='rss_comments'),
-    url(r'^thread/libatom-(?P<post_id>\d+).so$', AtomComments(), name='atom_comments'),
+    url(r'^lib/thread/librss.so.(?P<post_id>\d+)$', RssComments(), name='rss_comments'),
+    url(r'^lib/thread/libatom.so.(?P<post_id>\d+)$', AtomComments(), name='atom_comments'),
 
-    (r'^forum/createtopic.(?P<forum_id>\d+).so$', 'forum.views.topic_create'),
-    (r'^forum/edittopic.(?P<topic_id>\d+).so$', 'forum.views.topic_edit'),
-    (r'^forum/createforum.so$', 'forum.views.forum_create'),
-    (r'^forum/libtag-(?P<tag_id>\d+).so$', 'forum.views.tags_search'),
+    (r'^forum/libvim.so.0.(?P<forum_id>\d+)$', 'forum.views.topic_create'),
+    (r'^forum/libvim.so.1.(?P<topic_id>\d+)$', 'forum.views.topic_edit'),
+    (r'^bin/mkdir$', 'forum.views.forum_create'),
+    (r'^forum/libtag.so.(?P<tag_id>\d+)$', 'forum.views.tags_search'),
     (r'^forum/traker.so$', 'forum.views.traker'),
 
-    (r'^liboffset-(?P<root_id>\d+).so.(?P<offset_id>\d+)$', 'forum.views.offset'),
-    (r'^libremove-(?P<post_id>\d+).so$', 'forum.views.remove'),
-    (r'^libview-(?P<post_id>\d+).so$', 'forum.views.post_view'),
-    (r'^libsolve-(?P<post_id>\d+).so$', 'forum.views.post_solve'),
+    (r'^lib/offset.so.(?P<root_id>\d+).(?P<offset_id>\d+)$', 'forum.views.offset'),
+    (r'^sbin/remove.so.(?P<post_id>\d+)$', 'forum.views.remove'),
+#    (r'^libview-(?P<post_id>\d+).so$', 'forum.views.post_view'),
+    (r'^lib/libsolve.so.(?P<post_id>\d+)$', 'forum.views.post_solve'),
 
-    (r'^pam/liblogout.so$', 'userauth.views.openid_logout'),
-    (r'^pam/libprofile-(?P<user_id>\d+).so$', 'userauth.views.profile_view'),
+    (r'^lib/pam_logout.so$', 'userauth.views.openid_logout'),
+    (r'^lib/pam_access.so.(?P<user_id>\d+)$', 'userauth.views.profile_view'),
     (r'^~$', 'userauth.views.profile_view'),
-    (r'^pam/libprofile-edit.so$', 'userauth.views.profile_edit'),
-    (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
+    (r'^lib/pam_env.so$', 'userauth.views.profile_edit'),
+    (r'^lib/pam_comments.so.(?P<user_id>\d+)$', 'userauth.views.user_comments'),
     (r'^lib/libnotify.so$', 'userauth.views.notify'),
 
-    url(r'^pam/notify/librss-(?P<user_id>\d+).so$', RssNotify(), name='rss_notify'),
-    url(r'^pam/notify/libatom-(?P<user_id>\d+).so$', AtomNotify(), name='atom_notify'),
+    url(r'^lib/notify/librss.so.(?P<user_id>\d+)$', RssNotify(), name='rss_notify'),
+    url(r'^lib/notify/libatom.so.(?P<user_id>\d+)$', AtomNotify(), name='atom_notify'),
 
-    (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
+#   (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
     (r'^dev/graveyard$', 'userauth.views.graveyard'),
     (r'^index.php$', 'blog.views.firebox'),
 
-    (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
-    (r'^blog/libvote-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_generic'),
+    (r'^lib/ajax.so.(?P<post_id>\d+).(?P<positive>\d+)$', 'blog.views.vote_async'),
+    (r'^lib/libvote.so.(?P<post_id>\d+).(?P<positive>\d+)$', 'blog.views.vote_generic'),
 
-    url(r'^pam/librss-(?P<user_id>\d+).so$', RssUser(), name='rss_user'),
-    url(r'^pam/libatom-(?P<user_id>\d+).so$', AtomUser(), name='atom_user'),
+    url(r'^lib/pam/librss.so.(?P<user_id>\d+)$', RssUser(), name='rss_user'),
+    url(r'^lib/pam/libatom.so.(?P<user_id>\d+)$', AtomUser(), name='atom_user'),
 
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
@@ -111,7 +110,7 @@ urlpatterns = patterns('',
     url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
     url(r'^share/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
 
-    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    (r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

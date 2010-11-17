@@ -15,9 +15,9 @@
     <div class='right'>
         [<a href='{% url forum.views.print_post startpost.pk %}'>lp < post</a>]
         {% if showall == "1" %}
-            [<a href='?showall=0'>{% trans "grep positive" %}</a>]
+            [<a href='?showall=0'>grep positive</a>]
         {% else %}
-            [<a href='?showall=1'>{% trans "ls *" %}</a>]
+            [<a href='?showall=1'>ls *</a>]
         {% endif %}
         [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
 
