@@ -40,16 +40,16 @@ sitemaps = {
 urlpatterns = patterns('',
     (r'^sudo/', include(admin.site.urls)),
 
-    (r'^libthread.so.(?P<post_id>\d+).0$', 'forum.views.thread'),
-    (r'^libcups.so.(?P<post_id>\d+)$', 'forum.views.print_post'),
+    (r'^lib/thread.so.(?P<post_id>\d+)$', 'forum.views.thread'),
+    (r'^lib/cups.so.(?P<post_id>\d+)$', 'forum.views.print_post'),
 
     (r'^$', 'blog.views.index'),
 
-    (r'^blog/libblog.so.(?P<blog_id>\d+).0$', 'blog.views.view'),
+    (r'^share/libblog.so.(?P<blog_id>\d+)$', 'blog.views.view'),
 #    (r'^blog/all/libblog-(?P<user_id>\d+).so$', 'blog.views.view_all'),
 
-    (r'^blog/libdiff-(?P<diff_id>\d+).so$', 'forum.views.post_diff'),
-    (r'^blog/librollback-(?P<diff_id>\d+).so$', 'forum.views.post_rollback'),
+    (r'^lib/diff.so.(?P<diff_id>\d+)$', 'forum.views.post_diff'),
+    (r'^lib/rollback.so.(?P<diff_id>\d+)$', 'forum.views.post_rollback'),
 
     url(r'^librss-0.so$', RssBlogTraker(), name='rss_blog_traker'),
     url(r'^libatom-0.so$', AtomBlogTraker(), name='atom_blog_traker'),
@@ -57,10 +57,10 @@ urlpatterns = patterns('',
     (r'^share/$', 'blog.views.list'),
     (r'^share/local/$', 'blog.views.list_public'),
     (r'^share/usr/$', 'blog.views.list_users'),
-    (r'^blog/libpost-new.so$', 'blog.views.post_add'),
-    (r'^blog/libpost-edit-(?P<post_id>\d+).so$', 'blog.views.post_edit'),
+    (r'^bin/vim$', 'blog.views.post_add'),
+    (r'^share/libvim.so.0.(?P<post_id>\d+)$', 'blog.views.post_edit'),
     (r'^blog/libsettings.so$', 'blog.views.blog_settings'),
-    (r'^blog/libtag-(?P<tag_id>\d+).so$', 'blog.views.tags_search'),
+    (r'^sahre/libtag.so.(?P<tag_id>\d+)$', 'blog.views.tags_search'),
 
     (r'^forum/$', 'forum.views.index'),
     (r'^forum/libforum.so.(?P<forum_id>\d+).0$', 'forum.views.forum'),
@@ -69,7 +69,7 @@ urlpatterns = patterns('',
     url(r'^forum/libatom-(?P<forum_id>\d+).so$', AtomForum(), name='atom_forum_traker'),
 
     (r'^forum/posting.so$', 'forum.views.reply'),
-    (r'^libreply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
+    (r'^lib/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
 
     url(r'^thread/librss-(?P<post_id>\d+).so$', RssComments(), name='rss_comments'),
     url(r'^thread/libatom-(?P<post_id>\d+).so$', AtomComments(), name='atom_comments'),
@@ -90,13 +90,13 @@ urlpatterns = patterns('',
     (r'^~$', 'userauth.views.profile_view'),
     (r'^pam/libprofile-edit.so$', 'userauth.views.profile_edit'),
     (r'^pam/libcomments-(?P<user_id>\d+).so$', 'userauth.views.user_comments'),
-    (r'^pam/libnotify.so$', 'userauth.views.notify'),
+    (r'^lib/libnotify.so$', 'userauth.views.notify'),
 
     url(r'^pam/notify/librss-(?P<user_id>\d+).so$', RssNotify(), name='rss_notify'),
     url(r'^pam/notify/libatom-(?P<user_id>\d+).so$', AtomNotify(), name='atom_notify'),
 
     (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
-    (r'^pam/libgraweyard.so$', 'userauth.views.graveyard'),
+    (r'^dev/graveyard$', 'userauth.views.graveyard'),
     (r'^index.php$', 'blog.views.firebox'),
 
     (r'^libajax-(?P<post_id>\d+)-(?P<positive>\d+).so$', 'blog.views.vote_async'),
@@ -108,8 +108,8 @@ urlpatterns = patterns('',
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 
-    url(r'^blog/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
-    url(r'^blog/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
+    url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
+    url(r'^share/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 

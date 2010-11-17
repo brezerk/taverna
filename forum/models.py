@@ -199,7 +199,7 @@ class Post(models.Model):
             t = get_template('forum/postedit.inc.html')
             return t.render(Context({'edit_url': reverse("forum.views.post_diff", args=[lastedit[0].pk]), 'edit_count': 1, 'edit_date': lastedit[0].edited }))
 
-        return None
+        return ""
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
