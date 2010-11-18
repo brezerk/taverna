@@ -38,7 +38,7 @@ sitemaps = {
 }
 
 urlpatterns = patterns('',
-    (r'^sbin/sudo$', include(admin.site.urls)),
+    (r'^sbin/sudo/', include(admin.site.urls)),
 
     (r'^lib/thread.so.(?P<post_id>\d+)$', 'forum.views.thread'),
     (r'^lib/cups.so.(?P<post_id>\d+)$', 'forum.views.print_post'),

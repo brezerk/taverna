@@ -326,7 +326,7 @@ def graveyard(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Profile.objects.filter(Q(karma__lt = 0) | Q(buryed = True)).order_by('-buryed'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(Profile.objects.filter(Q(karma__lt = 0) | Q(buryed = True)).order_by('-buryed').select_related('user'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         users = paginator.page(page)
