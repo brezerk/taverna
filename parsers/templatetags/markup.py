@@ -63,9 +63,9 @@ def markup(value, parser):
                 contents = postmarkup.strip_bbcode(contents).replace(u'"', "%22")
 
                 if self.params in self.valid_params:
-                    return u'<img class="float-%s" src="%s"></img>' % (self.params, contents)
+                    return u'<img class="float-%s" src="%s" alt="%s"></img>' % (self.params, contents, contents)
                 else:
-                    return u'<img src="%s"></img>' % contents
+                    return u'<img src="%s" alt="%s"></img>' % (contents, contents)
 
         markup.add_tag(ImgTag, u'img')
 
