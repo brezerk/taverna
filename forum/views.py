@@ -132,28 +132,26 @@ def forum(request, forum_id):
 
 @rr('forum/traker.html')
 def traker(request):
-    user_info = User.objects.get(pk = request.user.pk)
-
     try:
         page = int(request.GET['offset'])
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    showall = request.GET.get("showall", False)
+    showall = request.GET.get("showall", "0")
 
-    pages = Post.objects.filter(blog = None).exclude(owner = user_info).order_by('-created')
+    posts = Post.objects.filter(blog = None).exclude(owner = request.user).order_by('-created').select_related('owner__profile', 'reply_to__owner__profile', 'thread__blog','thread__forum')
 
-    if not showall:
-        pages = pages.exclude(removed = True)
+    if showall == "0":
+        posts = posts.exclude(rating__lte = settings.MIN_RATING)
 
-    paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         thread = paginator.page(page)
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'user_info': user_info, 'request_url': request.get_full_path(), 'showall': showall }
+    return {'thread': thread, 'request_url': request.get_full_path(), 'showall': showall }
 
 @login_required()
 @rr('forum/reply.html')

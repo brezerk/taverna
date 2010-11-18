@@ -9,9 +9,9 @@
     </div>
     <div class='right'>
         {% if showall == "1" %}
-            [<a href='?showall=0'>{% trans "Hide removed" %}</a>]
+            [<a href='?showall=0'>grep positive</a>]
         {% else %}
-            [<a href='?showall=1'>{% trans "Show removed" %}</a>]
+            [<a href='?showall=1'>ls *</a>]
         {% endif %}
         [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
     </div>
@@ -33,6 +33,7 @@
     <a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a>
  </td>
  <td>
+    {{post.get_flags|safe}}
     {% if post.removed %}
         <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>{{post.thread.title}}</a>
         <span class='removed'>&times;</span>
