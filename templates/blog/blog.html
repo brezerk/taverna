@@ -7,7 +7,7 @@
         <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name }}</a> {{ blog_info.desc }}
     </div>
     <div class='right'>
-        [<a href='{% url rss_blog blog_info.id %}'>RSS</a>|<a href='{% url atom_blog blog_info.id %}'>Atom</a>]
+        [<a href='/media/blog-{{blog_info.pk}}.xml'>Atom</a>]
     {% if user.is_authenticated %}
         [<a href='{% url blog.views.post_add %}'>vim</a>]
         [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]

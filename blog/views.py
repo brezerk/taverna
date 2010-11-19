@@ -235,9 +235,7 @@ def tags_search(request, tag_id):
 def view(request, blog_id):
     page = request.GET.get("offset", 1)
     blog_info = Blog.objects.get(pk = blog_id)
-
-    posts = Post.objects.filter(blog = blog_info).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
-
+    posts = Post.get_rated_users_blog_posts(blog_info)
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     try:

@@ -211,6 +211,12 @@ class Post(models.Model):
         return Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
             ).order_by('-created').select_related('owner__profile','blog','thread')
 
+    @staticmethod
+    def get_rated_users_blog_posts(blog):
+        return Post.objects.filter(blog = blog
+            ).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
+            ).order_by('-created').select_related('owner__profile','blog','thread')
+
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
     new_text = models.TextField()
@@ -252,16 +258,35 @@ class PostVote(models.Model):
             return ret
 
 from django.db.models.signals import post_save, post_delete
-from blog.feeds import rss_blog_tracker
+from blog.feeds import RssBlogFeed
 import os
 
+rss_blog_tracker = RssBlogFeed(
+    title = _("Foss tracker"),
+    link = "/",
+    description = _("Updates on changes and additions to blogs topics."),
+)
+
 def generate_tracker_feed(sender, instance, **kwargs):
+
     if instance.blog is not None:
         rss_blog_tracker.save(
             Post.get_rated_blog_posts()[:16], 
             os.path.join(settings.STATIC_RSS_ROOT, "tracker.xml")
         )
 
+    if instance.blog.owner.pk != 1:
+        rss_blog = RssBlogFeed(
+            title = "FOSS :: " + instance.blog.name,
+            link = "/",
+            description = "%s %s" % (_("Foss blog updates for"), instance.blog.name),
+        )
+        rss_blog.save(
+            instance.get_rated_users_blog_posts(instance.blog)[:16],
+            os.path.join(settings.STATIC_RSS_ROOT, "blog-%d.xml" % instance.blog.pk),
+        )
+
 post_save.connect(generate_tracker_feed, sender = Post)
+post_delete.connect(generate_tracker_feed, sender = Post)
 
 

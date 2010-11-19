@@ -25,7 +25,6 @@ from django.core.urlresolvers import reverse
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-from taverna.blog.feeds import RssBlog, AtomBlog
 from taverna.blog.sitemaps import BlogSitemap
 from taverna.forum.feeds import RssForum, AtomForum, RssComments, AtomComments
 from taverna.userauth.feeds import RssUser, AtomUser, RssNotify, AtomNotify
@@ -103,9 +102,6 @@ urlpatterns = patterns('',
 
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
-
-    url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
-    url(r'^share/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
 
     (r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 
