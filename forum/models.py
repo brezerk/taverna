@@ -197,9 +197,19 @@ class Post(models.Model):
             from django.template import Context
 
             t = get_template('forum/postedit.inc.html')
-            return t.render(Context({'edit_url': reverse("forum.views.post_diff", args=[lastedit[0].pk]), 'edit_count': 1, 'edit_date': lastedit[0].edited }))
+            return t.render(Context({
+                'edit_url': reverse("forum.views.post_diff", 
+                args=[lastedit[0].pk]), 
+                'edit_count': 1, 
+                'edit_date': lastedit[0].edited })
+            )
 
         return ""
+    
+    @staticmethod
+    def get_rated_blog_posts():
+        return Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
+            ).order_by('-created').select_related('owner__profile','blog','thread')
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
@@ -240,4 +250,18 @@ class PostVote(models.Model):
             return _("(Auto) Reply to: ") + ret
         else:
             return ret
+
+from django.db.models.signals import post_save, post_delete
+from blog.feeds import rss_blog_tracker
+import os
+
+def generate_tracker_feed(sender, instance, **kwargs):
+    if instance.blog is not None:
+        rss_blog_tracker.save(
+            Post.get_rated_blog_posts()[:16], 
+            os.path.join(settings.STATIC_RSS_ROOT, "tracker.xml")
+        )
+
+post_save.connect(generate_tracker_feed, sender = Post)
+
 

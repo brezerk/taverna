@@ -250,9 +250,7 @@ def view(request, blog_id):
 @rr('blog/index.html')
 def index(request):
     page = request.GET.get("offset", 1)
-
-    posts = Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
-
+    posts = Post.get_rated_blog_posts()
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
     try:

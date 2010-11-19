@@ -22,37 +22,35 @@ from django.contrib.syndication.views import Feed
 from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
-from taverna.blog.models import Blog
-from taverna.forum.models import Post
+from blog.models import Blog
+from forum.models import Post
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from taverna.parsers.templatetags.markup import strippost
-from taverna.parsers.templatetags.markup import markup
-
+from parsers.templatetags.markup import strippost
+from parsers.templatetags.markup import markup
 from django.core.paginator import Paginator
-
 from django.conf import settings
 
-class RssBlogTraker(Feed):
-    title = _("Last 10 blogs topics")
-    link = "/"
-    description = _("Updates on changes and additions to blogs topics.")
+from util import StaticFeed
 
-    def items(self):
-        post_list = Post.objects.exclude(blog = None).exclude(removed = True).order_by('-created')
-        posts = post_list[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
-        return posts
+class RssBlogTraker(StaticFeed):
 
     def item_title(self, item):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
+        print strippost(item.text, item)
         return strippost(item.text, item)
 
-class AtomBlogTraker(RssBlogTraker):
-   feed_type = Atom1Feed
-   subtitle = RssBlogTraker.description
+    def item_pubdate(self, item):
+        return item.created
+
+rss_blog_tracker = RssBlogTraker(
+    title = _("Last 10 blogs topics"),
+    link = "/",
+    description = _("Updates on changes and additions to blogs topics."),
+)
 
 class RssBlog(Feed):
     link = ""
