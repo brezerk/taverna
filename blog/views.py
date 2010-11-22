@@ -285,14 +285,9 @@ def vote_async(request, post_id, positive):
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
 
-    if int(positive) == 0:
-        positive = True
-    else:
-        positive = False
-
     if request.user.profile.use_force("VOTE"):
         try:
-            PostVote(post = post, user = request.user, positive = positive).save()
+            PostVote(post = post, user = request.user, positive = bool(int(positive))).save()
         except IntegrityError:
             return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
         else:
