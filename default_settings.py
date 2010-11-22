@@ -140,6 +140,7 @@ PAGE_LIMITATIONS = {
     'BLOG_COMMENTS': 10,
     'FORUM_TOPICS': 30,
     'FORUM_COMMENTS': 10,
+    'RSS_POSTS': 16,
 }
 
 ugettext = lambda s: s

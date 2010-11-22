@@ -49,7 +49,7 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked', 'closed')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved', 'sticked', 'closed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -79,7 +79,7 @@ class ThreadForm(forms.ModelForm):
 class AdminThreadForm(ThreadForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -87,7 +87,7 @@ class AdminThreadForm(ThreadForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked', 'closed')
+        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved', 'sticked', 'closed')
         widgets = {
                   'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
@@ -156,7 +156,7 @@ def traker(request):
 @login_required()
 @rr('forum/reply.html')
 def reply(request, post_id):
-    reply_to = Post.objects.filter(removed = False, closed = False).get(pk = post_id)
+    reply_to = Post.objects.filter(closed = False).get(pk = post_id)
 
     if reply_to.thread.closed:
         raise Http404
@@ -198,14 +198,14 @@ def post_view(request, post_id):
 
 @login_required()
 @rr('blog/post_remove.html')
-def remove(request, post_id):
+def scourge(request, post_id):
     if not request.user.is_staff:
         raise Http404
 
     if not request.user.is_active:
        return error(request, "")
 
-    startpost = Post.objects.exclude(removed = True).get(pk = post_id)
+    startpost = Post.objects.get(pk = post_id)
 
     class RemoveForm(forms.ModelForm):
         class Meta:
@@ -216,19 +216,34 @@ def remove(request, post_id):
             reason = self.cleaned_data['reason']
             if reason == None:
                 raise forms.ValidationError(_("Valid reason required."))
+
+            if reason.cost == 0:
+                return reason
+
+            try:
+                postvote = PostVote.objects.get(post=post_id, user=1)
+            except:
+                postvote = None
+
+            if postvote:
+                raise forms.ValidationError(_("You can't scourge post twice :]"))
+
             return reason
 
         def save(self, **args):
-            postvote = super(RemoveForm, self).save(commit = False, **args)
-            postvote.post = startpost
-            postvote.user = request.user
-            postvote.positive = False
-            postvote.auto = False
-            postvote.save()
+            if self.cleaned_data['reason'].cost == 0:
+                auto_remove(startpost, self.cleaned_data['reason']);
+                startpost.delete()
+            else:
+                postvote = super(RemoveForm, self).save(commit = False, **args)
+                postvote.post = startpost
+                postvote.user = User.objects.get(pk = 1)
+                postvote.positive = False
+                postvote.auto = False
+                postvote.save()
 
-            startpost.removed = True
-            modify_rating(startpost, postvote.reason.cost)
-            auto_remove(startpost, postvote.reason);
+                modify_rating(startpost, postvote.reason.cost)
+                auto_remove(startpost, postvote.reason);
 
     if request.method == 'POST':
         form = RemoveForm(request.POST)
@@ -237,7 +252,7 @@ def remove(request, post_id):
             form.save()
             if startpost.reply_to:
                 offset = request.GET.get("offset", 1)
-                return HttpResponseRedirect("%s?offset=%s" % (reverse('forum.views.thread', args = [startpost.thread.pk]), offset))
+                return HttpResponseRedirect("%s?offset=%s&showall=1" % (reverse('forum.views.thread', args = [startpost.thread.pk]), offset))
             else:
                 if startpost.forum:
                     return HttpResponseRedirect(reverse('forum.views.forum', args = [startpost.forum.pk]))
@@ -254,18 +269,21 @@ def remove(request, post_id):
 
 def auto_remove(startpost, reason):
     if startpost.reply_to == None:
-        for post in Post.objects.filter(thread = startpost.pk, removed = False):
-            PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-            post.removed = True
-
-            modify_rating(post, reason.cost)
+        for post in Post.objects.filter(thread = startpost.pk):
+            if reason.cost == 0:
+                post.delete()
+            else:
+                PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
+                modify_rating(post, reason.cost)
     else:
-        for post in Post.objects.filter(reply_to = startpost.pk, removed = False):
-            PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-            post.removed = True
-
-            modify_rating(post, reason.cost)
+        for post in Post.objects.filter(reply_to = startpost.pk):
             auto_remove(post, reason)
+
+            if reason.cost == 0:
+                post.delete()
+            else:
+               PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
+               modify_rating(post, reason.cost)
 
 def modify_rating(post, cost = 1, positive = False):
     if positive:
@@ -322,7 +340,7 @@ def topic_create(request, forum_id):
             form = AdminThreadForm()
         else:
             form = ThreadForm()
-        form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'removed', 'solved', 'sticked')
+        form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved', 'sticked')
     return {'form': form, 'forum': forum, 'blog_info': True}
 
 @login_required()
@@ -331,7 +349,7 @@ def topic_edit(request, topic_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    topic = Post.objects.exclude(removed=True).get(pk = topic_id)
+    topic = Post.objects.get(pk = topic_id)
 
     if not topic.reply_to == None:
         raise Http404
@@ -420,7 +438,7 @@ def post_rollback(request, diff_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    diff = PostEdit.objects.exclude(removed = True).get(pk = diff_id)
+    diff = PostEdit.objects.get(pk = diff_id)
 
     if not diff.post.owner == request.user:
         raise Http404
@@ -437,7 +455,7 @@ def post_rollback(request, diff_id):
     return thread(request, post.pk)
 
 def post_solve(request, post_id):
-    post = Post.objects.filter(removed = False).get(pk = post_id)
+    post = Post.objects.get(pk = post_id)
 
     if post.solved:
         post.solved = False
@@ -473,7 +491,7 @@ def thread(request, post_id):
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
-    return {'startpost': Post.objects.exclude(removed = True).get(pk = post_id), 'site': Site.objects.get_current().domain}
+    return {'startpost': Post.objects.get(pk = post_id), 'site': Site.objects.get_current().domain}
 
 def offset(request, root_id, offset_id):
     if offset_id == root_id:

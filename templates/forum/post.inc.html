@@ -48,17 +48,13 @@
     </div>
     <div class="controls">
     {% if post.pk %}
-        {% if post.removed %}
-            [<a href="{% url userauth.views.rewards post.owner.pk %}">{% trans "This post was removed" %}</a>]
+        {% if user.is_staff %} 
+            [<a href="{% url forum.views.scourge post.pk %}?offset={{ thread.number }}">{% trans "Scourge" %}</a>]
+        {% endif %}
+        {% if post.thread.closed %}
+            [{% trans "This topic is closed" %}]
         {% else %}
-            {% if user.is_staff %} 
-                [<a href="{% url forum.views.remove post.pk %}?offset={{ thread.number }}">{% trans "Reward" %}</a>]
-            {% endif %}
-            {% if post.thread.closed %}
-                [{% trans "This topic is closed" %}]
-            {% else %}
-                [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
-            {% endif %}
+            [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
         {% endif %}
     {% endif %}
     </div>

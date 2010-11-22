@@ -76,7 +76,7 @@ urlpatterns = patterns('',
     (r'^forum/traker.so$', 'forum.views.traker'),
 
     (r'^lib/offset.so.(?P<root_id>\d+).(?P<offset_id>\d+)$', 'forum.views.offset'),
-    (r'^sbin/remove.so.(?P<post_id>\d+)$', 'forum.views.remove'),
+    (r'^sbin/scourge.so.(?P<post_id>\d+)$', 'forum.views.scourge'),
 #    (r'^libview-(?P<post_id>\d+).so$', 'forum.views.post_view'),
     (r'^lib/libsolve.so.(?P<post_id>\d+)$', 'forum.views.post_solve'),
 
