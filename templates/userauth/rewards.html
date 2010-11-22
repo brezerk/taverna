@@ -29,7 +29,7 @@
     <a href='{{ reward.post.thread.get_section_url }}'>{{ reward.post.thread.get_section_name }}</a>
  </td>
  <td>
-     <a href='{% url forum.views.post_view reward.post.pk %}'>{{ reward.post.get_title }}</a>
+     <a href='{% url forum.views.thread reward.post.thread.pk%}?showall=1#post_{{reward.post.pk}}'>{{ reward.post.get_title }}</a>
  </td>
  <td>
    {{ reward.get_reason }}

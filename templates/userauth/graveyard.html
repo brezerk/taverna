@@ -47,7 +47,7 @@
 <tr class="{% cycle "odd" "even" %}">
     <td><span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span></td>
     <td>{{ user_info.karma }}</td>
-    <td>{{ user_info.get_buryed_reason }} </td>
+    <td>{{ user_info.get_buryed_reason }}</td>
 </tr>
 {% endfor %}
 </table>

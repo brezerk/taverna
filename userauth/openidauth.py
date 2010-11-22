@@ -34,6 +34,9 @@ Return None if no match.
                 user = User.objects.get(username=username)
                 if user.is_superuser:
                     return None
+
+            if not user.is_active:
+                return None
             # plus any other test of User/UserProfile, etc.
             return user # indicates success
         except User.DoesNotExist:

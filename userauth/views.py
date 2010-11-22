@@ -284,27 +284,19 @@ def rewards(request, user_id):
     else:
         class SettingsForm(ModelForm):
             class Meta:
-                model = Profile
-                fields = ('buryed_reason',)
+                model = User
+                fields = ('is_active',)
 
             def save(self, **args):
-                profile = super(SettingsForm, self).save(commit = False, **args)
-                if self.cleaned_data['buryed_reason'] == None:
-                    profile.buryed = False
-                else:
-                    profile.buryed = True
-                    profile.karma = -100
-                    profile.force = -100
-                profile.save()
+                user = super(SettingsForm, self).save(commit = False, **args)
+                user.save()
 
         if request.method == 'POST':
-            form = SettingsForm(request.POST, instance=user_info.profile)
-            form.fields['buryed_reason'].empty_label=_("Not banned")
+            form = SettingsForm(request.POST, instance=user_info)
             if form.is_valid():
                 form.save()
         else:
-            form = SettingsForm(instance=user_info.profile)
-            form.fields['buryed_reason'].empty_label=_("Not banned")
+            form = SettingsForm(instance=user_info)
     try:
         page = int(request.GET['offset'])
     except (MultiValueDictKeyError, TypeError):
@@ -326,7 +318,7 @@ def graveyard(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Profile.objects.filter(Q(karma__lt = 0) | Q(buryed = True)).order_by('-buryed').select_related('user'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(Profile.objects.filter(karma__lt = 0).exclude(user__is_active = 0).order_by('-karma').select_related('user'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         users = paginator.page(page)

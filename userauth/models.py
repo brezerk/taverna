@@ -39,8 +39,6 @@ class Profile(models.Model):
     visible_name = models.SlugField(blank = False, null = True, max_length = 33, unique = True)
     karma = models.IntegerField(default = 10)
     force = models.IntegerField(default = 10)
-    buryed = models.BooleanField(default = 0, editable = True)
-    buryed_reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Ban reason"))
     jabber = models.EmailField(blank = True, null = True, max_length = 32)
     website = models.CharField(blank = True, null = True, max_length = 32)
     location = models.CharField(blank = True, null = True, max_length = 32)
@@ -51,7 +49,7 @@ class Profile(models.Model):
         return self.get_visible_name()
 
     def is_buryed(self):
-        if self.buryed or self.karma < 0:
+        if self.karma < 0:
             return True
         else:
             return False
@@ -64,42 +62,42 @@ class Profile(models.Model):
             return False
 
     def can_create_forum(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["FORUM_CREATE"]["COST"]
 
     def can_create_topic(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["TOPIC_CREATE"]["COST"]
 
     def can_create_comment(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["COMMENT_CREATE"]["COST"]
 
     def can_vote(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["CAN_VOTE"]["COST"]
 
     def can_edit_topic(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["TOPIC_EDIT"]["COST"]
 
     def can_edit_profile(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["PROFILE_EDIT"]["COST"]
 
     def can_edit_blog_desc(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["BLOG_DESC_EDIT"]["COST"]
 
     def can_edit_blog_name(self):
-        if self.buryed:
+        if not self.user.is_active:
             return False
         return self.force >= settings.FORCE_PRICELIST["BLOG_NAME_EDIT"]["COST"]
 
@@ -110,14 +108,12 @@ class Profile(models.Model):
             return "User-%i" % self.id
 
     def get_html_visible_name(self):
-        if self.buryed:
+        if self.karma < 0:
             return "<del>%s</del>" % (self.get_visible_name())
         else:
             return self.get_visible_name()
 
     def get_buryed_reason(self):
-        if self.buryed:
-            return self.buryed_reason
-        else:
-            return _("Auto ban due high karma loss.")
+        if self.karma < 0:
+            return _("Temporary auto ban due high karma loss.")
 
