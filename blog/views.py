@@ -44,9 +44,6 @@ from django.conf import settings
 @login_required()
 @rr('blog/settings.html')
 def blog_settings(request):
-    if request.user.profile.buryed:
-       return error(request, "")
-
     blog = Blog.objects.get(owner = request.user)
 
     class BlogForm(ModelForm):
