@@ -1,32 +1,14 @@
-{% extends "base.html" %}
+{% extends "blog/index.html" %}
 {% load i18n %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name }}</a> {{ blog_info.desc }}
-    </div>
-    <div class='right'>
-        [<a href='{{ feed_url }}'>Atom</a>]
+{% block action-left %}
+    <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name }}</a> {{ blog_info.desc }}
+{% endblock %}
+{% block action-right %}
+    [<a href='{{ feed_url }}'>Atom</a>]
     {% if user.is_authenticated %}
         [<a href='{% url blog.views.post_add %}'>vim</a>]
         [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
     {% endif %}
-    </div>
-</div>
-{% endblock %}
-
-{% block content %}
-
-{% include 'forum/pages.inc.html' %}
-
-{% if thread.object_list %}
-    {% for startpost in thread.object_list %}
-        {% include "blog/startpost.inc.html" %}
-    {% endfor %}
-{% endif %}
-
-{% include 'forum/pages.inc.html' %}
-
 {% endblock %}
 

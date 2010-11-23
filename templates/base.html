@@ -64,66 +64,77 @@
     </script>
 </head>
 <body>
-<!-- simple head title -->
-<div class='titlebox'>
-<pre><br>  ┏━━┏━┓┏━┓┏━┓<br>  ┣━ ┃ ┃┗━┓┗━┓<br>  ╹  ┗━┛┗━┛┗━┛</pre>
-</div>
-<!-- end of simple head title -->
-<!-- menu block -->
-<div class='menubox'>
-    <table cellspacing='0' cellpadding='2' border='0' width='100%'>
-    <tr>
-        <td width='300'>&nbsp;</td>
-        <td align='center'>
-            [<a href='{% url blog.views.index %}'>{% trans "Traker" %}</a>]
-            [<a href='{% url blog.views.list %}'>share</a>/(<a href='{% url blog.views.list_public %}'>local</a>|<a href='{% url blog.views.list_users %}'>usr</a>)] 
-            [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
-            [<a href='{% url userauth.views.graveyard %}'>{% trans "Grave yard" %}</a>] 
-            [<a href='{% url blog.views.firebox %}'>{% trans "Firebox" %}</a>] 
-        <td width='350' align='right'>
-        {% if user.is_authenticated %}
-            {% trans "Welcome" %}, 
-            <a href='/~'>{{ user.profile.get_visible_name }}</a>
-            [<span class='logout'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
-        {% else %}
-            [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
-        {% endif %}
-        </td>
-    </tr>
-    </table>
-</div>
-<!-- end of menu block -->
-<!-- action menu block -->
-{% block menubox %}{% endblock %}
-<!-- end of action menu block -->
-<div class='content'>
-{% block content %}{% endblock %}
-</div>
+    <!-- simple head title -->
+    <div class='titlebox'>
+        <pre><br>  ┏━━┏━┓┏━┓┏━┓<br>  ┣━ ┃ ┃┗━┓┗━┓<br>  ╹  ┗━┛┗━┛┗━┛</pre>
+    </div>
+    <!-- end of simple head title -->
+    <!-- menu block -->
+    <div class='menubox'>
+        <table cellspacing='0' cellpadding='2' border='0' width='100%'>
+        <tr>
+            <td width='300'>&nbsp;</td>
+            <td align='center'>
+                [<a href='{% url blog.views.index %}'>{% trans "Traker" %}</a>]
+                [<a href='{% url blog.views.list %}'>share</a>/(<a href='{% url blog.views.list_public %}'>local</a>|<a href='{% url blog.views.list_users %}'>usr</a>)] 
+                [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
+                [<a href='{% url userauth.views.graveyard %}'>{% trans "Grave yard" %}</a>] 
+                [<a href='{% url blog.views.firebox %}'>{% trans "Firebox" %}</a>] 
+            <td width='350' align='right'>
+            {% if user.is_authenticated %}
+                {% trans "Welcome" %}, 
+                <a href='/~'>{{ user.profile.get_visible_name }}</a>
+                [<span class='logout'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
+            {% else %}
+                [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
+            {% endif %}
+            </td>
+        </tr>
+        </table>
+    </div>
+    <!-- end of menu block -->
 
-<!-- end of news block -->
-<!-- sign block -->
-<div class='sign'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td valign='bottom' align='left' width='20%'>
+    <!-- action menu block -->
+    <div class='actionbox'>
+        <div class='left'>
+            {% block action-left %}{% endblock %}
+        </div>
+        <div class='right'>
+            {% block action-right %}{% endblock %}
+        </div>
+    </div>
+    <!-- end of action menu block -->
 
-{% trans "Information" %}: <a href='/about'>{% trans "About"%}</a> &amp; <a href='/rules'>{% trans "Site rules"%}</a><br>W3C: <a href='http://validator.w3.org/check?uri=referer'>Valid HTML 4.01 Transitional</a> &amp;
-<a href='http://jigsaw.w3.org/css-validator/check/referer'>Valid CSS 2.1</a><br>
+    <!-- news block -->
+    <div class='content'>
+        {% block content %}{% endblock %}
+    </div>
+    <!-- end of news block -->
 
-</td>
-<td valign='top'>
-Design and develop by <a href='mailto:brezerk@gmail.com'>Brezerk</a> and <a href='mailto:opium@jabber.com.ua'>Opium</a>.<br>
-All trademarks and copyrights on this page are owned by their respective owners.<br>
-Comments are owned by the Poster.<br>
-The Rest © 1997-2010 <a href='http://foss.org.ua'>FOSS</a>.
-</td>
-<td valign='top' width='20%'>&nbsp;</td></tr>
-</table>
-</div>
-<!-- end of sign block -->
-
-
+    <!-- sign block -->
+    <div class='sign'>
+        <table cellspacing='0' cellpadding='2' border='0' width='100%'>
+        <tr>
+            <td valign='bottom' align='left' width='20%'>
+                {% trans "Information" %}:
+                <a href='/about'>{% trans "About"%}</a> &amp; 
+                <a href='/rules'>{% trans "Site rules"%}</a>
+                <br>
+                W3C: 
+                <a href='http://validator.w3.org/check?uri=referer'>Valid HTML 4.01 Transitional</a> &amp;
+                <a href='http://jigsaw.w3.org/css-validator/check/referer'>Valid CSS 2.1</a>
+                <br>
+            </td>
+            <td valign='top'>
+                Design and develop by <a href='mailto:brezerk@gmail.com'>Brezerk</a> and <a href='mailto:opium@jabber.com.ua'>Opium</a>.<br>
+                All trademarks and copyrights on this page are owned by their respective owners.<br>
+                Comments are owned by the Poster.<br>
+                The Rest © 1997-2010 <a href='http://foss.org.ua'>FOSS</a>.
+            </td>
+            <td valign='top' width='20%'>&nbsp;</td>
+        </tr>
+        </table>
+    </div>
+    <!-- end of sign block -->
 </body>
-
-
 </html>
