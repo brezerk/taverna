@@ -2,17 +2,14 @@
 {% load i18n %}
 {% load markup %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "Our Grave Yard page" %}
-    </div>
-</div>
+{% block action-left %}
+    {% trans "Our Grave Yard page" %}
 {% endblock %}
 
 {% block content %}
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td width='180px'>
+    <table cellspacing='0' cellpadding='2' border='0' width='100%'>
+        <tr>
+            <td width='180px'>
 <pre>    _____
   /~/~   ~\
  | |       \
@@ -22,7 +19,16 @@
 --==\ \     ,,i!!i,
     ''"'',,}{,,
 </pre>
-</td><td>{% trans "Welcome to Grave Yard" %}<br>{% trans "This is a place, where all buryed users rest for a while (sometimes - forever. Muhahahaha!)." %}<p>{% trans "Current buryed users count:"%} {{ users.paginator.count }}</p></td><td width='180px' align='right'>
+            </td>
+            <td>
+                {% trans "Welcome to Grave Yard" %}
+                <br>
+                {% trans "This is a place, where all buryed users rest for a while." %}
+                <p>
+                    {% trans "Current population:"%} {{ users.paginator.count }}
+                </p>
+            </td>
+            <td width='180px' align='right'>
 <pre>+----------+
 |  PLEASE  |
 |  DO NOT  |
@@ -33,24 +39,25 @@
      ||     
   ..\||/..  
   </pre>
-</td></tr></table>
+            </td>
+        </tr>
+    </table>
 
-{% include "forum/arrows.inc.html" %}
-<table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'>
-    <th width='160px'>{% trans "User" %}</th>
-    <th width='60px'>{% trans "Karma" %}</th>
-    <th>{% trans "Revard reason" %}</th>
-</tr>
-
-{% for user_info in users.object_list %}
-<tr class="{% cycle "odd" "even" %}">
-    <td><span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span></td>
-    <td>{{ user_info.karma }}</td>
-    <td>{{ user_info.get_buryed_reason }}</td>
-</tr>
-{% endfor %}
-</table>
-{% include "forum/arrows.inc.html" %}
+    {% include "forum/arrows.inc.html" %}
+    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
+        <tr class='theader'>
+            <th width='160px'>{% trans "User" %}</th>
+            <th width='60px'>{% trans "Karma" %}</th>
+            <th>{% trans "Reason" %}</th>
+        </tr>
+        {% for user_info in users.object_list %}
+        <tr class="{% cycle "odd" "even" %}">
+            <td><span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span></td>
+            <td>{{ user_info.karma }}</td>
+            <td>{{ user_info.get_buryed_reason }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+    {% include "forum/arrows.inc.html" %}
 {% endblock %}
 

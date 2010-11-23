@@ -4,22 +4,18 @@
 
 {% block title %}{% trans "User profile" %} :. {{ user_profile.get_visible_name }}{% endblock %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "User profile" %}
-    </div>
-    <div class='right'>
-        [<a href='{% url blog.views.view user_blog.pk %}'>{% trans "User's blog" %}</a>]
-        {% if user.pk == user_info.pk %}
-            [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit" %}</a>]
-        {% endif %}
-    </div>
-</div>
+{% block action-left %}
+    {% trans "User profile" %}
+{% endblock %}
+
+{% block action-right %}
+    [<a href='{% url blog.views.view user_blog.pk %}'>{% trans "User's blog" %}</a>]
+    {% if user.pk == user_info.pk %}
+        [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit" %}</a>]
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-
 <h3>{% trans "User's insformation" %}</h3>
 <div class='profile'>
     {% if user_info.profile.photo %}
@@ -55,9 +51,7 @@
         </div>
     </div>
 </div>
-
 {% include "userauth/status.html" %}
-
 <h3>{% trans "User messags"%}:</h3>
 <ul>
     <li><a href='{% url blog.views.view user_blog.pk %}'>{% trans "Topics" %}</a>
@@ -67,6 +61,5 @@
     <li><a href='{% url userauth.views.rewards user_info.pk %}'>{% trans "Revards" %}</a>
     {% endif %}
 </ul>
-
 {% endblock %}
 
