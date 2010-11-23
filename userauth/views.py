@@ -27,7 +27,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.forms import Form, ModelForm, CharField, ModelChoiceField
+from django.forms import Form, ModelForm, CharField, ModelChoiceField, ValidationError
 
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -141,24 +141,32 @@ def openid_chalange(request):
     class OpenidForm(Form):
         openid = CharField(required = True, max_length = 32)
 
+        def clean_openid(self):
+            openid = self.cleaned_data['openid']
+            import re
+            p = re.compile('^[a-zA-Z._-]+$')
+            if not p.match(openid):
+                raise ValidationError(_("Invalid openid string."))
+
     form = None
 
     if (request.POST):
         form = OpenidForm(request.POST)
 
-        store = getOpenIDStore("/tmp/taverna_openid", "c_")
-        c = consumer.Consumer(request.session, store)
-        openid_url = request.POST['openid']
+        if form.is_valid():
+            store = getOpenIDStore("/tmp/taverna_openid", "c_")
+            c = consumer.Consumer(request.session, store)
+            openid_url = request.POST['openid']
 
 
-        # Google ...
-        if openid_url == "google":
-            openid_url = 'https://www.google.com/accounts/o8/id'
-        try:
-            auth_request = c.begin(openid_url)
-        except consumer.DiscoveryFailure, exc:
-            error = "OpenID discovery error: %s" % str(exc)
-            return {'form': form, 'error': error}
+            # Google ...
+            if openid_url == "google":
+                openid_url = 'https://www.google.com/accounts/o8/id'
+            try:
+                auth_request = c.begin(openid_url)
+            except consumer.DiscoveryFailure, exc:
+                error = "OpenID discovery error: %s" % str(exc)
+                return {'form': form, 'error': error}
 
 #       import openid.extensions.ax as ax
 #       ax_request = ax.FetchRequest()
@@ -167,9 +175,9 @@ def openid_chalange(request):
 #       auth_request.addExtension(ax_request)
 
 #       if auth_request.shouldSendRedirect():
-        trust_root = getViewURL(request, openid_chalange)
-        redirect_to = getViewURL(request, openid_finish)
-        return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
+            trust_root = getViewURL(request, openid_chalange)
+            redirect_to = getViewURL(request, openid_finish)
+            return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
     else:
         form = OpenidForm()
     return {'form': form}
