@@ -2,44 +2,29 @@
 {% load i18n %}
 {% load markup %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-    {% if reason %}
-        {% trans "View removed post" %}
-    {% else %}
-        {% trans "Remove post" %}
-    {% endif %}
-    </div>
-</div>
+{% block action-left %}
+        {% trans "Scourge or remove post" %}
 {% endblock %}
 
 {% block content %}
+    {% if startpost %}
+        {% include "forum/startpost.inc.html" %}
+    {% endif %}
+    {% if post %}
+        {% include "forum/post.inc.html" %}
+    {% endif %}
 
-{% if startpost %}
-{% include "forum/startpost.inc.html" %}
-{% endif %}
-
-{% if post %}
-    {% include "forum/post.inc.html" %}
-{% endif %}
-
-<div class='form'>
-{% if form %}
-<form method="POST" action="">{% csrf_token %}
-<table border='0' width='600px'>
-    {{ form }}
-    <tr><td>&nbsp;</td><td><input type="submit" name="preview" value="{% trans "Remove" %}"></td></tr>
-</table>
-</form>
-{% endif %}
-{% if reason %}
-<p>{% trans "This post was removed by"%} <a href='{% url userauth.views.profile_view reason.user.pk %}'>{{reason.user.profile.get_visible_name }}</a>.<br>{% trans "Post remove reason"%}: 
-{% if reason.auto %}
-    {% trans "(Auto) Reply to" %}:
-{% endif %}
-{{ reason.reason }} ( -{{ reason.reason.cost }} )</p>
-{% endif %}
-</div>
-
+    <div class='form'>
+        {% if form %}
+        <form method="POST" action="">{% csrf_token %}
+            <table border='0' width='600px'>
+                {{ form }}
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="submit" name="preview" value="{% trans "Scourge" %}"></td>
+                </tr>
+            </table>
+        </form>
+        {% endif %}
+    </div>
 {% endblock %}

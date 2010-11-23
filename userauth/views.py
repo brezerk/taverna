@@ -259,7 +259,7 @@ def user_comments(request, user_id):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None, blog = None).exclude(removed = True).order_by('-created'),
+    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None, blog = None).order_by('-created'),
                           settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
@@ -269,7 +269,7 @@ def user_comments(request, user_id):
 
     return {'thread': thread, 'user_info': user_info, 'request_url': request.get_full_path()}
 
-@rr("userauth/coments.html")
+@rr("userauth/notifyes.html")
 def notify(request):
     try:
         page = int(request.GET['offset'])
@@ -285,8 +285,8 @@ def notify(request):
 
     return {'thread': thread, 'request_url': request.get_full_path()}
 
-@rr("userauth/rewards.html")
-def rewards(request, user_id):
+@rr("userauth/scourges.html")
+def scourges(request, user_id):
     user_info = User.objects.get(pk = user_id)
     form = None
 

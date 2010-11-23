@@ -2,28 +2,21 @@
 {% load i18n %}
 {% load markup %}
 
-{% block menubox %}
-<div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td>
-{% trans "Error" %}
-</td>
-<td>
-</td>
-</tr>
-</table>
-</div>
+{% block action-left %}
+    {% trans "Error" %}
 {% endblock %}
 
 {% block content %}
-<h3>Error</h3>
-
-{% if cost %}
-    {% trans "You have not enough Force to"%} {{ desc }}!<br>{% trans "Amount of Force required for this action" %}: <b>{{ cost }}</b> points, you have only <b>{{ user.profile.force }}</b> points.
-{% else %}
-    {{ desc|safe }}
-{% endif %}
-
+    <h3>Error</h3>
+    {% if cost %}
+        {% trans "You have not enough Force to"%} {{ desc }}!
+        <br>
+        {% trans "Amount of Force required for this action" %}: 
+        <b>{{ cost }}</b> 
+        points, you have only 
+        <b>{{ user.profile.force }}</b> points.
+    {% else %}
+        {{ desc|safe }}
+    {% endif %}
 {% endblock %}
 

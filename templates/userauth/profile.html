@@ -58,7 +58,7 @@
     <li><a href='{% url userauth.views.user_comments user_info.id %}'>{% trans "Comments" %}</a>
     {% if user == user_info or user.is_staff%}
     <li><a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>
-    <li><a href='{% url userauth.views.rewards user_info.pk %}'>{% trans "Revards" %}</a>
+    <li><a href='{% url userauth.views.scourges user_info.pk %}'>{% trans "Scourges" %}</a>
     {% endif %}
 </ul>
 {% endblock %}

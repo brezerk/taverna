@@ -94,7 +94,7 @@ urlpatterns = patterns('',
     url(r'^lib/notify/librss.so.(?P<user_id>\d+)$', RssNotify(), name='rss_notify'),
     url(r'^lib/notify/libatom.so.(?P<user_id>\d+)$', AtomNotify(), name='atom_notify'),
 
-    (r'^pam/librewards-(?P<user_id>\d+).so$', 'userauth.views.rewards'),
+    (r'^pam/libscourges-(?P<user_id>\d+).so$', 'userauth.views.scourges'),
     (r'^dev/graveyard$', 'userauth.views.graveyard'),
     (r'^index.php$', 'blog.views.firebox'),
 
