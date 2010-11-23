@@ -2,44 +2,36 @@
 {% load i18n %}
 {% load markup %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
+{% block action-left %}
     {% if startpost.blog %}
         <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a> {{ startpost.blog.desc }}
     {% else %}
         <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> →
         <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> {{ startpost.forum.description }}
     {% endif %}
-    </div>
-    <div class='right'>
-        [<a href='{% url forum.views.print_post startpost.pk %}'>lp < post</a>]
-        {% if showall == "1" %}
-            [<a href='?showall=0'>grep positive</a>]
-        {% else %}
-            [<a href='?showall=1'>ls *</a>]
-        {% endif %}
-        [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
-
-        {% if user.is_authenticated %}
-            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
-        {% endif %}
-    </div>
-</div>
+{% endblock %}
+{% block action-right %}
+    [<a href='{% url forum.views.print_post startpost.pk %}'>lp < post</a>]
+    {% if showall == "1" %}
+        [<a href='?showall=0'>grep positive</a>]
+    {% else %}
+        [<a href='?showall=1'>ls *</a>]
+    {% endif %}
+    [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
 {% endblock %}
 
 {% block content %}
-{% include "forum/startpost.inc.html" %}
+    {% include "forum/startpost.inc.html" %}
 
-{% include "forum/pages.inc.html" %}
-<div class='news'>
-{% for post in thread.object_list %}
-{% include "forum/post.inc.html" %}
-{% endfor %}
-</div>
-{% include "forum/pages.inc.html" %}
+    {% include "forum/pages.inc.html" %}
+    <div class='news'>
+        {% for post in thread.object_list %}
+            {% include "forum/post.inc.html" %}
+        {% endfor %}
+    </div>
+    {% include "forum/pages.inc.html" %}
 
-<script type='text/javascript'>
-    highlightOnLoad();
-</script>
+    <script type='text/javascript'>
+        highlightOnLoad();
+    </script>
 {% endblock %}

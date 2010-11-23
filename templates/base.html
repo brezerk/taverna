@@ -101,6 +101,9 @@
         </div>
         <div class='right'>
             {% block action-right %}{% endblock %}
+            {% if user.is_authenticated %}
+                [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
+            {% endif %}
         </div>
     </div>
     <!-- end of action menu block -->

@@ -2,47 +2,41 @@
 {% load i18n %}
 {% load markup %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
-        <a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a> {{ forum.description }}
-    </div>
-    <div class='right'>
-        [<a href='{% url rss_forum_traker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_traker forum.pk %}'>Atom</a>]
-        {% if showall == "1" %}
-            [<a href='?showall=0'>grep positive</a>]
-        {% else %}
-            [<a href='?showall=1'>ls *</a>]
-        {% endif %}
+{% block action-left %}
+    <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
+    <a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a> {{ forum.description }}
+{% endblock %}
 
-        {% if user.is_authenticated %}
-            [<a href='{% url forum.views.topic_create forum.pk %}'>vim</a>]
-            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
-        {% endif %}
-    </div>
-</div>
+{% block action-right %}
+    [<a href='{% url rss_forum_traker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_traker forum.pk %}'>Atom</a>]
+    {% if showall == "1" %}
+        [<a href='?showall=0'>grep positive</a>]
+    {% else %}
+        [<a href='?showall=1'>ls *</a>]
+    {% endif %}
+    {% if user.is_authenticated %}
+        [<a href='{% url forum.views.topic_create forum.pk %}'>vim</a>]
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-
-{% include "forum/pages.inc.html" %}
-
-<table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th>{% trans "Title" %}</th><th width='240px'>{% trans "Last post" %}</th></tr>
-{% for post in thread.object_list %}
-<tr class="{% cycle "odd" "even" %}">
- <td>
-  {{post.get_flags|safe}}
-  {{post.get_forumtags|safe}}
-  <a href='{% url forum.views.thread post.pk %}'>{{post.title}}</a>
-  [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
- </td>
- <td>{{post.get_last_comment_date|timesince}} {% trans "ago" %}</td>
-</tr>
-{% endfor %}
-</table>
-
-{% include "forum/pages.inc.html" %}
+    {% include "forum/pages.inc.html" %}
+    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
+        <tr class='theader'>
+            <th>{% trans "Title" %}</th>
+            <th width='240px'>{% trans "Last post" %}</th>
+        </tr>
+        {% for post in thread.object_list %}
+        <tr class="{% cycle "odd" "even" %}">
+             <td>
+                {{post.get_flags|safe}}
+                {{post.get_forumtags|safe}}
+                <a href='{% url forum.views.thread post.pk %}'>{{post.title}}</a>
+                [<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{post.owner.profile.get_visible_name}}</a>]
+             </td>
+             <td>{{post.get_last_comment_date|timesince}} {% trans "ago" %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% include "forum/pages.inc.html" %}
 {% endblock %}
-

@@ -6,44 +6,33 @@
     {% trans "Blog's traker" %}
 {% endblock %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "Blog's list" %}
-    </div>
-    <div class='right'>
-    {% if user.is_authenticated %}
-        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
-    {% endif %}
-    </div>
-</div>
+{% block action-left %}
+    {% trans "Blog's list" %}
 {% endblock %}
 
 {% block content %}
+    {% if public_blogs %}
+        <h4>{% trans "public blogs:" %}</h4>
+        {% with public_blogs as blogs_list %}
+            {% include "blog/blog_list_table.html" %}
+        {% endwith %}
+    {% endif %}
 
-{% if public_blogs %}
-    <h4>{% trans "public blogs:" %}</h4>
-    {% with public_blogs as blogs_list %}
-        {% include "blog/blog_list_table.html" %}
-    {% endwith %}
-{% endif %}
+    {% if user_blogs %}
+        <h4>{% trans "Top 20 user blogs:" %}</h4>
+        {% with user_blogs as blogs_list %}
+            {% include "blog/blog_list_table.html" %}
+        {% endwith %}
+    {% endif %}
 
-{% if user_blogs %}
-    <h4>{% trans "Top 20 user blogs:" %}</h4>
-    {% with user_blogs as blogs_list %}
-        {% include "blog/blog_list_table.html" %}
-    {% endwith %}
-{% endif %}
-
-{% if thread %}
-{% include 'forum/arrows.inc.html' %}
-    <h4>{% trans "User blogs:" %}</h4>
-    {% with thread.object_list as blogs_list %}
-        {% include "blog/blog_list_table.html" %}
-    {% endwith %}
-{% include 'forum/arrows.inc.html' %}
-{% endif %}
-
+    {% if thread %}
+        {% include 'forum/arrows.inc.html' %}
+        <h4>{% trans "User blogs:" %}</h4>
+        {% with thread.object_list as blogs_list %}
+            {% include "blog/blog_list_table.html" %}
+        {% endwith %}
+        {% include 'forum/arrows.inc.html' %}
+    {% endif %}
 {% endblock %}
 
 
