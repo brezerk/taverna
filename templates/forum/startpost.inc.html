@@ -40,25 +40,6 @@
 
         {{ startpost.get_edits }}
 
-        <div class='controls'>
-            {% if user.is_staff %} 
-                [<a href="{% url forum.views.scourge startpost.pk %}">{% trans "Scourge" %}</a>]
-            {% endif %}
-            {% if user = startpost.owner or user.is_staff %}
-                [<a href="{{ startpost.get_edit_url }}">{% trans "Edit" %}</a>]
-                {% if startpost.forum %}
-                    {% if startpost.solved %}
-                        [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as unsolved" %}</a>]
-                    {% else %}
-                        [<a href="{% url forum.views.post_solve startpost.pk %}">{% trans "Mark as solved" %}</a>]
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            {% if startpost.closed %}
-                [<a href="{{ startpost.get_section_url }}">{% trans "This topic is closed" %}</a>]
-            {% else %}
-                [<a href="{% url forum.views.reply startpost.pk %}">{% trans "Add a comment" %}</a>]
-            {% endif %}
-        </div>
+        {% include 'forum/startpost.controls.inc.html' %}
     </div>
 </div>

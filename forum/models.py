@@ -135,7 +135,7 @@ class Post(models.Model):
 
 
     def get_last_comment_date(self):
-        comments = Post.objects.exclude(pk=self.pk).filter(thread=self.pk, removed = False).order_by('-created')[:1]
+        comments = Post.objects.exclude(pk=self.pk).filter(thread=self.pk).order_by('-created')[:1]
 
         try:
             return comments[0].created
