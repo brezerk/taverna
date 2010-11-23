@@ -267,6 +267,7 @@ rss_blog_tracker = RssBlogFeed(
 )
 
 def generate_tracker_feed(sender, instance, **kwargs):
+    print "regen call"
     pass
     # This is horribe fucking staff
 #    if instance.blog is not None:

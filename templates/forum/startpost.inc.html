@@ -3,6 +3,7 @@
 
 <div class='news'>
     <h3>
+        {{ startpost.get_flags|safe }}
         {{ startpost.get_forumtags|safe }}
         <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
     </h3>

@@ -237,6 +237,7 @@ def scourge(request, post_id):
             if self.cleaned_data['reason'].cost == 0:
                 auto_remove(startpost, self.cleaned_data['reason']);
                 PostVote.objects.filter(post = startpost).delete()
+                PostEdit.objects.filter(post = startpost).delete()
                 startpost.delete()
             else:
                 postvote = super(RemoveForm, self).save(commit = False, **args)
@@ -285,6 +286,7 @@ def auto_remove(startpost, reason):
         for post in Post.objects.filter(thread = startpost.pk):
             if reason.cost == 0:
                 PostVote.objects.filter(post = post).delete()
+                PostEdit.objects.filter(post = post).delete()
                 post.delete()
             else:
                 PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
@@ -295,6 +297,7 @@ def auto_remove(startpost, reason):
 
             if reason.cost == 0:
                 PostVote.objects.filter(post = post).delete()
+                PostEdit.objects.filter(post = post).delete()
                 post.delete()
             else:
                PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()

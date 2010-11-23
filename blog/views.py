@@ -189,8 +189,6 @@ def post_add(request):
 
             request.user.profile.use_force("TOPIC_CREATE")
             request.user.profile.save()
-
-
             return post.blog.pk
 
     form = PostForm()
@@ -351,7 +349,7 @@ def list_users(request):
 
 @rr('blog/error.html')
 def error(request, error):
-    if request.user.profile.buryed:
+    if request.user.profile.is_buryed():
         desc = _("Sorry, but You have been buryed at our Grave Yard. See your profile for a details.")
         cost = None
     else:
