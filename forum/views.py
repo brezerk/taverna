@@ -206,6 +206,9 @@ def scourge(request, post_id):
        return error(request, "")
 
     startpost = Post.objects.get(pk = post_id)
+    thread_id = startpost.thread.pk
+    forum = startpost.forum
+    blog = startpost.blog
 
     class RemoveForm(forms.ModelForm):
         class Meta:
@@ -233,6 +236,7 @@ def scourge(request, post_id):
         def save(self, **args):
             if self.cleaned_data['reason'].cost == 0:
                 auto_remove(startpost, self.cleaned_data['reason']);
+                PostVote.objects.filter(post = startpost).delete()
                 startpost.delete()
             else:
                 postvote = super(RemoveForm, self).save(commit = False, **args)
@@ -243,21 +247,30 @@ def scourge(request, post_id):
                 postvote.save()
 
                 modify_rating(startpost, postvote.reason.cost)
-                auto_remove(startpost, postvote.reason);
+                if startpost != startpost.thread:
+                    auto_remove(startpost, postvote.reason);
 
     if request.method == 'POST':
         form = RemoveForm(request.POST)
         form.fields['reason'].empty_label=None
         if form.is_valid():
             form.save()
-            if startpost.reply_to:
+            try:
+                thread = Post.objects.get(pk = thread_id)
+            except:
+                thread = None
+
+            if thread:
                 offset = request.GET.get("offset", 1)
-                return HttpResponseRedirect("%s?offset=%s&showall=1" % (reverse('forum.views.thread', args = [startpost.thread.pk]), offset))
-            else:
-                if startpost.forum:
-                    return HttpResponseRedirect(reverse('forum.views.forum', args = [startpost.forum.pk]))
+                if startpost:
+                    return HttpResponseRedirect("%s?offset=%s&showall=1#post_%s" % (reverse('forum.views.thread', args = [thread.pk]), offset, startpost.pk))
                 else:
-                    return HttpResponseRedirect(reverse('blog.views.view', args = [startpost.blog.pk]))
+                    return HttpResponseRedirect("%s?offset=%s&showall=1" % (reverse('forum.views.thread', args = [thread.pk]), offset))
+            else:
+                if forum:
+                    return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
+                else:
+                    return HttpResponseRedirect(reverse('blog.views.view', args = [blog.pk]))
     else:
         form = RemoveForm()
         form.fields['reason'].empty_label=None
@@ -271,6 +284,7 @@ def auto_remove(startpost, reason):
     if startpost.reply_to == None:
         for post in Post.objects.filter(thread = startpost.pk):
             if reason.cost == 0:
+                PostVote.objects.filter(post = post).delete()
                 post.delete()
             else:
                 PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
@@ -280,6 +294,7 @@ def auto_remove(startpost, reason):
             auto_remove(post, reason)
 
             if reason.cost == 0:
+                PostVote.objects.filter(post = post).delete()
                 post.delete()
             else:
                PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
