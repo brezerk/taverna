@@ -179,6 +179,9 @@ def post_add(request):
             post.thread = post
             post.save()
 
+            from signals import blog_update
+            blog_update.send(sender=None, instance=post)
+
             for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
                 try:
                     post.tags.add(Tag.objects.get(name = name))
@@ -229,7 +232,7 @@ def tags_search(request, tag_id):
 @rr('blog/blog.html')
 def view(request, blog_id):
     page = request.GET.get("offset", 1)
-    blog_info = Blog.objects.get(pk = blog_id)
+    blog_info = Blog.objects.select_related('owner').get(pk = blog_id)
     posts = Post.get_rated_users_blog_posts(blog_info)
     paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
 
@@ -238,7 +241,12 @@ def view(request, blog_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'blog_info': blog_info}
+    if blog_info.owner.pk == 1:
+        feed_url = "/media/blog-%s.xml" % (blog_info.pk)
+    else:
+        feed_url = reverse("atom_blog", args=[blog_info.pk]) 
+
+    return {'thread': thread, 'blog_info': blog_info, 'feed_url': feed_url}
 
 @rr('blog/index.html')
 def index(request):

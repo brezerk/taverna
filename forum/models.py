@@ -266,9 +266,15 @@ rss_blog_tracker = RssBlogFeed(
     description = _("Updates on changes and additions to blogs topics."),
 )
 
-def generate_tracker_feed(sender, instance, **kwargs):
-    print "regen call"
-    pass
+from signals import blog_update, forum_update, thread_update
+
+def blog_update_handler(sender, instance, **kwargs):
+    print "blog feed regen call"
+    rss_blog_tracker.save(
+        Post.get_rated_blog_posts()[:settings.PAGE_LIMITATIONS['RSS_POSTS']],
+        os.path.join(settings.STATIC_RSS_ROOT, "tracker.xml")
+    )
+
     # This is horribe fucking staff
 #    if instance.blog is not None:
  #       rss_blog_tracker.save(
@@ -287,7 +293,8 @@ def generate_tracker_feed(sender, instance, **kwargs):
         #    os.path.join(settings.STATIC_RSS_ROOT, "blog-%d.xml" % instance.blog.pk),
        # )
 
-post_save.connect(generate_tracker_feed, sender = Post)
-post_delete.connect(generate_tracker_feed, sender = Post)
+#post_save.connect(generate_tracker_feed, sender = Post)
+#post_delete.connect(generate_tracker_feed, sender = Post)
 
+blog_update.connect(blog_update_handler)
 
