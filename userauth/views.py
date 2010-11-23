@@ -228,7 +228,11 @@ def openid_finish(request):
             user = User(username = openid_hash[:30], is_staff = False, is_active = True,
                         is_superuser = False)
             user.save()
-            profile = Profile(user = user, photo = "", openid_hash = openid_hash)
+            profile = Profile(
+                                user = user, photo = "", openid_hash = openid_hash,
+                                karma = settings.START_RATING,
+                                force = settings.START_RATING
+                            )
             profile.save()
             try:
                 blog = Blog.objects.get(owner = user)
