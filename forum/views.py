@@ -512,12 +512,12 @@ def offset(request, root_id, offset_id):
     if offset_id == root_id:
         return HttpResponseRedirect(reverse('forum.views.thread', args = [root_id]))
     else:
-        showall = request.GET.get("showall", False)
+        showall = request.GET.get("showall", "0")
 
         pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id)
 
-        if not showall:
-            pages = pages.exclude(removed = True)
+        if showall == "0":
+            pages = pages.exclude(rating__lte = settings.MIN_RATING)
 
         paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         post = Post.objects.get(pk=offset_id)

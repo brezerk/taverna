@@ -83,7 +83,7 @@ def post_edit(request, post_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    post_orig = Post.objects.exclude(removed = True).get(pk = post_id)
+    post_orig = Post.objects.get(pk = post_id)
 
     if not request.user.is_staff:
         if not post_orig.reply_to == None:
@@ -108,7 +108,7 @@ def post_edit(request, post_id):
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread', 'flags', 'removed', 'closed', 'solved', 'sticked')
+            exclude = ('tags', 'reply_to', 'thread', 'flags', 'closed', 'solved', 'sticked')
             widgets = {
                       'text': Textarea(attrs={'cols': 80, 'rows': 27}),
                       }
@@ -167,7 +167,7 @@ def post_add(request):
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread', 'flags', 'removed', 'closed', 'solved', 'sticked')
+            exclude = ('tags', 'reply_to', 'thread', 'flags', 'closed', 'solved', 'sticked')
             widgets = {
                       'text': Textarea(attrs={'rows': 27}),
                       }
@@ -276,9 +276,6 @@ def vote_async(request, post_id, positive):
 
     post = Post.objects.get(pk = post_id)
 
-    if post.removed:
-        raise Http404
-
     if post.owner == request.user:
         return {"rating": post.rating, "message": _("You can not vote for own post.")}
 
@@ -301,9 +298,6 @@ def vote_generic(request, post_id, positive):
         return error(request, _("Registration required."))
 
     post = Post.objects.get(pk = post_id)
-
-    if post.removed:
-        raise Http404
 
     if post.owner == request.user:
         return error(request, _("You can not vote for own post."))

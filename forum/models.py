@@ -51,7 +51,6 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, null = True)
     blog = models.ForeignKey(Blog, null = True)
     forum = models.ForeignKey(Forum, editable = False, null = True)
-    removed = models.BooleanField(editable = True, default = 0)
     sticked = models.BooleanField(editable = True, default = 0)
     closed = models.BooleanField(editable = True, default = 0)
     solved = models.BooleanField(editable = True, default = 0)
@@ -198,14 +197,14 @@ class Post(models.Model):
 
             t = get_template('forum/postedit.inc.html')
             return t.render(Context({
-                'edit_url': reverse("forum.views.post_diff", 
-                args=[lastedit[0].pk]), 
-                'edit_count': 1, 
+                'edit_url': reverse("forum.views.post_diff",
+                args=[lastedit[0].pk]),
+                'edit_count': 1,
                 'edit_date': lastedit[0].edited })
             )
 
         return ""
-    
+
     @staticmethod
     def get_rated_blog_posts():
         return Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
