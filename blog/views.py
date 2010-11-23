@@ -296,7 +296,10 @@ def vote_async(request, post_id, positive):
         return {"rating": post.rating, "message": _("You have not enough Force.")}
 
     from forum.views import modify_rating
-    modify_rating(post, 1, positive)
+    if positive == "1":
+        modify_rating(post, 1, False)
+    else:
+        modify_rating(post, 1, True)
     return {"rating": post.rating}
 
 def vote_generic(request, post_id, positive):
@@ -308,7 +311,7 @@ def vote_generic(request, post_id, positive):
     if post.owner == request.user:
         return error(request, _("You can not vote for own post."))
 
-    if int(positive) == 0:
+    if positive == "0":
         positive = True
     else:
         positive = False
