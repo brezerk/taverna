@@ -275,26 +275,16 @@ def blog_update_handler(sender, instance, **kwargs):
         os.path.join(settings.STATIC_RSS_ROOT, "tracker.xml")
     )
 
-    # This is horribe fucking staff
-#    if instance.blog is not None:
- #       rss_blog_tracker.save(
-  #          Post.get_rated_blog_posts()[:16], 
-   #         os.path.join(settings.STATIC_RSS_ROOT, "tracker.xml")
-    #    )
-
-#    if instance.blog.owner.pk != 1:
- #       rss_blog = RssBlogFeed(
-  #          title = "FOSS :: " + instance.blog.name,
-   #         link = "/",
-    #        description = "%s %s" % (_("Foss blog updates for"), instance.blog.name),
-     #   )
-      #  rss_blog.save(
-       #     instance.get_rated_users_blog_posts(instance.blog)[:16],
-        #    os.path.join(settings.STATIC_RSS_ROOT, "blog-%d.xml" % instance.blog.pk),
-       # )
-
-#post_save.connect(generate_tracker_feed, sender = Post)
-#post_delete.connect(generate_tracker_feed, sender = Post)
+    if instance.blog.owner.pk == 1:
+        rss_blog = RssBlogFeed(
+            title = "FOSS :: " + instance.blog.name,
+            link = "/",
+            description = "%s %s" % (_("Foss blog updates for"), instance.blog.name),
+        )
+        rss_blog.save(
+            instance.get_rated_users_blog_posts(instance.blog)[:16],
+            os.path.join(settings.STATIC_RSS_ROOT, "blog-%d.xml" % instance.blog.pk),
+        )
 
 blog_update.connect(blog_update_handler)
 
