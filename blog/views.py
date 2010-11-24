@@ -340,7 +340,7 @@ def vote_generic(request, post_id, positive):
 @rr('blog/blog_list.html')
 def list(request):
     public_blogs = Blog.objects.filter(owner = 1)
-    user_blogs = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")[:10]
+    user_blogs = Blog.objects.all().exclude(owner = 1).exclude(owner__profile__visible_name__isnull = True).order_by("-owner__profile__karma")[:20]
     return { 'public_blogs': public_blogs, 'user_blogs': user_blogs }
 
 @rr('blog/blog_list.html')
