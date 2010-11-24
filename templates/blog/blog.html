@@ -9,5 +9,8 @@
     {% if user.is_authenticated %}
         [<a href='{% url blog.views.post_add %}'>vim</a>]
     {% endif %}
+    {% if blog_info.owner = user %}
+        [<a href='{% url blog.views.blog_settings %}'>{% trans "Settings" %}</a>]
+    {% endif %}
 {% endblock %}
 

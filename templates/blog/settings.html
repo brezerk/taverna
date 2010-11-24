@@ -3,26 +3,23 @@
 
 {% block title %}{% trans "Blog settings" %}{% endblock %}
 
-
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "Blog settings" %}
-    </div>
-</div>
+{% block action-left %}
+    {% trans "Blog settings" %}
 {% endblock %}
 
 {% block content %}
-
-<h3>{% trans "My blog settings" %}</h3>
-<div class='form'>
-<form method="POST">{% csrf_token %}
-<table border='0' width='600px'>
-    {{form}}
-    <tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Save" %}"></td></tr>
-</table>
-</form>
-</div>
+    <h3>{% trans "My blog settings" %}</h3>
+    <div class='form'>
+        <form method="POST">{% csrf_token %}
+        <table border='0' width='600px'>
+        {{form}}
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" name="submit" value="{% trans "Save" %}"></td>
+        </tr>
+        </table>
+        </form>
+    </div>
 {% endblock %}
 
 

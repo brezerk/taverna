@@ -4,28 +4,24 @@
 
 {% block title %}{% trans "User profile" %} :. {{ user.profile.get_visible_name }}{% endblock %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "User profile" %}
-    </div>
-    <div class='right'>
-        [<a href='{% url userauth.views.profile_view user.id %}'>{% trans "Cancel" %}</a>]
-    </div>
-</div>
+{% block action-left %}
+    {% trans "User profile" %}
 {% endblock %}
 
 {% block content %}
-<div class='form'>
-<h3>{% trans "Edit profile" %} {{ user.profile.get_visible_name }}</h3>
-<form method="POST">{% csrf_token %}
-<table border='0' width='600px'>
-{{ formUser }}
-{{ formProfile }}
-<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="{% trans "Update" %}"></td></tr>
-</table>
-</form>
-</div>
+    <div class='form'>
+        <h3>{% trans "Edit profile" %} {{ user.profile.get_visible_name }}</h3>
+        <form method="POST">{% csrf_token %}
+            <table border='0' width='600px'>
+            {{ formUser }}
+            {{ formProfile }}
+            <tr>
+                <td>&nbsp;</td>
+                <td><input type="submit" name="submit" value="{% trans "Update" %}"></td>
+            </tr>
+        </table>
+        </form>
+    </div>
 {% endblock %}
 
 
