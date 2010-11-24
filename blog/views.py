@@ -350,7 +350,7 @@ def list_public(request):
 
 @rr('blog/blog_list.html')
 def list_users(request):
-    blog_list = Blog.objects.all().exclude(owner = 1).order_by("-owner__profile__karma")
+    blog_list = Blog.objects.all().exclude(owner = 1).exclude(owner__profile__visible_name__isnull = True).order_by("-owner__profile__karma")
 
     page = request.GET.get("offset", 1)
 
