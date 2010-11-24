@@ -37,6 +37,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.html import strip_tags
 
 from django.utils.translation import ugettext as _
+from django.shortcuts import get_object_or_404
 
 import re
 
@@ -49,9 +50,18 @@ class ForumForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved', 'sticked', 'closed')
+        exclude = (
+            'tags',
+            'blog',
+            'reply_to',
+            'thread',
+            'flags',
+            'solved',
+            'sticked',
+            'closed',
+        )
         widgets = {
-                  'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+            'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
 
     def clean_title(self):
@@ -59,44 +69,70 @@ class ThreadForm(forms.ModelForm):
         title = title.strip()
 
         if not title:
-            raise forms.ValidationError(_("You have forgotten about title."))
+            raise forms.ValidationError(
+                _("You have forgotten about title.")
+            )
 
         tag_list = re.split('\[(.*?)\]', title)
         if not tag_list[-1].strip():
-            raise forms.ValidationError(_("Tags is good. But title also required."))
+            raise forms.ValidationError(
+                _("Tags is good. But title also required.")
+            )
 
         if len(tag_list[-1].strip()) < 5:
-            raise forms.ValidationError(_("Topic length < 5 is not allowed."))
+            raise forms.ValidationError(
+                _("Topic length < 5 is not allowed.")
+            )
         return title
 
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
         text_len = len(text)
         if text_len > 4096:
-            raise forms.ValidationError(_("Text length > 4096 characters is not allowed."))
+            raise forms.ValidationError(
+                _("Text length > 4096 characters is not allowed.")
+            )
         return text
 
 class AdminThreadForm(ThreadForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved')
+        exclude = (
+            'tags',
+            'blog',
+            'reply_to',
+            'thread',
+            'flags',
+            'solved',
+        )
         widgets = {
-                  'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+            'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved', 'sticked', 'closed')
+        exclude = (
+            'tags',
+            'blog',
+            'reply_to',
+            'thread',
+            'flags',
+            'solved',
+            'sticked',
+            'closed',
+        )
         widgets = {
-                  'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+            'text': Textarea(attrs={'cols': 80, 'rows': 27}),
         }
 
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
         text_len = len(text)
         if text_len > 4096:
-            raise forms.ValidationError(_("Text length: %s > 4096 characters") % text_len)
+            raise forms.ValidationError(
+                _("Text length: %s > 4096 characters") % text_len
+            )
         return text
 
 @rr('forum/index.html')
@@ -109,14 +145,21 @@ def forum(request, forum_id):
     showall = request.GET.get("showall", "0")
     page = request.GET.get("offset", 1)
 
-    forum = Forum.objects.get(pk = forum_id)
+    forum = get_object_or_404(Forum, pk=forum_id)
 
-    posts = Post.objects.filter(reply_to = None, forum = forum).order_by('-sticked', '-created').select_related('owner__profile', 'thread')
+    posts = Post.objects.filter(
+                reply_to=None, forum=forum) \
+                .order_by('-sticked', '-created') \
+                .select_related('owner__profile', 'thread'
+            )
 
     if showall == "0":
-        posts = posts.exclude(rating__lte = settings.MIN_RATING)
+        posts = posts.exclude(rating__lte=settings.MIN_RATING)
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
     try:
         thread = paginator.page(page)
@@ -139,24 +182,39 @@ def traker(request):
 
     showall = request.GET.get("showall", "0")
 
-    posts = Post.objects.filter(blog = None).exclude(owner = request.user).order_by('-created').select_related('owner__profile', 'reply_to__owner__profile', 'thread__blog','thread__forum')
+    posts = Post.objects.filter(blog=None) \
+                .exclude(owner=request.user) \
+                .order_by('-created') \
+                .select_related(
+                    'owner__profile',
+                    'reply_to__owner__profile',
+                    'thread__blog',
+                    'thread__forum'
+                )
 
     if showall == "0":
-        posts = posts.exclude(rating__lte = settings.MIN_RATING)
+        posts = posts.exclude(rating__lte=settings.MIN_RATING)
 
-    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
     try:
         thread = paginator.page(page)
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'request_url': request.get_full_path(), 'showall': showall }
+    return {
+        'thread': thread,
+        'request_url': request.get_full_path(),
+        'showall': showall
+    }
 
 @login_required()
 @rr('forum/reply.html')
 def reply(request, post_id):
-    reply_to = Post.objects.filter(closed = False).get(pk = post_id)
+    reply_to = get_object_or_404(Post, pk=post_id)
 
     if reply_to.thread.closed:
         raise Http404
@@ -168,7 +226,7 @@ def reply(request, post_id):
         form = PostForm(request.POST)
         if form.is_valid():
             if request.POST['submit']==_("Reply"):
-                post = form.save(commit = False)
+                post = form.save(commit=False)
                 post.reply_to = reply_to
                 post.thread = post.reply_to.thread
                 post.owner = request.user
@@ -177,10 +235,21 @@ def reply(request, post_id):
                 request.user.profile.use_force("COMMENT_CREATE")
                 request.user.profile.save()
 
-                paginator = ExtendedPaginator(Post.objects.filter(thread = post.thread)[1:], settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+                paginator = ExtendedPaginator(
+                                Post.objects.filter(thread=post.thread)[1:],
+                                settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]
+                            )
                 last_page = paginator.num_pages
 
-                return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [post.thread.pk]), last_page, post.pk))
+                return HttpResponseRedirect(
+                           "%s?offset=%s#post_%s" % (
+                               reverse(
+                                   "forum.views.thread",
+                                   args=[post.thread.pk]
+                               ),
+                               last_page, post.pk
+                           )
+                       )
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
@@ -188,8 +257,8 @@ def reply(request, post_id):
 @login_required()
 @rr('blog/post_remove.html')
 def post_view(request, post_id):
-    startpost = Post.objects.get(pk = post_id)
-    reason = PostVote.objects.exclude(reason = None).get(post = startpost)
+    startpost = get_object_or_404(Post, pk=post_id)
+    reason = PostVote.objects.exclude(reason=None).get(post=startpost)
 
     if startpost.reply_to:
         return { 'post': startpost, 'reason': reason }
@@ -205,7 +274,7 @@ def scourge(request, post_id):
     if not request.user.is_active:
        return error(request, "")
 
-    startpost = Post.objects.get(pk = post_id)
+    startpost = get_objects_or_404(Post, pk=post_id)
     thread_id = startpost.thread.pk
     forum = startpost.forum
     blog = startpost.blog
@@ -229,7 +298,9 @@ def scourge(request, post_id):
                 postvote = None
 
             if postvote:
-                raise forms.ValidationError(_("You can't scourge post twice :]"))
+                raise forms.ValidationError(
+                    _("You can't scourge post twice :]")
+                )
 
             return reason
 
@@ -240,9 +311,9 @@ def scourge(request, post_id):
                 PostEdit.objects.filter(post = startpost).delete()
                 startpost.delete()
             else:
-                postvote = super(RemoveForm, self).save(commit = False, **args)
+                postvote = super(RemoveForm, self).save(commit=False, **args)
                 postvote.post = startpost
-                postvote.user = User.objects.get(pk = 1)
+                postvote.user = User.objects.get(pk=1)
                 postvote.positive = False
                 postvote.auto = False
                 postvote.save()
@@ -257,21 +328,48 @@ def scourge(request, post_id):
         if form.is_valid():
             form.save()
             try:
-                thread = Post.objects.get(pk = thread_id)
+                thread = Post.objects.get(pk=thread_id)
             except:
                 thread = None
 
             if thread:
                 offset = request.GET.get("offset", 1)
                 if startpost:
-                    return HttpResponseRedirect("%s?offset=%s&showall=1#post_%s" % (reverse('forum.views.thread', args = [thread.pk]), offset, startpost.pk))
+                    return HttpResponseRedirect(
+                               "%s?offset=%s&showall=1#post_%s" % (
+                                   reverse(
+                                       'forum.views.thread',
+                                       args=[thread.pk]
+                                   ),
+                                   offset,
+                                   startpost.pk
+                               )
+                           )
                 else:
-                    return HttpResponseRedirect("%s?offset=%s&showall=1" % (reverse('forum.views.thread', args = [thread.pk]), offset))
+                    return HttpResponseRedirect(
+                               "%s?offset=%s&showall=1" % (
+                                   reverse(
+                                       'forum.views.thread',
+                                       args=[thread.pk]
+                                   ),
+                                   offset
+                               )
+                           )
             else:
                 if forum:
-                    return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
+                    return HttpResponseRedirect(
+                               reverse(
+                                   'forum.views.forum',
+                                   args=[forum.pk]
+                               )
+                           )
                 else:
-                    return HttpResponseRedirect(reverse('blog.views.view', args = [blog.pk]))
+                    return HttpResponseRedirect(
+                               reverse(
+                                   'blog.views.view',
+                                   args=[blog.pk]
+                               )
+                           )
     else:
         form = RemoveForm()
         form.fields['reason'].empty_label=None
@@ -283,25 +381,37 @@ def scourge(request, post_id):
 
 def auto_remove(startpost, reason):
     if startpost.reply_to == None:
-        for post in Post.objects.filter(thread = startpost.pk):
+        for post in Post.objects.filter(thread=startpost.pk):
             if reason.cost == 0:
-                PostVote.objects.filter(post = post).delete()
-                PostEdit.objects.filter(post = post).delete()
+                PostVote.objects.filter(post=post).delete()
+                PostEdit.objects.filter(post=post).delete()
                 post.delete()
             else:
-                PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
+                PostVote(
+                    user=User.objects.get(pk=1),
+                    post=post,
+                    reason=reason,
+                    positive=False,
+                    auto=True
+                ).save()
                 modify_rating(post, reason.cost)
     else:
-        for post in Post.objects.filter(reply_to = startpost.pk):
+        for post in Post.objects.filter(reply_to=startpost.pk):
             auto_remove(post, reason)
 
             if reason.cost == 0:
-                PostVote.objects.filter(post = post).delete()
-                PostEdit.objects.filter(post = post).delete()
+                PostVote.objects.filter(post=post).delete()
+                PostEdit.objects.filter(post=post).delete()
                 post.delete()
             else:
-               PostVote(user = User.objects.get(pk = 1), post = post, reason = reason, positive = False, auto = True).save()
-               modify_rating(post, reason.cost)
+                PostVote(
+                    user=User.objects.get(pk=1),
+                    post=post,
+                    reason=reason,
+                    positive=False,
+                    auto=True
+                ).save()
+                modify_rating(post, reason.cost)
 
 def modify_rating(post, cost = 1, positive = False):
     if positive:
@@ -321,7 +431,7 @@ def topic_create(request, forum_id):
     if not request.user.profile.can_create_topic():
         return error(request, "TOPIC_CREATE")
 
-    forum = Forum.objects.get(pk = forum_id)
+    forum = get_object_or_404(Forum, pk=forum_id)
     if request.method == 'POST':
         if request.user.is_staff:
             form = AdminThreadForm(request.POST)
@@ -339,9 +449,9 @@ def topic_create(request, forum_id):
                 for name in split_str[1:-1]:
                     if name:
                         try:
-                            post.tags.add(Tag.objects.get(name = name))
+                            post.tags.add(Tag.objects.get(name=name))
                         except Tag.DoesNotExist:
-                            tag = Tag(name = name)
+                            tag = Tag(name=name)
                             tag.save()
                             post.tags.add(tag)
 
@@ -352,14 +462,28 @@ def topic_create(request, forum_id):
                 request.user.profile.use_force("TOPIC_CREATE")
                 request.user.profile.save()
 
-                return HttpResponseRedirect(reverse('forum.views.forum', args = [forum.pk]))
+                return HttpResponseRedirect(
+                           reverse('forum.views.forum', args=[forum.pk])
+                       )
     else:
         if request.user.is_staff:
             form = AdminThreadForm()
         else:
             form = ThreadForm()
-        form.exclude = ('tags', 'blog', 'reply_to', 'thread', 'flags', 'solved', 'sticked')
-    return {'form': form, 'forum': forum, 'blog_info': True}
+        form.exclude = (
+            'tags',
+            'blog',
+            'reply_to',
+            'thread',
+            'flags',
+            'solved',
+            'sticked'
+        )
+    return {
+        'form': form,
+        'forum': forum,
+        'blog_info': True
+    }
 
 @login_required()
 @rr('forum/topic_edit.html')
@@ -367,7 +491,7 @@ def topic_edit(request, topic_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    topic = Post.objects.get(pk = topic_id)
+    topic = get_object_or_404(Post, pk=topic_id)
 
     if not topic.reply_to == None:
         raise Http404
@@ -383,16 +507,23 @@ def topic_edit(request, topic_id):
             form = ThreadForm(request.POST, instance=topic)
         if form.is_valid():
             if request.POST['submit']==_("Save"):
-                orig_text = Post.objects.get(pk = topic_id).text
+                orig_text = Post.objects.get(pk=topic_id).text
                 post = form.save()
 
                 if orig_text != post.text:
-                    PostEdit(post = topic, user = request.user, old_text = orig_text, new_text = post.text).save()
+                    PostEdit(
+                        post=topic,
+                        user=request.user,
+                        old_text=orig_text,
+                        new_text=post.text
+                    ).save()
 
                 request.user.profile.use_force("TOPIC_EDIT")
                 request.user.profile.save()
 
-                return HttpResponseRedirect(reverse('forum.views.thread', args = [topic_id]))
+                return HttpResponseRedirect(
+                           reverse('forum.views.thread', args=[topic_id])
+                       )
 
     else:
         if request.user.is_staff:
@@ -410,7 +541,7 @@ def forum_create(request):
     if request.method == 'POST':
         form = ForumForm(request.POST)
         if form.is_valid():
-            forum = form.save(commit = False)
+            forum = form.save(commit=False)
             forum.owner = request.user
             forum.save()
 
@@ -427,14 +558,19 @@ def tags_search(request, tag_id):
     page = request.GET.get("offset", 1)
     showall = request.GET.get("showall", "0")
 
-    tag = Tag.objects.get(pk=tag_id)
+    tag = get_object_or_404(Tag, pk=tag_id)
 
-    posts = Post.objects.filter(blog = None, tags = tag_id).order_by('-created').select_related('owner__profile', 'thread', 'forum')
+    posts = Post.objects.filter(blog=None, tags=tag_id) \
+                .order_by('-created') \
+                .select_related('owner__profile', 'thread', 'forum')
 
     if showall == "0":
-        posts = posts.exclude(rating__lte = settings.MIN_RATING)
+        posts = posts.exclude(rating__lte=settings.MIN_RATING)
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
     try:
         thread = paginator.page(page)
@@ -449,19 +585,30 @@ def tags_search(request, tag_id):
 
 @rr('blog/post_diff.html')
 def post_diff(request, diff_id):
-    edit_post = PostEdit.objects.select_related('user__profile', 'post__owner__profile', 'post__blog').get(pk = diff_id)
+    edit_post = PostEdit.objects \
+                    .select_related(
+                        'user__profile',
+                        'post__owner__profile',
+                        'post__blog'
+                    ) \
+                    .get(pk = diff_id)
     return {'startpost': edit_post.post, 'edit_post': edit_post}
 
 def post_rollback(request, diff_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    diff = PostEdit.objects.get(pk = diff_id)
+    diff = get_object_or_404(PostEdit, pk=diff_id)
 
     if not diff.post.owner == request.user:
         raise Http404
 
-    PostEdit(post = diff.post, user = request.user, old_text = diff.post.text, new_text = diff.old_text).save()
+    PostEdit(
+        post=diff.post,
+        user=request.user,
+        old_text=diff.post.text,
+        new_text=diff.old_text
+    ).save()
 
     request.user.profile.use_force("FORUM_CREATE")
     request.user.profile.save()
@@ -473,7 +620,7 @@ def post_rollback(request, diff_id):
     return thread(request, post.pk)
 
 def post_solve(request, post_id):
-    post = Post.objects.get(pk = post_id)
+    post = get_object_or_404(Post, pk=post_id)
 
     if post.solved:
         post.solved = False
@@ -482,7 +629,9 @@ def post_solve(request, post_id):
     post.save()
 
     if request.user.is_staff or request.user == post.owner:
-        return HttpResponseRedirect(reverse("forum.views.thread", args = [post_id]))
+        return HttpResponseRedirect(
+                  reverse("forum.views.thread", args = [post_id])
+               )
     else:
         raise Http404
 
@@ -491,46 +640,83 @@ def thread(request, post_id):
     page = request.GET.get("offset", 1)
     showall = request.GET.get("showall", "0")
 
-    startpost = Post.objects.select_related('owner__profile','blog','forum','thread').get(pk = post_id)
+    startpost = Post.objects \
+        .select_related(
+            'owner__profile',
+            'blog',
+            'forum',
+            'thread'
+        ).get(pk = post_id)
 
-    posts = Post.objects.filter(thread = startpost.thread.pk).exclude(pk = startpost.pk).select_related('owner__profile', 'reply_to__owner__profile', 'thread')
+    posts = Post.objects.filter(thread=startpost.thread.pk) \
+        .exclude(pk=startpost.pk) \
+        .select_related(
+            'owner__profile',
+            'reply_to__owner__profile',
+            'thread'
+        )
 
     if showall == "0":
-        posts = posts.exclude(rating__lte = settings.MIN_RATING)
+        posts = posts.exclude(rating__lte=settings.MIN_RATING)
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]
+                )
 
     try:
         thread = paginator.page(page)
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return { 'startpost': startpost, 'thread': thread, 'showall': showall}
+    return {
+        'startpost': startpost,
+        'thread': thread,
+        'showall': showall
+    }
 
 @rr('blog/post_print.html')
 def print_post(request, post_id):
-    return {'startpost': Post.objects.get(pk = post_id), 'site': Site.objects.get_current().domain}
+    startpost = get_object_or_404(Post, pk=post_id)
+    return {
+        'startpost': startpost,
+        'site': Site.objects.get_current().domain
+    }
 
 def offset(request, root_id, offset_id):
     if offset_id == root_id:
-        return HttpResponseRedirect(reverse('forum.views.thread', args = [root_id]))
+        return HttpResponseRedirect(
+            reverse('forum.views.thread', args=[root_id])
+        )
     else:
         showall = request.GET.get("showall", "0")
 
-        pages = Post.objects.filter(thread__pk = root_id).exclude(pk = root_id)
+        pages = Post.objects.filter(thread__pk=root_id).exclude(pk=root_id)
 
         if showall == "0":
-            pages = pages.exclude(rating__lte = settings.MIN_RATING)
+            pages = pages.exclude(rating__lte=settings.MIN_RATING)
 
-        paginator = Paginator(pages, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        paginator = Paginator(
+                        pages,
+                        settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]
+                    )
         post = Post.objects.get(pk=offset_id)
 
         for page in paginator.page_range:
             if post in paginator.page(page).object_list:
                 if showall == "1":
-                   return HttpResponseRedirect("%s?showall=1&offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
+                   return HttpResponseRedirect(
+                        "%s?showall=1&offset=%s#post_%s" % (
+                            reverse("forum.views.thread", args=[root_id]),
+                            page,
+                            offset_id)
+                        )
                 else:
-                   return HttpResponseRedirect("%s?offset=%s#post_%s" % (reverse("forum.views.thread", args = [root_id]), page, offset_id))
+                   return HttpResponseRedirect(
+                        "%s?offset=%s#post_%s" % (
+                            reverse("forum.views.thread", args=[root_id]),
+                            page, offset_id)
+                        )
 
     raise Http404
 

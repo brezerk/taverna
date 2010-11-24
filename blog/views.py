@@ -44,7 +44,7 @@ from django.conf import settings
 @login_required()
 @rr('blog/settings.html')
 def blog_settings(request):
-    blog = Blog.objects.get(owner = request.user)
+    blog = get_object_or_404(Blog, owner=request.user)
 
     class BlogForm(ModelForm):
         class Meta:
@@ -52,8 +52,8 @@ def blog_settings(request):
             exclude = ('owner')
 
         def save(self, **args):
-            blog_name = Blog.objects.get(owner = request.user).name
-            blog = super(BlogForm, self).save(commit = False, **args)
+            blog_name = Blog.objects.get(owner=request.user).name
+            blog = super(BlogForm, self).save(commit=False, **args)
             if blog.name == blog_name:
                 if request.user.profile.use_force("BLOG_DESC_EDIT"):
                     request.user.profile.save()
@@ -66,12 +66,12 @@ def blog_settings(request):
                     blog.save()
                 else:
                     return error(request, "BLOG_NAME_EDIT")
-            return HttpResponseRedirect(reverse(view, args = [blog.pk]))
+            return HttpResponseRedirect(reverse(view, args=[blog.pk]))
 
     form = BlogForm(instance = blog)
 
     if request.method == 'POST':
-        form = BlogForm(request.POST, instance = blog)
+        form = BlogForm(request.POST, instance=blog)
         if form.is_valid():
             return form.save()
 
@@ -83,7 +83,7 @@ def post_edit(request, post_id):
     if not request.user.profile.can_edit_topic():
         return error(request, "TOPIC_EDIT")
 
-    post_orig = Post.objects.get(pk = post_id)
+    post_orig = get_object_or_404(Post, pk=post_id)
 
     if not request.user.is_staff:
         if not post_orig.reply_to == None:
@@ -96,37 +96,49 @@ def post_edit(request, post_id):
     else:
         user_info = post_orig.owner
 
-    user_blogs = Blog.objects.filter(owner__in = [1, user_info.pk]).order_by('name').order_by('-owner__id')
+    user_blogs = Blog.objects.filter(owner__in=[1, user_info.pk]) \
+                 .order_by('name').order_by('-owner__id')
 
     tag_string = ""
 
     class EditForm(ModelForm):
-        tag_string = CharField(initial = post_orig.get_tag_list())
-        blog = ModelChoiceField(queryset = user_blogs,
-                            initial = user_blogs[0],
-                            label = _("Post to"))
+        tag_string = CharField(initial=post_orig.get_tag_list())
+        blog = ModelChoiceField(queryset=user_blogs,
+                            initial=user_blogs[0],
+                            label=_("Post to"))
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread', 'flags', 'closed', 'solved', 'sticked')
+            exclude = (
+                'tags',
+                'reply_to',
+                'thread',
+                'flags',
+                'closed',
+                'solved',
+                'sticked'
+            )
             widgets = {
-                      'text': Textarea(attrs={'cols': 80, 'rows': 27}),
-                      }
+                'text': Textarea(attrs={'cols': 80, 'rows': 27}),
+            }
 
         def save(self, **args):
-            orig_text = Post.objects.get(pk = post_id).text
+            orig_text = Post.objects.get(pk=post_id).text
 
-            post = super(EditForm, self).save(commit = False, **args)
+            post = super(EditForm, self).save(commit=False, **args)
             post.tags = ""
             post.save()
 
-            PostEdit(post = post, user = request.user, old_text = orig_text, new_text = post.text).save()
+            PostEdit(
+                post=post, user=request.user,
+                old_text=orig_text, new_text=post.text).save()
 
-            for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
+            for name in [t.strip() for t in \
+            self.cleaned_data["tag_string"].split(",")]:
                 try:
-                    post.tags.add(Tag.objects.get(name = name))
+                    post.tags.add(Tag.objects.get(name=name))
                 except Tag.DoesNotExist:
-                    tag = Tag(name = name)
+                    tag = Tag(name=name)
                     tag.save()
                     post.tags.add(tag)
 
@@ -142,14 +154,17 @@ def post_edit(request, post_id):
         if 'submit' in request.POST:
             if request.POST['submit']==_("Save"):
                 form.save()
-                return HttpResponseRedirect(reverse("forum.views.thread", args = [post_id]))
+                return HttpResponseRedirect(
+                           reverse("forum.views.thread", args=[post_id])
+                       )
     else:
         form = EditForm(instance=post_orig)
+
     return {
         'form': form,
         'post_id': post_id,
         'blog_info': True
-        }
+    }
 
 @login_required()
 @rr('blog/post_add.html')
@@ -157,23 +172,34 @@ def post_add(request):
     if not request.user.profile.can_create_topic():
        return error(request, "TOPIC_CREATE")
 
-    user_blogs = Blog.objects.filter(owner__in = [1, request.user.pk]).order_by('name').order_by('-owner__id')
+    user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
+                 .order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
-        tag_string = CharField(max_length = 32)
-        blog = ModelChoiceField(queryset = user_blogs,
-                            initial = user_blogs[0],
-                            label = _("Post to"))
+        tag_string = CharField(max_length=32)
+        blog = ModelChoiceField(
+                   queryset=user_blogs,
+                   initial=user_blogs[0],
+                   label=_("Post to")
+               )
 
         class Meta:
             model = Post
-            exclude = ('tags', 'reply_to', 'thread', 'flags', 'closed', 'solved', 'sticked')
+            exclude = (
+                'tags',
+                'reply_to',
+                'thread',
+                'flags',
+                'closed',
+                'solved',
+                'sticked'
+            )
             widgets = {
-                      'text': Textarea(attrs={'rows': 27}),
-                      }
+                'text': Textarea(attrs={'rows': 27}),
+            }
 
         def save(self, **args):
-            post = super(PostForm, self).save(commit = False, **args)
+            post = super(PostForm, self).save(commit=False, **args)
             post.owner = request.user
             post.save()
             post.thread = post
@@ -182,11 +208,12 @@ def post_add(request):
             from signals import blog_update
             blog_update.send(sender=None, instance=post)
 
-            for name in [t.strip() for t in self.cleaned_data["tag_string"].split(",")]:
+            for name in [t.strip() for t in \
+            self.cleaned_data["tag_string"].split(",")]:
                 try:
-                    post.tags.add(Tag.objects.get(name = name))
+                    post.tags.add(Tag.objects.get(name=name))
                 except Tag.DoesNotExist:
-                    tag = Tag(name = name)
+                    tag = Tag(name=name)
                     tag.save()
                     post.tags.add(tag)
 
@@ -205,22 +232,30 @@ def post_add(request):
             if form.is_valid():
                 if request.POST['submit']==_("Save"):
                     post_id = form.save()
-                    return HttpResponseRedirect(reverse(view, args = [post_id]))
+                    return HttpResponseRedirect(
+                               reverse(view, args=[post_id])
+                           )
     return {
         'form': form,
         'preview': preview,
         'tags': tags,
         'blog_info': True,
-        'dont_strip': True}
+        'dont_strip': True
+    }
 
 @rr('blog/tag_search.html')
 def tags_search(request, tag_id):
     page = request.GET.get("offset", 1)
 
-    tag = Tag.objects.get(pk = tag_id)
-    posts = Post.objects.filter(forum = None, tags = tag_id).order_by('-created').select_related('owner__profile','blog','thread')
+    tag = get_object_or_404(Tag, pk=tag_id)
+    posts = Post.objects.filter(forum=None, tags=tag_id) \
+            .order_by('-created') \
+            .select_related('owner__profile','blog','thread')
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["BLOG_POSTS"]
+                )
 
     try:
         thread = paginator.page(page)
@@ -232,9 +267,17 @@ def tags_search(request, tag_id):
 @rr('blog/blog.html')
 def view(request, blog_id):
     page = request.GET.get("offset", 1)
-    blog_info = Blog.objects.select_related('owner').get(pk = blog_id)
+
+    try:
+        blog_info = Blog.objects.select_related('owner').get(pk=blog_id)
+    except:
+        raise Http404
+
     posts = Post.get_rated_users_blog_posts(blog_info)
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["BLOG_POSTS"]
+                )
 
     try:
         thread = paginator.page(page)
@@ -244,15 +287,22 @@ def view(request, blog_id):
     if blog_info.owner.pk == 1:
         feed_url = "/media/blog-%s.xml" % (blog_info.pk)
     else:
-        feed_url = reverse("atom_blog", args=[blog_info.pk]) 
+        feed_url = reverse("atom_blog", args=[blog_info.pk])
 
-    return {'thread': thread, 'blog_info': blog_info, 'feed_url': feed_url}
+    return {
+        'thread': thread,
+        'blog_info': blog_info,
+        'feed_url': feed_url
+    }
 
 @rr('blog/index.html')
 def index(request):
     page = request.GET.get("offset", 1)
     posts = Post.get_rated_blog_posts()
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["BLOG_POSTS"]
+                )
 
     try:
         thread = paginator.page(page)
@@ -264,9 +314,15 @@ def index(request):
 @rr('blog/firebox.html')
 def firebox(request):
     page = request.GET.get("offset", 1)
-    posts = Post.objects.exclude(blog = None).exclude(rating__gte = settings.MIN_RATING).order_by('-created').select_related('owner__profile','blog','thread')
+    posts = Post.objects.exclude(blog=None) \
+            .exclude(rating__gte=settings.MIN_RATING) \
+            .order_by('-created') \
+            .select_related('owner__profile', 'blog', 'thread')
 
-    paginator = ExtendedPaginator(posts, settings.PAGE_LIMITATIONS["BLOG_POSTS"])
+    paginator = ExtendedPaginator(
+                    posts,
+                    settings.PAGE_LIMITATIONS["BLOG_POSTS"]
+                )
 
     try:
         thread = paginator.page(page)
@@ -278,22 +334,32 @@ def firebox(request):
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):
     if not request.user.is_authenticated():
-        return {"rating": post.rating, "message": _("Registration required.")}
+        return {"rating": post.rating,
+                "message": _("Registration required.")}
 
-    post = Post.objects.get(pk = post_id)
+    post = get_object_or_404(Post, pk=post_id)
 
     if post.owner == request.user:
-        return {"rating": post.rating, "message": _("You can not vote for own post.")}
+        return {"rating": post.rating,
+                "message": _("You can not vote for own post.")}
 
     if request.user.profile.use_force("VOTE"):
         try:
-            PostVote(post = post, user = request.user, positive = bool(int(positive))).save()
+            PostVote(post=post, user=request.user,
+                     positive=bool(int(positive))).save()
         except IntegrityError:
-            return {"rating": post.rating, "message": _("You can not vote more then one time for a single post.")}
+            return {
+                "rating": post.rating,
+                "message": _("""You can not vote more then one
+                                time for a single post.""")
+            }
         else:
             request.user.profile.save()
     else:
-        return {"rating": post.rating, "message": _("You have not enough Force.")}
+        return {
+            "rating": post.rating,
+            "message": _("You have not enough Force.")
+        }
 
     from forum.views import modify_rating
     if positive == "1":
@@ -306,7 +372,7 @@ def vote_generic(request, post_id, positive):
     if not request.user.is_authenticated():
         return error(request, _("Registration required."))
 
-    post = Post.objects.get(pk = post_id)
+    post = get_object_or_404(Post, pk=post_id)
 
     if post.owner == request.user:
         return error(request, _("You can not vote for own post."))
@@ -318,9 +384,13 @@ def vote_generic(request, post_id, positive):
 
     if request.user.profile.use_force("VOTE"):
         try:
-            PostVote(post = post, user = request.user, positive = positive).save()
+            PostVote(post=post, user=request.user,
+                     positive=positive).save()
         except IntegrityError:
-            return error(request, _("You can not vote more then one time for a single post."))
+            return error(
+                request,
+                _("You can not vote more then one time for a single post.")
+            )
         else:
             request.user.profile.save()
     else:
@@ -330,18 +400,32 @@ def vote_generic(request, post_id, positive):
     modify_rating(post, 1, positive)
 
     if post.reply_to:
-        paginator = Paginator(Post.objects.filter(thread = post.thread).exclude(pk = post.thread.pk), settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
+        paginator = Paginator(Post.objects.filter(thread=post.thread) \
+                              .exclude(pk=post.thread.pk),
+                              settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         for page in paginator.page_range:
             if post in paginator.page(page).object_list:
-               return HttpResponseRedirect("%s?offset=%i#post_%i" % (reverse("forum.views.thread", args = [post.thread.pk]), page, post.pk))
+               return HttpResponseRedirect(
+                   "%s?offset=%i#post_%i" % (
+                       reverse("forum.views.thread", args=[post.thread.pk]),
+                       page, post.pk
+                   )
+               )
     else:
-        return HttpResponseRedirect(reverse("forum.views.thread", args = [post.pk]))
+        return HttpResponseRedirect(
+                   reverse("forum.views.thread", args=[post.pk])
+               )
 
 @rr('blog/blog_list.html')
 def list(request):
-    public_blogs = Blog.objects.filter(owner = 1)
-    user_blogs = Blog.objects.all().exclude(owner = 1).exclude(owner__profile__visible_name__isnull = True).order_by("-owner__profile__karma")[:20]
-    return { 'public_blogs': public_blogs, 'user_blogs': user_blogs }
+    public_blogs = Blog.objects.filter(owner=1)
+    user_blogs = Blog.objects.all().exclude(owner=1) \
+                 .exclude(owner__profile__visible_name__isnull=True) \
+                 .order_by("-owner__profile__karma")[:20]
+    return {
+        'public_blogs': public_blogs,
+        'user_blogs': user_blogs
+    }
 
 @rr('blog/blog_list.html')
 def list_public(request):
@@ -350,18 +434,26 @@ def list_public(request):
 
 @rr('blog/blog_list.html')
 def list_users(request):
-    blog_list = Blog.objects.all().exclude(owner = 1).exclude(owner__profile__visible_name__isnull = True).order_by("-owner__profile__karma")
+    blog_list = Blog.objects.all().exclude(owner=1) \
+                .exclude(owner__profile__visible_name__isnull=True) \
+                .order_by("-owner__profile__karma")
 
     page = request.GET.get("offset", 1)
 
-    paginator = ExtendedPaginator(blog_list, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = ExtendedPaginator(
+                    blog_list,
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
-    return { 'thread': paginator.page(page) }
+    return {
+        'thread': paginator.page(page)
+    }
 
 @rr('blog/error.html')
 def error(request, error):
     if request.user.profile.is_buryed():
-        desc = _("Sorry, but You have been buryed at our Grave Yard. See your profile for a details.")
+        desc = _("""Sorry, but You have been buryed at our Grave Yard.
+                    See your profile for a details.""")
         cost = None
     else:
         try:

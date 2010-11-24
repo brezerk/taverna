@@ -20,14 +20,13 @@
 
 # Create your views here.
 
-#from librecaptcha import librecaptcha
-#from recaptcha.client import captcha
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.forms import Form, ModelForm, CharField, ModelChoiceField, ValidationError
+from django.forms import Form, ModelForm, CharField,
+                         ModelChoiceField, ValidationError
 
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -56,6 +55,7 @@ from django.template.defaultfilters import slugify
 from django.http import Http404
 
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 def openid_logout(request):
     logout(request)
@@ -63,18 +63,21 @@ def openid_logout(request):
 
 @login_required()
 @rr ('userauth/profile.html')
-def profile_view(request, user_id = None):
+def profile_view(request, user_id=None):
     if user_id:
-        user_info = User.objects.get(pk = user_id)
+        user_info = get_object_or_404(User, pk=user_id)
     else:
         user_info = request.user
 
     try:
-        user_blog = Blog.objects.get(owner = user_info)
+        user_blog = get_object_or_404(Blog, owner=user_info)
     except:
-        user_blog = ""
+        user_blog = None
 
-    return {'user_info': user_info,'user_blog': user_blog}
+    return {
+        'user_info': user_info,
+        'user_blog': user_blog
+    }
 
 @login_required()
 @rr ('userauth/settings.html')
@@ -90,12 +93,23 @@ def profile_edit(request):
         class Meta:
             model = Profile
             if profile.visible_name:
-                exclude = ('user', 'karma', 'photo', 'visible_name', 'force', 'buryed', 'buryed_reason')
+                exclude = (
+                    'user',
+                    'karma',
+                    'photo',
+                    'visible_name',
+                    'force',
+                )
             else:
-                exclude = ('user', 'karma', 'photo', 'force', 'buryed', 'buryed_reason')
+                exclude = (
+                    'user',
+                    'karma',
+                    'photo',
+                    'force',
+                )
 
         def save(self, **args):
-            profile = super(SettingsForm, self).save(commit = False, **args)
+            profile = super(SettingsForm, self).save(commit=False, **args)
             if request.POST['email']:
                 mailhash = md5(request.POST['email']).hexdigest()
                 profile.photo = mailhash
@@ -109,28 +123,40 @@ def profile_edit(request):
             except KeyError:
                 pass
             else:
-                blog = Blog.objects.get(owner = request.user.id)
+                blog = Blog.objects.get(owner=request.user.id)
                 blog.name = profile.visible_name
                 blog.save()
 
     class UserSettingsForm(ModelForm):
         class Meta:
             model = User
-            exclude = ('username', 'password', 'is_staff',
-                       'is_active', 'is_superuser', 'groups',
-                       'user_permissions', 'last_login', 'date_joined')
+            exclude = (
+                'username',
+                'password',
+                'is_staff',
+                'is_active',
+                'is_superuser',
+                'groups',
+                'user_permissions',
+                'last_login',
+                'date_joined'
+            )
 
     if request.method == 'POST':
-        formProfile = SettingsForm(request.POST, instance = profile)
-        formUser = UserSettingsForm(request.POST, instance = request.user)
+        formProfile = SettingsForm(request.POST, instance=profile)
+        formUser = UserSettingsForm(request.POST, instance=request.user)
         if formUser.is_valid() and formProfile.is_valid():
             formUser.save()
             formProfile.save()
-            return HttpResponseRedirect(reverse("userauth.views.profile_view",
-                                        args = [request.user.id]))
+            return HttpResponseRedirect(
+                       reverse(
+                           "userauth.views.profile_view",
+                           args=[request.user.id]
+                       )
+                   )
     else:
-        formProfile = SettingsForm(instance = profile)
-        formUser = UserSettingsForm(instance = request.user)
+        formProfile = SettingsForm(instance=profile)
+        formUser = UserSettingsForm(instance=request.user)
     return {'formProfile': formProfile, 'formUser': formUser}
 
 @rr ('userauth/openid.html')
@@ -139,7 +165,7 @@ def openid_chalange(request):
         return HttpResponseRedirect("/")
 
     class OpenidForm(Form):
-        openid = CharField(required = True, max_length = 32)
+        openid = CharField(required=True, max_length=32)
 
         def clean_openid(self):
             openid = self.cleaned_data['openid']
@@ -168,16 +194,11 @@ def openid_chalange(request):
                 error = "OpenID discovery error: %s" % str(exc)
                 return {'form': form, 'error': error}
 
-#       import openid.extensions.ax as ax
-#       ax_request = ax.FetchRequest()
-#       ax_request.add (ax.AttrInfo ('http://schema.openid.net/contact/email', alias='email', required=False))
-#       ax_request.add (ax.AttrInfo ('http://axschema.org/namePerson/first', alias='firstname', required=False))
-#       auth_request.addExtension(ax_request)
-
-#       if auth_request.shouldSendRedirect():
             trust_root = getViewURL(request, openid_chalange)
             redirect_to = getViewURL(request, openid_finish)
-            return HttpResponseRedirect(auth_request.redirectURL(trust_root, redirect_to))
+            return HttpResponseRedirect(
+                       auth_request.redirectURL(trust_root, redirect_to)
+                   )
     else:
         form = OpenidForm()
     return {'form': form}
@@ -201,23 +222,8 @@ def openid_finish(request):
         openid_hash=sha512(response.getDisplayIdentifier()).hexdigest()
         sreg_response = sreg.SRegResponse.fromSuccessResponse(response)
 
-#       import openid.extensions.ax as ax
-#       ax_response = ax.FetchResponse.fromSuccessResponse(response)
-
-#       print ax_response
-#
-#       ax_items = ""
-
-#       if ax_response:
-#           ax_items = {
-#               'email': ax_response.get('http://schema.openid.net/contact/email'),
-#               'firstname': ax_response.get('http://axschema.org/namePerson/first'),
-#           }
-#
-#       print ax_items
-
         try:
-            profile = Profile.objects.get(openid_hash = openid_hash)
+            profile = Profile.objects.get(openid_hash=openid_hash)
             username = profile.user.username
             user = authenticate(username=username)
             if user is not None:
@@ -225,49 +231,69 @@ def openid_finish(request):
 
             return HttpResponseRedirect("/")
         except Profile.DoesNotExist:
-            user = User(username = openid_hash[:30], is_staff = False, is_active = True,
-                        is_superuser = False)
+            user = User(
+                       username=openid_hash[:30],
+                       is_staff=False,
+                       is_active=True,
+                       is_superuser=False
+                   )
             user.save()
             profile = Profile(
-                                user = user, photo = "", openid_hash = openid_hash,
-                                karma = settings.START_RATING,
-                                force = settings.START_RATING
-                            )
+                          user=user,
+                          photo="",
+                          openid_hash=openid_hash,
+                          karma=settings.START_RATING,
+                          force=settings.START_RATING
+                      )
             profile.save()
             try:
-                blog = Blog.objects.get(owner = user)
+                blog = Blog.objects.get(owner=user)
             except Blog.DoesNotExist:
-                blog = Blog(owner = user, name = openid_hash[:30])
+                blog = Blog(owner=user, name=openid_hash[:30])
                 blog.save()
 
             auth = authenticate(username=user.username)
             if user is not None:
                 login(request, auth)
 
-            return HttpResponseRedirect(reverse("userauth.views.profile_edit"))
+            return HttpResponseRedirect(
+                       reverse("userauth.views.profile_edit")
+                   )
     else:
-        error = "Verification of %s failed: %s" % (response.getDisplayIdentifier(), response.message)
+        error = "Verification of %s failed: %s" % (
+                    response.getDisplayIdentifier(),
+                    response.message
+                )
 
     return {'from': form, 'error': error}
 
 @rr("userauth/coments.html")
 def user_comments(request, user_id):
-    user_info = User.objects.get(pk = user_id)
+    user_info = User.objects.get(pk=user_id)
 
     try:
         page = int(request.GET['offset'])
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Post.objects.filter(owner = user_info, forum = None, blog = None).order_by('-created'),
-                          settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
-
+    paginator = Paginator(
+                    Post.objects.filter(
+                        owner=user_info,
+                        forum=None,
+                        blog=None
+                    ).order_by('-created'),
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
     try:
         thread = paginator.page(page)
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'user_info': user_info, 'request_url': request.get_full_path()}
+    return {
+        'thread': thread,
+        'user_info': user_info,
+        'request_url': request.get_full_path()
+    }
 
 @rr("userauth/notifyes.html")
 def notify(request):
@@ -276,18 +302,34 @@ def notify(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Post.objects.exclude(owner=request.user).filter(forum = None, blog = None, reply_to__owner = request.user).order_by('-created').select_related('owner__profile', 'reply_to__owner__profile', 'thread__blog','thread__forum'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(
+                    Post.objects.exclude(owner=request.user) \
+                    .filter(
+                        forum=None,
+                        blog=None,
+                        reply_to__owner=request.user
+                    ).order_by('-created') \
+                    .select_related(
+                        'owner__profile',
+                        'reply_to__owner__profile',
+                        'thread__blog',
+                        'thread__forum'
+                    ), settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
     try:
         thread = paginator.page(page)
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    return {'thread': thread, 'request_url': request.get_full_path()}
+    return {
+        'thread': thread,
+        'request_url': request.get_full_path()
+    }
 
 @rr("userauth/scourges.html")
 def scourges(request, user_id):
-    user_info = User.objects.get(pk = user_id)
+    user_info = User.objects.get(pk=user_id)
     form = None
 
     if not request.user.is_staff:
@@ -300,7 +342,7 @@ def scourges(request, user_id):
                 fields = ('is_active',)
 
             def save(self, **args):
-                user = super(SettingsForm, self).save(commit = False, **args)
+                user = super(SettingsForm, self).save(commit=False, **args)
                 user.save()
 
         if request.method == 'POST':
@@ -314,14 +356,23 @@ def scourges(request, user_id):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(PostVote.objects.exclude(reason = None).filter(post__owner = user_info).order_by('-pk'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(
+                    PostVote.objects.exclude(reason=None) \
+                    .filter(post__owner=user_info).order_by('-pk'),
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
     try:
         rewards = paginator.page(page)
     except (EmptyPage, InvalidPage):
         rewards = paginator.page(paginator.num_pages)
 
-    return {'rewards': rewards, 'request_url': request.get_full_path(), 'user_info': user_info, 'form': form}
+    return {
+        'rewards': rewards,
+        'request_url': request.get_full_path(),
+        'user_info': user_info,
+        'form': form
+    }
 
 @rr("userauth/graveyard.html")
 def graveyard(request):
@@ -330,7 +381,12 @@ def graveyard(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(Profile.objects.filter(karma__lt = 0).exclude(user__is_active = 0).order_by('-karma').select_related('user'), settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
+    paginator = Paginator(
+                    Profile.objects.filter(karma__lt=0) \
+                    .exclude(user__is_active=0).order_by('-karma') \
+                    .select_related('user'),
+                    settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
+                )
 
     try:
         users = paginator.page(page)
