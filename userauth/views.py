@@ -25,8 +25,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.forms import Form, ModelForm, CharField,
-                         ModelChoiceField, ValidationError
+from django.forms import Form, ModelForm, CharField
+from django.forms import ModelChoiceField, ValidationError
 
 from django.utils.datastructures import MultiValueDictKeyError
 
