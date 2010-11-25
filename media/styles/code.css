@@ -4,7 +4,7 @@
 .code .k { color: #f0e68c; font-weight: bold } /* Keyword */
 .code .o { color: #666666 } /* Operator */
 .code .cm { color: #008800; font-style: italic } /* Comment.Multiline */
-.code .cp { color: #008800 } /* Comment.Preproc */
+.code .cp { color: #87ceeb } /* Comment.Preproc */
 .code .c1 { color: #008800; font-style: italic } /* Comment.Single */
 .code .cs { color: #008800; font-weight: bold } /* Comment.Special */
 .code .gd { color: #A00000 } /* Generic.Deleted */
@@ -25,8 +25,8 @@
 .code .kn { color: #f0e68c; font-weight: bold }
 .code .m { color: #666666 } /* Literal.Number */
 .code .s { color: #ffa0a0 } /* Literal.String */
-.code .na { color: #BB4444 } /* Name.Attribute */
-.code .nb { color: #f0e68c } /* Name.Builtin */
+.code .na { color: #bdb76b } /* Name.Attribute */
+.code .nb { color: #f0e68c; font-weight: bold } /* Name.Builtin */
 .code .nc { color: #98fb98 } /* Name.Class */
 .code .no { color: #880000 } /* Name.Constant */
 .code .nd { color: #98fb98 } /* Name.Decorator */
@@ -35,8 +35,8 @@
 .code .nf { color: #98fb98 } /* Name.Function */
 .code .nl { color: #A0A000 } /* Name.Label */
 .code .nn { } /* Name.Namespace */
-.code .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.code .nv { color: #B8860B } /* Name.Variable */
+.code .nt { color: #f0e68c; font-weight: bold } /* Name.Tag */
+.code .nv { color: #98fb98 } /* Name.Variable */
 .code .ow { color: #f0e68c; font-weight: bold } /* Operator.Word */
 .code .mf { color: #ffa0a0 } /* Literal.Number.Float */
 .code .mh { color: #ffa0a0 } /* Literal.Number.Hex */
@@ -45,7 +45,7 @@
 .code .sb { color: #BB4444 } /* Literal.String.Backtick */
 .code .sc { color: #BB4444 } /* Literal.String.Char */
 .code .sd { color: #BB4444; font-style: italic } /* Literal.String.Doc */
-.code .s2 { color: #BB4444 } /* Literal.String.Double */
+.code .s2 { color: #ffa0a0 } /* Literal.String.Double */
 .code .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
 .code .sh { color: #BB4444 } /* Literal.String.Heredoc */
 .code .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
