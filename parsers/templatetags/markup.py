@@ -49,7 +49,11 @@ def markup(value, parser):
     esc = conditional_escape
     if parser == 1:
         import postmarkup
-        markup = postmarkup.create(annotate_links=False,exclude=["img"],use_pygments=False)
+        from pygments import highlight
+        from pygments.lexers import get_lexer_by_name, ClassNotFound
+        from pygments.formatters import HtmlFormatter
+
+        markup = postmarkup.create(annotate_links=False,exclude=["img", "code"],use_pygments=False)
 
         class ImgTag(postmarkup.TagBase):
             valid_params = ("left", "right")
@@ -67,7 +71,26 @@ def markup(value, parser):
                 else:
                     return u'<img src="%s" alt="%s"></img>' % (contents, contents)
 
+        class PygmentsCodeTag(postmarkup.TagBase):
+            def __init__(self, name, pygments_line_numbers=False, **kwargs):
+                postmarkup.TagBase.__init__(self, name, enclosed=True, strip_first_newline=True)
+                self.line_numbers = pygments_line_numbers
+
+            def render_open(self, parser, node_index):
+                contents = self.get_contents(parser)
+                self.skip_contents(parser)
+
+                try:
+                    lexer = get_lexer_by_name(self.params, stripall=True)
+                except ClassNotFound:
+                    contents = postmarkup._escape_no_breaks(contents)
+                    return '<div class="code"><pre>%s</pre></div>' % contents
+
+                formatter = HtmlFormatter(linenos=self.line_numbers, cssclass="code")
+                return highlight(contents, lexer, formatter)
+
         markup.add_tag(ImgTag, u'img')
+        markup.add_tag(PygmentsCodeTag, u'code')
 
         value = "<p>" + markup(value) + "</p>"
         return value
