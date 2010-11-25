@@ -25,7 +25,7 @@ from django.core.urlresolvers import reverse
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-from taverna.blog.feeds import RssBlog, AtomBlog
+from taverna.blog.feeds import RssBlog, AtomBlog, RssBlogFeed, AtomBlogFeed
 from taverna.blog.sitemaps import BlogSitemap
 from taverna.forum.feeds import RssForum, AtomForum, RssComments, AtomComments
 from taverna.userauth.feeds import RssUser, AtomUser, RssNotify, AtomNotify
@@ -64,6 +64,9 @@ urlpatterns = patterns('',
 
     url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
     url(r'^share/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
+
+    url(r'^lib/librss.so$', RssBlogFeed(), name='rss_blog_traker'),
+    url(r'^lib/libatom.so$', AtomBlogFeed(), name='atom_blog_traker'),
 
     url(r'^lib/forum/librss.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
     url(r'^lib/forum/libatom.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_traker'),

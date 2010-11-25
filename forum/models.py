@@ -256,35 +256,10 @@ class PostVote(models.Model):
         else:
             return ret
 
-from django.db.models.signals import post_save, post_delete
-from blog.feeds import RssBlogFeed
-import os
-
-rss_blog_tracker = RssBlogFeed(
-    title = _("Foss tracker"),
-    link = "/",
-    description = _("Updates on changes and additions to blogs topics."),
-)
-
 from signals import blog_update, forum_update, thread_update
 
 def blog_update_handler(sender, instance, **kwargs):
     print "blog feed regen call"
-    rss_blog_tracker.save(
-        Post.get_rated_blog_posts()[:settings.PAGE_LIMITATIONS['RSS_POSTS']],
-        os.path.join(settings.STATIC_RSS_ROOT, "tracker.xml")
-    )
-
-    if instance.blog.owner.pk == 1:
-        rss_blog = RssBlogFeed(
-            title = "FOSS :: " + instance.blog.name,
-            link = "/",
-            description = "%s %s" % (_("Foss blog updates for"), instance.blog.name),
-        )
-        rss_blog.save(
-            instance.get_rated_users_blog_posts(instance.blog)[:16],
-            os.path.join(settings.STATIC_RSS_ROOT, "blog-%d.xml" % instance.blog.pk),
-        )
 
 blog_update.connect(blog_update_handler)
 

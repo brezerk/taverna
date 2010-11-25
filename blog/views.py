@@ -284,15 +284,9 @@ def view(request, blog_id):
     except (EmptyPage, InvalidPage):
         thread = paginator.page(paginator.num_pages)
 
-    if blog_info.owner.pk == 1:
-        feed_url = "/media/blog-%s.xml" % (blog_info.pk)
-    else:
-        feed_url = reverse("atom_blog", args=[blog_info.pk])
-
     return {
         'thread': thread,
         'blog_info': blog_info,
-        'feed_url': feed_url
     }
 
 @rr('blog/index.html')
