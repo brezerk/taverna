@@ -3,26 +3,21 @@
 
 {% block title %}{% trans "Forum" %} - {% trans "New forum creation" %}{% endblock %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "New forum creation" %}
-    </div>
-    <div class='right'>
-            [<a href='{% url forum.views.index %}'>{% trans "Cancel" %}</a>]
-    </div>
-</div>
+{% block action-left %}
+    {% trans "New forum creation" %}
 {% endblock %}
 
 {% block content %}
-<div class='form'>
-<h3>{% trans "Create forum" %}</h3>
-<form method=post>
-{% csrf_token %}
-<table border='0' width='600px'>
-{{form}}
-<tr><td><td colspan=2><input type=submit value="{% trans "Add" %}">
-</table>
-</form>
-</div>
+    <div class='form'>
+        <h3>{% trans "Create forum" %}</h3>
+        <form method=post>
+        {% csrf_token %}
+        <table border='0' width='600px'>
+            {{form}}
+            <tr>
+                <td colspan=2><input type=submit value="{% trans "Add" %}"></td>
+            </tr>
+        </table>
+        </form>
+    </div>
 {% endblock %}
