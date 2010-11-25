@@ -45,7 +45,7 @@ class RssForum(Feed):
         self.description = obj.description
         self.link = obj.get_absolute_url()
 
-        topics = Post.objects.filter(reply_to = None, forum = obj, removed = False).order_by('-sticked', '-created')
+        topics = Post.objects.filter(reply_to = None, forum = obj).order_by('-sticked', '-created')
 
         return topics[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
@@ -75,7 +75,7 @@ class RssComments(Feed):
         self.title = obj.title
         self.description = markup(obj.text, obj.parser)
 
-        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk, removed = True).order_by('-created')
+        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk).order_by('-created')
 
         self.paginator = Paginator(thread_list, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         return thread_list[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]

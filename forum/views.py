@@ -274,7 +274,7 @@ def scourge(request, post_id):
     if not request.user.is_active:
        return error(request, "")
 
-    startpost = get_objects_or_404(Post, pk=post_id)
+    startpost = get_object_or_404(Post, pk=post_id)
     thread_id = startpost.thread.pk
     forum = startpost.forum
     blog = startpost.blog
