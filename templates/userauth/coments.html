@@ -25,7 +25,7 @@
              <td>{{ post.thread.get_section_type }} </td>
              <td><a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a></td>
              <td>
-                {% if post.removed %}
+                {% if post.is_negative %}
                     <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>
                     <span class='removed'>&times;</span>
                 {% else %}

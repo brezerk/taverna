@@ -134,9 +134,11 @@ def post_edit(request, post_id):
             post.tags = ""
             post.save()
 
-            PostEdit(
-                post=post, user=request.user,
-                old_text=orig_text, new_text=post.text).save()
+            if orig_text != post.text:
+                PostEdit(
+                    post=post, user=request.user,
+                    old_text=orig_text, new_text=post.text
+                ).save()
 
             for name in [t.strip() for t in \
             self.cleaned_data["tag_string"].split(",")]:

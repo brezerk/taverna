@@ -58,9 +58,6 @@ class Post(models.Model):
     class Meta:
         ordering = ('created',)
 
-    def is_removed(self):
-        return bool(settings.O_REMOVED & self.flags)
-
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
 
@@ -215,6 +212,13 @@ class Post(models.Model):
         return Post.objects.filter(blog = blog
             ).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
             ).order_by('-created').select_related('owner__profile','blog','thread')
+
+    def is_negative(self):
+        if self.rating < settings.MIN_RATING:
+            return True
+        else:
+            return False
+
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)

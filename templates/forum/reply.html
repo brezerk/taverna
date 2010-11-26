@@ -7,7 +7,13 @@
 
 {% block content %}
     <h4>{% trans "Reply to message"%}</h4>
-    {% include 'forum/post.inc.html' %}
+    {% if post.blog or post.forum %}
+        {% with post as startpost %}
+        {% include 'blog/startpost.inc.html' %}
+        {% endwith %}
+    {% else %}
+        {% include 'forum/post.inc.html' %}
+    {% endif %}
 
     {% if form.cleaned_data %}
     <a name='reply'>
