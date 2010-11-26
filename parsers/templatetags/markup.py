@@ -69,9 +69,9 @@ def markup(value, parser):
                 contents = postmarkup.strip_bbcode(contents).replace(u'"', "%22")
 
                 if self.params in self.valid_params:
-                    return u'<img class="float-%s" src="%s" alt="%s"></img>' % (self.params, contents, contents)
+                    return u'<img class="float-%s" src="%s" alt="%s">' % (self.params, contents, contents)
                 else:
-                    return u'<img src="%s" alt="%s"></img>' % (contents, contents)
+                    return u'<img src="%s" alt="%s">' % (contents, contents)
 
         class PygmentsCodeTag(postmarkup.TagBase):
             def __init__(self, name, pygments_line_numbers=False, **kwargs):

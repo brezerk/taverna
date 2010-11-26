@@ -2,7 +2,7 @@
 #
 # This is cealnup script for cleaning make, tmp and other build files.
 #
-# Plz. Use it before move project to hosting place.
+# Run it before uploading to hosting.
 
 names="*~ *.pyc .*.swp"
 
