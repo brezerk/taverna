@@ -166,4 +166,5 @@ FORCE_REGEN = {
 MIN_RATING = -10
 
 START_RATING = 20
+FRIDAY_BLOG = u"Пепятничный бред"
 

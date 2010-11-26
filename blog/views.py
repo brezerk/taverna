@@ -102,7 +102,7 @@ def post_edit(request, post_id):
                      .order_by('name').order_by('-owner__id')
     else:
         user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
-                     .exclude(name=_(u"Пятничный бред")).order_by('name').order_by('-owner__id')
+                     .exclude(name=settings.FRIDAY_BLOG).order_by('name').order_by('-owner__id')
 
     tag_string = ""
 
@@ -183,7 +183,7 @@ def post_add(request):
                      .order_by('name').order_by('-owner__id')
     else:
         user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
-                     .exclude(name=_(u"Пятничный бред")).order_by('name').order_by('-owner__id')
+                     .exclude(name=settings.FRIDAY_BLOG).order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
         tag_string = CharField(max_length=32)
