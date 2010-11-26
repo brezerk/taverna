@@ -228,6 +228,9 @@ def reply(request, post_id):
                 post.reply_to = reply_to
                 post.thread = post.reply_to.thread
                 post.owner = request.user
+                from taverna.parsers.templatetags.markup import markup
+                post.text = markup(post.text, post.parser)
+
                 post.save()
 
                 request.user.profile.use_force("COMMENT_CREATE")

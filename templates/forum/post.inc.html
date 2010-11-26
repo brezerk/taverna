@@ -31,7 +31,7 @@
     </div>
     <div class="content">
         <div class="title">{{ post.title }}</div>
-        <div class="text">{{post.text|strip_cut|markup:post.parser|safe}}</div>
+        <div class="text">{{post.text|safe}}</div>
     </div>
     <div class="info">
         <span class='user'>
