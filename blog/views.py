@@ -96,8 +96,13 @@ def post_edit(request, post_id):
     else:
         user_info = post_orig.owner
 
-    user_blogs = Blog.objects.filter(owner__in=[1, user_info.pk]) \
-                 .order_by('name').order_by('-owner__id')
+    import datetime
+    if datetime.date.weekday(datetime.date.today()) == 4:
+        user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
+                     .order_by('name').order_by('-owner__id')
+    else:
+        user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
+                     .exclude(name=settings.FRIDAY_BLOG).order_by('name').order_by('-owner__id')
 
     tag_string = ""
 
@@ -172,8 +177,13 @@ def post_add(request):
     if not request.user.profile.can_create_topic():
        return error(request, "TOPIC_CREATE")
 
-    user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
-                 .order_by('name').order_by('-owner__id')
+    import datetime
+    if datetime.date.weekday(datetime.date.today()) == 4:
+        user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
+                     .order_by('name').order_by('-owner__id')
+    else:
+        user_blogs = Blog.objects.filter(owner__in=[1, request.user.pk]) \
+                     .exclude(name=settings.FRIDAY_BLOG).order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
         tag_string = CharField(max_length=32)

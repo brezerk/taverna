@@ -1,4 +1,4 @@
-.code { background: #232323; }
+.code {}
 .code .c { color: #87ceeb; } /* Comment */
 .code .err { border: 1px solid #FF0000 } /* Error */
 .code .k { color: #f0e68c; font-weight: bold } /* Keyword */

@@ -88,9 +88,9 @@ class ThreadForm(forms.ModelForm):
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
         text_len = len(text)
-        if text_len > 4096:
+        if text_len > 9096:
             raise forms.ValidationError(
-                _("Text length > 4096 characters is not allowed.")
+                _("Text length > 9096 characters is not allowed.")
             )
         return text
 
@@ -129,9 +129,9 @@ class PostForm(forms.ModelForm):
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
         text_len = len(text)
-        if text_len > 4096:
+        if text_len > 9096:
             raise forms.ValidationError(
-                _("Text length: %s > 4096 characters") % text_len
+                _("Text length: %s > 9096 characters") % text_len
             )
         return text
 
@@ -228,6 +228,9 @@ def reply(request, post_id):
                 post.reply_to = reply_to
                 post.thread = post.reply_to.thread
                 post.owner = request.user
+                from taverna.parsers.templatetags.markup import markup
+                post.text = markup(post.text, post.parser)
+
                 post.save()
 
                 request.user.profile.use_force("COMMENT_CREATE")
