@@ -2,6 +2,10 @@
 {% load i18n %}
 {% load markup %}
 
+{% block headlist %}<link rel="alternate" title="Forum {{forum.name}} feed" 
+    href="{% url rss_forum_traker forum.pk %}" 
+    type="application/rss+xml">{% endblock %}
+
 {% block action-left %}
     <a href='{% url forum.views.index %}'>{% trans "Forum list" %}</a> → 
     <a href='{% url forum.views.forum forum.pk %}'>{{ forum.name }}</a> {{ forum.description }}
