@@ -18,26 +18,37 @@
 # You should have received a copy of the GNU General Public License
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
+from taverna.tests import BaseTest
+from models import *
+from views import *
+from django.test.client import Client
 
-Replace these with more appropriate tests for your application.
-"""
+class SimpleForumTest(BaseTest):
 
-from django.test import TestCase
+    def setUp(self):
+        self.setUpProfile()
+        forum = Forum(name="Test Forum", description="Test", owner=self.user)
+        forum.save()
+        post = Post(owner=self.user, title="Test", text="Test", forum=forum)
+        post.save()
+        post.thread = post
+        post.save()
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
+    def testAnonymousStatusCodes(self):
         """
-        Tests that 1 + 1 always equals 2.
+        Check anonymous viewable pages:
         """
-        self.failUnlessEqual(1 + 1, 2)
+        client = self.getAnonymousClient()
+        self.assertEqual(client.get(reverse(index)).status_code, 200)
+        for v in forum, thread, print_post:
+            self.assertEqual(client.get(reverse(v, args=[1])).status_code, 200)
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
+    def testLoggedInStatusCodes(self):
+        """
+        Check login required pages:
+        """
+        client = self.getLoggedInClient()
+        self.assertEqual(client.get(reverse(forum_create)).status_code, 200)
+        self.assertEqual(client.get(reverse(topic_create, args=[1])).status_code, 200)
+        self.assertEqual(client.get(reverse(reply, args=[1])).status_code, 200)
 
