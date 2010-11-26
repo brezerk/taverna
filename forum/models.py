@@ -196,7 +196,7 @@ class Post(models.Model):
             return t.render(Context({
                 'edit_url': reverse("forum.views.post_diff",
                 args=[lastedit[0].pk]),
-                'edit_count': 1,
+                'edit_count': lastedit.count(),
                 'edit_date': lastedit[0].edited })
             )
 
