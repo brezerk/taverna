@@ -51,7 +51,9 @@ def markup(value, parser):
         import postmarkup
         from pygments import highlight
         from pygments.lexers import get_lexer_by_name, ClassNotFound
+        #from pygments.lexers import guess_lexer
         from pygments.formatters import HtmlFormatter
+
 
         markup = postmarkup.create(annotate_links=False,exclude=["img", "code"],use_pygments=False)
 
@@ -80,11 +82,15 @@ def markup(value, parser):
                 contents = self.get_contents(parser)
                 self.skip_contents(parser)
 
-                try:
-                    lexer = get_lexer_by_name(self.params, stripall=True)
-                except ClassNotFound:
-                    contents = postmarkup._escape_no_breaks(contents)
-                    return '<div class="code"><pre>%s</pre></div>' % contents
+                if self.params:
+                    try:
+                        lexer = get_lexer_by_name(self.params, stripall=True)
+                    except ClassNotFound:
+                        contents = postmarkup._escape_no_breaks(contents)
+                        return '<div class="code"><pre>%s</pre></div>' % contents
+                #Well, do we realy need lexer gues?
+                #else:
+                #    lexer = guess_lexer(contents)
 
                 formatter = HtmlFormatter(linenos=self.line_numbers, cssclass="code")
                 return highlight(contents, lexer, formatter)
