@@ -84,7 +84,6 @@ urlpatterns = patterns('',
 
     (r'^lib/offset.so.(?P<root_id>\d+).(?P<offset_id>\d+)$', 'forum.views.offset'),
     (r'^sbin/scourge.so.(?P<post_id>\d+)$', 'forum.views.scourge'),
-#    (r'^libview-(?P<post_id>\d+).so$', 'forum.views.post_view'),
     (r'^lib/libsolve.so.(?P<post_id>\d+)$', 'forum.views.post_solve'),
 
     (r'^lib/pam_logout.so$', 'userauth.views.openid_logout'),

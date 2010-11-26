@@ -175,10 +175,8 @@ def forum(request, forum_id):
 
 @rr('forum/traker.html')
 def traker(request):
-    try:
-        page = int(request.GET['offset'])
-    except (MultiValueDictKeyError, TypeError):
-        page = 1
+
+    page = int(request.GET.get('offset', 1))
 
     showall = request.GET.get("showall", "0")
 
@@ -253,17 +251,6 @@ def reply(request, post_id):
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
-
-@login_required()
-@rr('blog/post_remove.html')
-def post_view(request, post_id):
-    startpost = get_object_or_404(Post, pk=post_id)
-    reason = PostVote.objects.exclude(reason=None).get(post=startpost)
-
-    if startpost.reply_to:
-        return { 'post': startpost, 'reason': reason }
-    else:
-        return { 'startpost': startpost, 'reason': reason }
 
 @login_required()
 @rr('blog/post_remove.html')
