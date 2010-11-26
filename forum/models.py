@@ -245,7 +245,7 @@ class PostVote(models.Model):
     user = models.ForeignKey(User)
     positive = models.BooleanField()
     auto = models.BooleanField(default = 0, editable = False)
-    reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Post remove reason"))
+    reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Option or reason:"))
     class Meta:
         unique_together = ('post', 'user')
 
