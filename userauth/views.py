@@ -267,6 +267,7 @@ def openid_finish(request):
 
     return {'from': form, 'error': error}
 
+@login_required()
 @rr("userauth/coments.html")
 def user_comments(request, user_id):
     user_info = User.objects.get(pk=user_id)
@@ -295,6 +296,7 @@ def user_comments(request, user_id):
         'request_url': request.get_full_path()
     }
 
+@login_required()
 @rr("userauth/notifyes.html")
 def notify(request):
     try:
@@ -327,6 +329,7 @@ def notify(request):
         'request_url': request.get_full_path()
     }
 
+@login_required()
 @rr("userauth/scourges.html")
 def scourges(request, user_id):
     user_info = User.objects.get(pk=user_id)

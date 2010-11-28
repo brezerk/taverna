@@ -9,9 +9,7 @@
 
 {% block action-right %}
     [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
-    {% if user.is_authenticated %}
-        [<a href='{% url blog.views.post_add %}'>vim</a>]
-    {% endif %}
+    [<a href='{% url blog.views.post_add %}'>vim</a>]
 {% endblock %}
 
 {% block content %}

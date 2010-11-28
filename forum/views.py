@@ -173,6 +173,7 @@ def forum(request, forum_id):
         'showall': showall,
     }
 
+@login_required()
 @rr('forum/traker.html')
 def traker(request):
 

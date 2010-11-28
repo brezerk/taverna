@@ -6,9 +6,7 @@
 {% endblock %}
 
 {% block action-right %}
-    {% if user.is_authenticated %}
-         [<a href='{% url forum.views.forum_create %}'>mkdir</a>]
-    {% endif %}
+    [<a href='{% url forum.views.forum_create %}'>mkdir</a>]
 {% endblock %}
 
 {% block content %}

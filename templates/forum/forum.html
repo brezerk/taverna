@@ -18,9 +18,7 @@
     {% else %}
         [<a href='?showall=1'>ls *</a>]
     {% endif %}
-    {% if user.is_authenticated %}
-        [<a href='{% url forum.views.topic_create forum.pk %}'>vim</a>]
-    {% endif %}
+    [<a href='{% url forum.views.topic_create forum.pk %}'>vim</a>]
 {% endblock %}
 
 {% block content %}

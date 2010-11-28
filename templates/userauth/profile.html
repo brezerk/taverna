@@ -11,7 +11,8 @@
 {% block action-right %}
     [<a href='{% url blog.views.view user_blog.pk %}'>{% trans "User's blog" %}</a>]
     {% if user.pk == user_info.pk %}
-        [<a href='{% url userauth.views.profile_edit %}'>{% trans "Edit" %}</a>]
+        [<a href='{% url userauth.views.profile_edit %}'>{% trans "Profile settings" %}</a>]
+        [<a href='{% url blog.views.blog_settings %}'>{% trans "Blog settings" %}</a>]
     {% endif %}
 {% endblock %}
 
