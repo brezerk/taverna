@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block headlist %}<link rel="alternate" title="FOSS FEED" href="{% url rss_blog_traker %}" type="application/rss+xml">{% endblock %}
+
 {% block action-left %}
     {% trans "Blogs traker" %}
 {% endblock %}

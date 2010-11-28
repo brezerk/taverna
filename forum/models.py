@@ -58,9 +58,6 @@ class Post(models.Model):
     class Meta:
         ordering = ('created',)
 
-    def is_removed(self):
-        return bool(settings.O_REMOVED & self.flags)
-
     def get_absolute_url(self):
         return reverse("forum.views.thread", args = [self.pk])
 
@@ -199,7 +196,7 @@ class Post(models.Model):
             return t.render(Context({
                 'edit_url': reverse("forum.views.post_diff",
                 args=[lastedit[0].pk]),
-                'edit_count': 1,
+                'edit_count': lastedit.count(),
                 'edit_date': lastedit[0].edited })
             )
 
@@ -215,6 +212,13 @@ class Post(models.Model):
         return Post.objects.filter(blog = blog
             ).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
             ).order_by('-created').select_related('owner__profile','blog','thread')
+
+    def is_negative(self):
+        if self.rating < settings.MIN_RATING:
+            return True
+        else:
+            return False
+
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
@@ -245,7 +249,7 @@ class PostVote(models.Model):
     user = models.ForeignKey(User)
     positive = models.BooleanField()
     auto = models.BooleanField(default = 0, editable = False)
-    reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Post remove reason"))
+    reason = models.ForeignKey(ReasonList, blank = True, null = True, verbose_name=_("Option or reason:"))
     class Meta:
         unique_together = ('post', 'user')
 

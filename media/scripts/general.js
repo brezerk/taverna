@@ -26,12 +26,17 @@ function highlightOnLoad(){
     if (anchor != null)
         objName = anchor.substr(6);
             if (objName != null)
-                highlightMessage(objName)
-    return
+                highlightMessage(objName);
+    return;
+}
+
+function focusOnAnchor(anchor){
+    var currentHref = window.location.href;
+    window.location.href = currentHref.substr(0, currentHref.lastIndexOf("#")) + "#" + anchor;
+    return;
 }
 
 function highlightMessage(post_id){
-
     postName = 'post_' + post_id;
     postObj = document.getElementById(postName);
 
@@ -41,7 +46,7 @@ function highlightMessage(post_id){
                 unhighlightMessage();
             old_post_id = post_id;
         }
-    return
+    return;
 }
 
 function unhighlightMessage(){
@@ -56,5 +61,7 @@ function unhighlightMessage(){
         
         postObj.style.border = "";
     }
+    return;
 }
+
 

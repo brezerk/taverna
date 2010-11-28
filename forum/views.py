@@ -88,9 +88,9 @@ class ThreadForm(forms.ModelForm):
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
         text_len = len(text)
-        if text_len > 4096:
+        if text_len > 9096:
             raise forms.ValidationError(
-                _("Text length > 4096 characters is not allowed.")
+                _("Text length > 9096 characters is not allowed.")
             )
         return text
 
@@ -129,9 +129,9 @@ class PostForm(forms.ModelForm):
     def clean_text(self):
         text = self.cleaned_data['text'].strip()
         text_len = len(text)
-        if text_len > 4096:
+        if text_len > 9096:
             raise forms.ValidationError(
-                _("Text length: %s > 4096 characters") % text_len
+                _("Text length: %s > 9096 characters") % text_len
             )
         return text
 
@@ -175,10 +175,8 @@ def forum(request, forum_id):
 
 @rr('forum/traker.html')
 def traker(request):
-    try:
-        page = int(request.GET['offset'])
-    except (MultiValueDictKeyError, TypeError):
-        page = 1
+
+    page = int(request.GET.get('offset', 1))
 
     showall = request.GET.get("showall", "0")
 
@@ -230,6 +228,9 @@ def reply(request, post_id):
                 post.reply_to = reply_to
                 post.thread = post.reply_to.thread
                 post.owner = request.user
+                from taverna.parsers.templatetags.markup import markup
+                post.text = markup(post.text, post.parser)
+
                 post.save()
 
                 request.user.profile.use_force("COMMENT_CREATE")
@@ -253,17 +254,6 @@ def reply(request, post_id):
     else:
         form = PostForm()
     return { 'form': form, 'post': reply_to}
-
-@login_required()
-@rr('blog/post_remove.html')
-def post_view(request, post_id):
-    startpost = get_object_or_404(Post, pk=post_id)
-    reason = PostVote.objects.exclude(reason=None).get(post=startpost)
-
-    if startpost.reply_to:
-        return { 'post': startpost, 'reason': reason }
-    else:
-        return { 'startpost': startpost, 'reason': reason }
 
 @login_required()
 @rr('blog/post_remove.html')

@@ -1,53 +1,16 @@
-{% extends "base.html" %}
+{% extends "userauth/coments.html" %}
 {% load i18n %}
 {% load markup %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        {% trans "Recent comments list" %}
-    </div>
-    <div class='right'>
-        {% if showall == "1" %}
-            [<a href='?showall=0'>grep positive</a>]
-        {% else %}
-            [<a href='?showall=1'>ls *</a>]
-        {% endif %}
-        [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
-    </div>
-</div>
+{% block action-left %}
+    {% trans "Recent comments list" %}
 {% endblock %}
 
-{% block content %}
-
-{% include "forum/arrows.inc.html" %}
-
-<table cellspacing='0' cellpadding='2' border='0' class='theader'>
-<tr class='theader'><th width='100px'>{% trans "Section" %}</th><th width='240px'>{% trans "Seaction name" %}<th>{% trans "Topic title" %}</th><th width='280px'>{% trans "Date" %}</th></tr>
-{% for post in thread.object_list %}
-<tr class="{% cycle "odd" "even" %}">
- <td>
-    {{ post.thread.get_section_type }}
- </td>
- <td>
-    <a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a>
- </td>
- <td>
-    {{post.get_flags|safe}}
-    {% if post.removed %}
-        <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>{{post.thread.title}}</a>
-        <span class='removed'>&times;</span>
+{% block action-right %}
+    {% if showall == "1" %}
+        [<a href='?showall=0'>grep positive</a>]
     {% else %}
-        <a href='{% url forum.views.offset post.thread.pk post.id %}'>{{post.thread.title}}</a>
+        [<a href='?showall=1'>ls *</a>]
     {% endif %}
- </td>
- <td>{{post.created|timesince}}
- {% trans "by" %} (<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{ post.owner.profile.get_visible_name }}</a>)
- </td>
-</tr>
-{% endfor %}
-</table>
-
-{% include "forum/arrows.inc.html" %}
 {% endblock %}
 
