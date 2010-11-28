@@ -30,6 +30,8 @@ from openid.store.filestore import FileOpenIDStore
 from openid.store import sqlstore
 from django.core.paginator import Paginator
 
+from userauth.models import Profile
+from blog.models import Blog
 
 class ExtendedPaginator(Paginator):
 
@@ -70,7 +72,26 @@ def rr(template, mimetype=None):
     def decor(view):
         def wrapper(request, *args, **kwargs):
             if request.user.is_authenticated():
-                if not request.user.profile.visible_name:
+                # This is an a fixup for root account
+                try:
+                    profile = request.user.profile
+                except:
+                    profile = Profile(
+                        user=request.user,
+                        photo="",
+                        openid_hash="",
+                        karma=settings.START_RATING,
+                        force=settings.START_RATING
+                    )
+                    profile.save()
+
+                    try:
+                        blog = Blog.objects.get(owner=request.user)
+                    except Blog.DoesNotExist:
+                        blog = Blog(owner=request.user, name=request.user.username)
+                        blog.save()
+
+                if not profile.visible_name:
                     if request.path not in (reverseURL("userauth.views.profile_edit"), reverseURL("userauth.views.openid_logout")):
                         return HttpResponseRedirect(reverseURL("userauth.views.profile_edit"))
             val = view(request, *args, **kwargs)
