@@ -374,10 +374,8 @@ def vote_async(request, post_id, positive):
         modify_rating(post, 1, True)
     return {"rating": post.rating}
 
+@login_required()
 def vote_generic(request, post_id, positive):
-    if not request.user.is_authenticated():
-        return error(request, _("Registration required."))
-
     post = get_object_or_404(Post, pk=post_id)
 
     if post.owner == request.user:
