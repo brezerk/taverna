@@ -59,11 +59,13 @@
             if (positive != 0){
                 positive == 1;
             }
-            var voite_id = "#rating-" + post_id;
             $.getJSON('/lib/ajax.so.' + post_id + '.' + positive, {}, function(json){
-                $(voite_id).html(json.vote.rating);
                 if (json.vote.message){
-                    alert (json.vote.message);
+                    var voite_msg = "#message-" + post_id;
+                    $(voite_msg).html(json.vote.message);
+                } else {
+                    var voite_id = "#rating-" + post_id;
+                    $(voite_id).html(json.vote.rating);
                 };
             }, 'json');
         };

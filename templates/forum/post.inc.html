@@ -24,8 +24,9 @@
         </div>
         <div class="right">
             {% if post.pk%}
+            <span id='message-{{ post.pk }}'>
             <span id='rating-{{ post.pk }}'>{{ post.get_rating }}</span>
-            <span class="vote-positive"><a class='vote-positive' href='{% url blog.views.vote_generic post.pk 0 %}' id='positive-{{ post.pk }}'>&#43;</a></span>&#47;<span class="vote-negative"><a class='vote-negative' id='negative-{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a></span>
+            <span class="vote-positive"><a class='vote-positive' href='{% url blog.views.vote_generic post.pk 0 %}' id='positive-{{ post.pk }}'>&#43;</a></span>&#47;<span class="vote-negative"><a class='vote-negative' id='negative-{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a></span></span>
             {% endif %}
         </div>
     </div>
