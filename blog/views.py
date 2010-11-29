@@ -333,13 +333,13 @@ def firebox(request):
 def vote_async(request, post_id, positive):
     if not request.user.is_authenticated():
         return {"rating": post.rating,
-                "message": _("Registration required.")}
+                "message": _("EACCES")}
 
     post = get_object_or_404(Post, pk=post_id)
 
     if post.owner == request.user:
         return {"rating": post.rating,
-                "message": _("You can not vote for own post.")}
+                "message": _("ELOOP")}
 
     if request.user.profile.use_force("VOTE"):
         try:
@@ -348,15 +348,14 @@ def vote_async(request, post_id, positive):
         except IntegrityError:
             return {
                 "rating": post.rating,
-                "message": _("You can not vote more then one \
-                             time for a single post.")
+                "message": _("EEXIST")
             }
         else:
             request.user.profile.save()
     else:
         return {
             "rating": post.rating,
-            "message": _("You have not enough Force.")
+            "message": _("ENOFORCE")
         }
 
     from forum.views import modify_rating
@@ -371,7 +370,7 @@ def vote_generic(request, post_id, positive):
     post = get_object_or_404(Post, pk=post_id)
 
     if post.owner == request.user:
-        return error(request, _("You can not vote for own post."))
+        return error(request, _("ELOOP"))
 
     if positive == "0":
         positive = True
@@ -385,7 +384,7 @@ def vote_generic(request, post_id, positive):
         except IntegrityError:
             return error(
                 request,
-                _("You can not vote more then one time for a single post.")
+                _("EEXIST")
             )
         else:
             request.user.profile.save()
