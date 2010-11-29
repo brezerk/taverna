@@ -2,23 +2,30 @@
 {% load i18n %}
 
 {% block content %}
-
-<h3>{% trans "Log in page" %}</h3>
-<div class='form'>
-<form method=post>
-<table border='0' width='600px'>
-{% if error %}
-<tr><td colspan='3'>{{error}}</td></tr>
-{% endif %}
-{{form}}
-{% csrf_token %}
-<tr><td>&nbsp;</td><td><input type=submit value={% trans "Log in" %}></tr>
-</form>
-<form method=post>
-{% csrf_token %}
-<input id="id_openid" type="hidden" name="openid" maxlength="32" value="google" />
-<tr><td>&nbsp;</td><td><input type=submit value={% trans "Google" %}></tr>
-</table>
-</form>
-</div>
+    <h3>{% trans "Log in page" %}</h3>
+    <div class="form">
+        <form method="post" action="">
+        {% csrf_token %}
+        <table border='0' width='600px'>
+        {% if error %}
+            <tr><td colspan='2'>{{error}}</td></tr>
+        {% endif %}
+        {{form}}
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" value="{% trans "Log in" %}"></td>
+        </tr>
+        </table>
+        </form>
+        <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="openid" maxlength="32" value="google">
+        <table border='0' width='600px'>
+        <tr>
+            <th>&nbsp;</th>
+            <td><input type="submit" value="{% trans "Google" %}"></td>
+        </tr>
+        </table>
+        </form>
+    </div>
 {% endblock %}
