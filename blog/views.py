@@ -348,8 +348,8 @@ def vote_async(request, post_id, positive):
         except IntegrityError:
             return {
                 "rating": post.rating,
-                "message": _("""You can not vote more then one
-                                time for a single post.""")
+                "message": _("You can not vote more then one \
+                             time for a single post.")
             }
         else:
             request.user.profile.save()
