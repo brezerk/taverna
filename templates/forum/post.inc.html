@@ -1,62 +1,30 @@
+{% extends "forum/post.base.html" %}
+
 {% load i18n %}
 {% load markup %}
 
-<div class="post" id="post_{{post.pk}}">
-    <div class="header">
-        <div class="left">
-            <a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>
-               {{ post.get_flags|safe }}
-               {% if post.reply_to and post.reply_to != post.thread %}
-                    {% trans "Reply to" %} <a href="
-                    {% if thread %}
-                        {% if post.reply_to in thread.object_list %}
-                            #post_{{post.reply_to.pk}}
-                        {% else %}
-                            ?offset={{ post.reply_to|pg:thread.paginator }}#post_{{post.reply_to.pk}}
-                        {% endif %}
-                    {% else %}
-                        {% url forum.views.offset post.thread.pk post.pk %}
-                    {% endif %}
-                    " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> 
-                    {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} 
-                    {{post.reply_to.created|date:"d.m.Y H:i:s"}}
-                {% endif %}
-        </div>
-        <div class="right">
-            {% if post.pk%}
-            <span id='message-{{ post.pk }}'>
-            <span id='rating-{{ post.pk }}'>{{ post.get_rating }}</span>
-            <span class="vote-positive"><a class='vote-positive' href='{% url blog.views.vote_generic post.pk 0 %}' id='positive-{{ post.pk }}'>&#43;</a></span>&#47;<span class="vote-negative"><a class='vote-negative' id='negative-{{ post.pk }}' href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a></span></span>
+{% block header %}
+    <a href="#post_{{ post.pk }}" onclick="highlightMessage({{ post.pk }});" >#</a>
+    {{ post.get_flags|safe }}
+    {% if post.reply_to and post.reply_to != post.thread %}
+        {% trans "Reply to" %} <a href="
+        {% if thread %}
+            {% if post.reply_to in thread.object_list %}
+                #post_{{post.reply_to.pk}}
+            {% else %}
+                ?offset={{ post.reply_to|pg:thread.paginator }}#post_{{post.reply_to.pk}}
             {% endif %}
-        </div>
-    </div>
-    <div class="content">
-        <div class="title">{{ post.title }}</div>
-        <div class="text">{{post.text|safe}}</div>
-    </div>
-    <div class="info">
-        <span class='user'>
-        {% if post.owner %}
-            <a href='{% url userauth.views.profile_view post.owner.pk %}'>
-            {{ post.owner.profile.get_html_visible_name|safe }}
         {% else %}
-            <a href='{% url userauth.views.profile_view user.pk %}'>
-            {{ user.profile.get_html_visible_name|safe }}
+            {% url forum.views.offset post.thread.pk post.pk %}
         {% endif %}
-        </a></span>
-        @ 
-        {{post.created|date:"d.m.Y H:i:s"}}
-    </div>
-    <div class="controls">
-    {% if post.pk %}
-        {% if user.is_staff %} 
-            [<a href="{% url forum.views.scourge post.pk %}?offset={{ thread.number }}">{% trans "Scourge" %}</a>]
-        {% endif %}
-        {% if post.thread.closed %}
-            [{% trans "This topic is closed" %}]
-        {% else %}
-            [<a href="{% url forum.views.reply post.pk %}">{% trans "Reply on this message" %}</a>]
-        {% endif %}
+        " onclick="highlightMessage({{ post.reply_to.pk }});">{% trans "comment" %}</a> 
+        {% trans "by" %} {{post.reply_to.owner.profile.get_visible_name}} 
+        {{post.reply_to.created|date:"d.m.Y H:i:s"}}
     {% endif %}
-    </div>
-</div>
+{% endblock %}
+
+{% block user %}
+    <a href='{% url userauth.views.profile_view post.owner.pk %}'>
+        {{ post.owner.profile.get_html_visible_name|safe }}
+    </a>
+{% endblock %}
