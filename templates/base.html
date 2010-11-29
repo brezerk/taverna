@@ -81,7 +81,7 @@
         <tr>
             <td width='300'>&nbsp;</td>
             <td align='center'>
-                [<a href='{% url blog.views.index %}'>{% trans "Traker" %}</a>]
+                [<a href='{% url blog.views.index %}'>{% trans "Tracker" %}</a>]
                 [<a href='{% url blog.views.list %}'>share</a>/(<a href='{% url blog.views.list_public %}'>local</a>|<a href='{% url blog.views.list_users %}'>usr</a>)] 
                 [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
                 [<a href='{% url userauth.views.graveyard %}'>{% trans "Grave yard" %}</a>] 
@@ -107,7 +107,7 @@
         </div>
         <div class='right'>
             {% block action-right %}{% endblock %}
-            [<a href='{% url userauth.views.notify %}'>{% trans "Notifyes" %}</a>|<a href='{% url forum.views.traker %}'>{% trans "Traker" %}</a>]
+            [<a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>|<a href='{% url forum.views.tracker %}'>{% trans "Tracker" %}</a>]
         </div>
     </div>
     <!-- end of action menu block -->

@@ -41,7 +41,7 @@ class RssForum(Feed):
         return forum
 
     def items(self, obj):
-        self.title = _("Last topics in form: %s" % (obj.name))
+        self.title = _("Last topics in forum: %s" % (obj.name))
         self.description = obj.description
         self.link = obj.get_absolute_url()
 

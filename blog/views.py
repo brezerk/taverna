@@ -19,16 +19,12 @@
 # along with Taverna. If not, see <http://www.gnu.org/licenses/>.
 
 from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm, CharField, ModelChoiceField, Textarea
 
 from django.db import IntegrityError
 
-from django.contrib.auth.models import User
-from userauth.models import Profile
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post, PostEdit, PostVote
 
@@ -91,10 +87,6 @@ def post_edit(request, post_id):
 
         if post_orig.owner != request.user:
             raise Http404
-
-        user_info = request.user
-    else:
-        user_info = post_orig.owner
 
     import datetime
     if datetime.date.weekday(datetime.date.today()) == 4:
@@ -159,7 +151,7 @@ def post_edit(request, post_id):
         form = EditForm(request.POST, instance=post_orig)
         form.is_valid()
         if 'submit' in request.POST:
-            if request.POST['submit']==_("Save"):
+            if request.POST['submit'] == _("Save"):
                 form.save()
                 return HttpResponseRedirect(
                            reverse("forum.views.thread", args=[post_id])
@@ -242,7 +234,7 @@ def post_add(request):
         form.is_valid()
         if 'submit' in request.POST:
             if form.is_valid():
-                if request.POST['submit']==_("Save"):
+                if request.POST['submit'] == _("Save"):
                     post_id = form.save()
                     return HttpResponseRedirect(
                                reverse(view, args=[post_id])

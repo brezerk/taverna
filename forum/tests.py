@@ -49,6 +49,7 @@ class SimpleForumTest(BaseTest):
         """
         client = self.getLoggedInClient()
         self.assertEqual(client.get(reverse(forum_create)).status_code, 200)
+        self.assertEqual(client.get(reverse(tracker)).status_code, 200)
         self.assertEqual(client.get(reverse(topic_create, args=[1])).status_code, 200)
         self.assertEqual(client.get(reverse(reply, args=[1])).status_code, 200)
 

@@ -64,11 +64,11 @@ urlpatterns = patterns('',
     url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
     url(r'^share/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
 
-    url(r'^lib/librss.so$', RssBlogFeed(), name='rss_blog_traker'),
-    url(r'^lib/libatom.so$', AtomBlogFeed(), name='atom_blog_traker'),
+    url(r'^lib/librss.so$', RssBlogFeed(), name='rss_blog_tracker'),
+    url(r'^lib/libatom.so$', AtomBlogFeed(), name='atom_blog_tracker'),
 
-    url(r'^lib/forum/librss.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_traker'),
-    url(r'^lib/forum/libatom.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_traker'),
+    url(r'^lib/forum/librss.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_tracker'),
+    url(r'^lib/forum/libatom.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_tracker'),
 
     (r'^lib/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
 
@@ -79,7 +79,7 @@ urlpatterns = patterns('',
     (r'^forum/libvim.so.1.(?P<topic_id>\d+)$', 'forum.views.topic_edit'),
     (r'^bin/mkdir$', 'forum.views.forum_create'),
     (r'^forum/libtag.so.(?P<tag_id>\d+)$', 'forum.views.tags_search'),
-    (r'^forum/traker.so$', 'forum.views.traker'),
+    (r'^forum/tracker.so$', 'forum.views.tracker'),
 
     (r'^lib/offset.so.(?P<root_id>\d+).(?P<offset_id>\d+)$', 'forum.views.offset'),
     (r'^sbin/scourge.so.(?P<post_id>\d+)$', 'forum.views.scourge'),

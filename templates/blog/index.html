@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block headlist %}<link rel="alternate" title="FOSS FEED" href="{% url rss_blog_traker %}" type="application/rss+xml">{% endblock %}
+{% block headlist %}<link rel="alternate" title="FOSS FEED" href="{% url rss_blog_tracker %}" type="application/rss+xml">{% endblock %}
 
 {% block action-left %}
-    {% trans "Blogs traker" %}
+    {% trans "Blogs tracker" %}
 {% endblock %}
 
 {% block action-right %}
-    [<a href='{% url rss_blog_traker %}'>RSS</a>|<a href='{% url atom_blog_traker %}'>Atom</a>]
+    [<a href='{% url rss_blog_tracker %}'>RSS</a>|<a href='{% url atom_blog_tracker %}'>Atom</a>]
     [<a href='{% url blog.views.post_add %}'>vim</a>]
 {% endblock %}
 

@@ -3,7 +3,7 @@
 {% load markup %}
 
 {% block headlist %}<link rel="alternate" title="Forum {{forum.name}} feed" 
-    href="{% url rss_forum_traker forum.pk %}" 
+    href="{% url rss_forum_tracker forum.pk %}" 
     type="application/rss+xml">{% endblock %}
 
 {% block action-left %}
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block action-right %}
-    [<a href='{% url rss_forum_traker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_traker forum.pk %}'>Atom</a>]
+    [<a href='{% url rss_forum_tracker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_tracker forum.pk %}'>Atom</a>]
     {% if showall == "1" %}
         [<a href='?showall=0'>grep positive</a>]
     {% else %}
