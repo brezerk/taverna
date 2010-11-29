@@ -1,50 +1,29 @@
+{% extends "forum/startpost.base.html" %}
+
 {% load i18n %}
 {% load markup %}
 
-<div class='news'>
-    <h3>
-        {{ startpost.get_flags|safe }}
-        <a href='{{ startpost.get_section_url }}'>{{ startpost.get_section_name }}</a> →
-        {{ startpost.get_forumtags|safe }}
-        <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
-    </h3>
-    <div class='block'>
-        <div class='text'>
-            {{ startpost.get_strip_text|safe }}
-        </div>
-        <div class='tags'>
-            {% trans "Tags" %}:
-            {{ startpost.get_tag_url_list|safe }}
-        </div>
-        <div>
-            <span id='message-{{ startpost.pk }}'>
-            [<span class='vote-positive'><a class='vote-positive' 
-                   href='{% url blog.views.vote_generic startpost.pk 0 %}' 
-                   id='positive-{{ startpost.pk }}'>▲</a></span>]
-            <span id='rating-{{ startpost.pk }}'>
-                {{ startpost.get_rating }}
-            </span>
-            [<span class='vote-negative'><a class='vote-negative' 
-                   href='{% url blog.views.vote_generic startpost.pk 1 %}'
-                   id='negative-{{ startpost.pk }}'>▼</a></span>]
-            </span>
-            | {% trans "Author" %}:
-            <span class='user'>
-                <a href='{% url userauth.views.profile_view startpost.owner.pk %}'>
-                    {{ startpost.owner.profile.visible_name }}
-                </a>
-            </span>
-            ( 
-                {{ startpost.created|date:"d.m.Y H:i" }}
-            )
-            {% if startpost.thread %}
-            |
-            <span class='comments'>
-            {{ startpost.get_comments_count|safe }}
-            </span>
-            {% endif %}
-        </div>
+{% block header %}
+    {{ startpost.get_flags|safe }}
+    <a href='{{ startpost.get_section_url }}'>{{ startpost.get_section_name }}</a> →
+    {{ startpost.get_forumtags|safe }}
+    <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
+{% endblock %}
 
-        {% include "forum/startpost.controls.inc.html" %}
+{% block text %}
+    {{ startpost.get_strip_text|safe }}
+{% endblock %}
+
+{% block tags %}
+    <div class='tags'>
+        {% trans "Tags" %}:
+        {{ startpost.get_tag_url_list|safe }}
     </div>
-</div>
+{% endblock %}
+
+{% block coments %}
+    |
+    <span class='comments'>
+        {{ startpost.get_comments_count|safe }}
+    </span>
+{% endblock %}    

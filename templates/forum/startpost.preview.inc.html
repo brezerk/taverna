@@ -1,30 +1,37 @@
+{% extends "forum/startpost.base.html" %}
+
 {% load i18n %}
 {% load markup %}
 
-<div class='news'>
-    <h3>
-        <a href='#'>{{ startpost.title }}</a>
-    </h3>
-    <div class='block'>
-            {{ startpost.text|markup:startpost.parser|show_cut|safe }}
-        {% if startpost.tag_string %}
-        <div class='tags'>
-            {% trans "Tags" %}:
-            {{ startpost.tag_string|tags|safe }}
-        </div>
-        {% endif %}
-        <div>
-            [<span class='vote-positive'><a href='#'>▲</a></span>]
-            <span>0</span>
-            [<span class='vote-negative'><a href='#'>▼</a></span>]
-            | {% trans "Author" %}:
-            <span class='user'>
-                <a href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_visible_name|safe }}</a>
-            </span>
-            ( 
-                {%now "d.m.Y H:i:s"%}
-            )
-        </div>
+{% block header %}
+    <a href='#'>{{ startpost.title }}</a>
+{% endblock %}
+
+{% block text %}
+    {{ startpost.text|markup:startpost.parser|show_cut|safe }}
+{% endblock %}
+
+{% block tags %}
+    <div class='tags'>
+        {% trans "Tags" %}:
+        {{ startpost.tag_string|tags|safe }}
     </div>
-</div>
+{% endblock %}
+
+{% block vote %}
+    [<span class='vote-positive'><a href='#'>▲</a></span>]
+    <span>0</span>
+    [<span class='vote-negative'><a href='#'>▼</a></span>]
+{% endblock %}
+
+{% block author %}
+<a href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_visible_name|safe }}</a>
+{% endblock %}
+
+{% block date %}
+    {%now "d.m.Y H:i:s"%}
+{% endblock %}
+
+{% block controls %}
+{% endblock %}
 
