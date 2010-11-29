@@ -265,5 +265,5 @@ from signals import blog_update, forum_update, thread_update
 def blog_update_handler(sender, instance, **kwargs):
     print "blog feed regen call"
 
-blog_update.connect(blog_update_handler)
+blog_update.connect(blog_update_handler, dispatch_uid="b6b097360b48b4d02eae3291251aee0f")
 
