@@ -331,11 +331,11 @@ def firebox(request):
 
 @rr('ajax/vote.json', "application/json")
 def vote_async(request, post_id, positive):
+    post = get_object_or_404(Post, pk=post_id)
+
     if not request.user.is_authenticated():
         return {"rating": post.rating,
                 "message": _("EACCES")}
-
-    post = get_object_or_404(Post, pk=post_id)
 
     if post.owner == request.user:
         return {"rating": post.rating,
