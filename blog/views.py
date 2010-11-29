@@ -448,7 +448,7 @@ def list_users(request):
 @rr('blog/error.html')
 def error(request, error):
     if request.user.profile.is_buryed():
-        desc = _("""Sorry, but You have been buryed at our Grave Yard.
+        desc = _("""Sorry, but You have been buryed at our Graveyard.
                     See your profile for a details.""")
         cost = None
     else:
