@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.contrib.syndication.views import Feed
 from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
@@ -31,7 +30,10 @@ from django.conf import settings
 
 from django.core.paginator import Paginator
 
-class RssForum(Feed):
+from util import CachedFeed
+
+class RssForum(CachedFeed):
+    cache_prefix = "rss-forum"
     link = ""
     description = ""
     title = ""
@@ -56,11 +58,13 @@ class RssForum(Feed):
         return markup(item.text, item.parser)
 
 class AtomForum(RssForum):
+    cache_prefix = "atom-forum"
     feed_type = Atom1Feed
     subtitle = RssForum.description
 
 
-class RssComments(Feed):
+class RssComments(CachedFeed):
+    cache_prefix = "rss-comments"
     link = ""
     description = ""
     title = ""
@@ -97,6 +101,7 @@ class RssComments(Feed):
         return reverse("blog.views.view", args=[item.blog.pk])
 
 class AtomComments(RssComments):
+    cache_prefix = "atom-comments"
     feed_type = Atom1Feed
     subtitle = RssComments.description
 

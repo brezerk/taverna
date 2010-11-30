@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.contrib.syndication.views import Feed
 from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
@@ -30,10 +29,12 @@ from parsers.templatetags.markup import strippost
 from parsers.templatetags.markup import markup
 from django.core.paginator import Paginator
 from django.conf import settings
-
+from util import CachedFeed
 from parsers.templatetags.markup import strippost
 
-class RssBlogFeed(Feed):
+
+class RssBlogFeed(CachedFeed):
+    cache_prefix = "rss-blog-feed"
     title = _("Last 10 blogs topics")
     link = "/"
     description = _("Updates on changes and additions to blogs topics.")
@@ -49,11 +50,15 @@ class RssBlogFeed(Feed):
     def item_description(self, item):
         return strippost(item.text, item)
 
+
 class AtomBlogFeed(RssBlogFeed):
+    cache_prefix = "atom-blog-feed"
     feed_type = Atom1Feed
     subtitle = RssBlogFeed.description
 
-class RssBlog(Feed):
+
+class RssBlog(CachedFeed):
+    cache_prefix = "rss-blog"
     link = ""
     description = ""
     title = ""
@@ -75,6 +80,9 @@ class RssBlog(Feed):
     def item_description(self, item):
         return strippost(item.text, item)
 
+
 class AtomBlog(RssBlog):
+    cache_prefix = "atom-blog"
     feed_type = Atom1Feed
     subtitle = RssBlog.description
+

@@ -29,6 +29,7 @@ from django.conf import settings
 from openid.store.filestore import FileOpenIDStore
 from openid.store import sqlstore
 from django.core.paginator import Paginator
+from django.core.cache import cache
 
 from userauth.models import Profile
 from blog.models import Blog
@@ -61,12 +62,22 @@ class ExtendedPaginator(Paginator):
 def clear_template_cache(key, *variables):
     from django.utils.http import urlquote
     from django.utils.hashcompat import md5_constructor
-    from django.core.cache import cache
 
     args = md5_constructor(u':'.join([urlquote(var) for var in variables]))
     cache_key = 'template.cache.%s.%s' % (key, args.hexdigest())
     cache.delete(cache_key)
     print "Remove template cache %s" % (cache_key)
+
+from django.contrib.syndication.views import Feed
+
+class CachedFeed(Feed):
+    def __call__(self, request, *args, **kwargs):
+        key = self.cache_prefix + ".".join(args) + ".".join(kwargs.keys()) + ".".join(kwargs.values())
+        reply = cache.get(key)
+        if reply is None:
+            reply = Feed.__call__( self, request, *args, **kwargs)
+            cache.set(key, reply, 100500) # About 28 hours :]
+        return reply
 
 def rr(template, mimetype=None):
     def decor(view):
