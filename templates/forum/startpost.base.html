@@ -26,19 +26,16 @@
                     id='negative-{{ startpost.pk }}'>▼</a></span>]
                 </span>
             {% endblock %}
-            | {% trans "Author" %}:
-            <span class='user'>
+            | <span class='user'>
                 {% block author %}
                     <a href='{% url userauth.views.profile_view startpost.owner.pk %}'>
                         {{ startpost.owner.profile.get_html_visible_name|safe }}
                     </a>
                 {% endblock %}
-            </span>
-            ( 
-                {% block date %}
-                    {{ startpost.created|date:"d.m.Y H:i" }}
-                {% endblock %}
-            )
+            </span> @
+            {% block date %}
+                {{ startpost.created|date:"d.m.Y H:i" }}
+            {% endblock %}
 
             {% block comments %}
             {% endblock %}
