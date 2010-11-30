@@ -39,6 +39,9 @@
                     {{ startpost.created|date:"d.m.Y H:i" }}
                 {% endblock %}
             )
+
+            {% block comments %}
+            {% endblock %}
         </div>
         {% block edits %}
         {% endblock %}
