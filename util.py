@@ -104,16 +104,17 @@ class CachedFeed(Feed):
             + ".".join([str(x) for x in kwargs.values()])
 
     def __call__(self, request, *args, **kwargs):
-        key = self.get_cache_key()
+        key = self.get_cache_key(*args, **kwargs)
         reply = cache.get(key)
         if reply is None:
-            reply = Feed.__call__( self, request, *args, **kwargs)
+            reply = Feed.__call__(self, request, *args, **kwargs)
             cache.set(key, reply, 100500) # About 28 hours :]
-        else:
-            # opium, it sems this don't work as expected :]
-            # it math only one of existing feeds...
             if settings.DEBUG:
-                print "[ii] Key %s mem hit!" % (key)
+                print "Cache %s miss!" % (key)
+
+        else:
+            if settings.DEBUG:
+                print "Cache %s hit!" % (key)
         return reply
 
 def rr(template, mimetype=None):
