@@ -20,5 +20,9 @@
     <a href='{% url userauth.views.profile_view user.pk %}'>{{ user.profile.get_html_visible_name|safe }}</a>
 {% endblock %}
 
+{% block date %}
+    {%now "d.m.Y H:i:s"%}
+{% endblock %}
+
 {% block controls %}
 {% endblock %}
