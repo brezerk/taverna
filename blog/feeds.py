@@ -51,12 +51,6 @@ class RssBlogFeed(CachedFeed):
         return strippost(item.text, item)
 
 
-class AtomBlogFeed(RssBlogFeed):
-    cache_prefix = "atom-blog-feed"
-    feed_type = Atom1Feed
-    subtitle = RssBlogFeed.description
-
-
 class RssBlog(CachedFeed):
     cache_prefix = "rss-blog"
     link = ""
@@ -80,9 +74,4 @@ class RssBlog(CachedFeed):
     def item_description(self, item):
         return strippost(item.text, item)
 
-
-class AtomBlog(RssBlog):
-    cache_prefix = "atom-blog"
-    feed_type = Atom1Feed
-    subtitle = RssBlog.description
 

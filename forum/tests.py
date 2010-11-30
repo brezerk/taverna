@@ -38,7 +38,7 @@ class SimpleForumTest(BaseTest):
         """Check feeds"""
         client = self.getAnonymousClient()
 
-        for view in "rss_forum_tracker", "atom_forum_tracker", "rss_forum_tracker", "atom_forum_tracker":
+        for view in "rss_forum_tracker", "rss_forum_tracker":
             self.assertEqual(client.get(reverse(view, args=[1])).status_code, 200)
 
     def testAnonymousStatusCodes(self):

@@ -33,6 +33,7 @@ from django.core.cache import cache
 
 from userauth.models import Profile
 from blog.models import Blog
+from django.contrib.syndication.views import Feed
 
 class ExtendedPaginator(Paginator):
 
@@ -68,11 +69,42 @@ def clear_template_cache(key, *variables):
     cache.delete(cache_key)
     print "Remove template cache %s" % (cache_key)
 
-from django.contrib.syndication.views import Feed
+def invalidate_cache(post):
+    """
+    Be carefull with invalidation! :]
+    """
+
+    if post.thread is None:
+        return
+
+    if post.forum is not None and post.thread != post.pk:
+        # Invalidating forum tracker cache
+        from forum.feeds import RssForum
+        RssForum().clear_cache(forum_id = post.forum.pk)
+
+    elif post.blog is not None:
+        # Invalidating blog cache
+        from blog.feeds import RssBlogFeed, RssBlog
+        RssBlogFeed().clear_cache()
+        RssBlog().clear_cache(blog_id = post.thread.blog.pk)
+    else:
+        # Invalidating thread cache (forum or blog)
+        from forum.feeds import RssComments
+        RssComments().clear_cache(post_id = post.thread.pk)
 
 class CachedFeed(Feed):
+
+    def clear_cache(self, *args, **kwargs):
+        print "deleting "+ self.get_cache_key(*args, **kwargs)
+        cache.delete(self.get_cache_key())
+
+    def get_cache_key(self, *args, **kwargs):
+        return self.cache_prefix + ".".join([str(x) for x in args]) \
+            + ".".join([str(x) for x in kwargs.keys()]) \
+            + ".".join([str(x) for x in kwargs.values()])
+
     def __call__(self, request, *args, **kwargs):
-        key = self.cache_prefix + ".".join(args) + ".".join(kwargs.keys()) + ".".join(kwargs.values())
+        key = self.get_cache_key()
         reply = cache.get(key)
         if reply is None:
             reply = Feed.__call__( self, request, *args, **kwargs)

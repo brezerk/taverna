@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block action-right %}
-    [<a href='{% url rss_forum_tracker forum.pk %}'>RSS</a>|<a href='{% url atom_forum_tracker forum.pk %}'>Atom</a>]
+    [<a href='{% url rss_forum_tracker forum.pk %}'>RSS</a>]
     {% if showall == "1" %}
         [<a href='?showall=0'>grep positive</a>]
     {% else %}

@@ -25,9 +25,9 @@ from django.core.urlresolvers import reverse
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-from taverna.blog.feeds import RssBlog, AtomBlog, RssBlogFeed, AtomBlogFeed
+from taverna.blog.feeds import RssBlog, RssBlogFeed
 from taverna.blog.sitemaps import BlogSitemap
-from taverna.forum.feeds import RssForum, AtomForum, RssComments, AtomComments
+from taverna.forum.feeds import RssForum, RssComments
 from taverna.userauth.feeds import RssUser, AtomUser, RssNotify, AtomNotify
 
 admin.autodiscover()
@@ -61,19 +61,14 @@ urlpatterns = patterns('',
     (r'^forum/$', 'forum.views.index'),
     (r'^forum/libforum.so.(?P<forum_id>\d+)$', 'forum.views.forum'),
 
-    url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
-    url(r'^share/libatom-(?P<blog_id>\d+).so$', AtomBlog(), name='atom_blog'),
-
     url(r'^lib/librss.so$', RssBlogFeed(), name='rss_blog_tracker'),
-    url(r'^lib/libatom.so$', AtomBlogFeed(), name='atom_blog_tracker'),
+    url(r'^share/librss-(?P<blog_id>\d+).so$', RssBlog(), name='rss_blog'),
 
     url(r'^lib/forum/librss.so.(?P<forum_id>\d+)$', RssForum(), name='rss_forum_tracker'),
-    url(r'^lib/forum/libatom.so.(?P<forum_id>\d+)$', AtomForum(), name='atom_forum_tracker'),
+    url(r'^lib/thread/librss.so.(?P<post_id>\d+)$', RssComments(), name='rss_comments'),
 
     (r'^lib/reply.so.(?P<post_id>\d+)$', 'forum.views.reply'),
 
-    url(r'^lib/thread/librss.so.(?P<post_id>\d+)$', RssComments(), name='rss_comments'),
-    url(r'^lib/thread/libatom.so.(?P<post_id>\d+)$', AtomComments(), name='atom_comments'),
 
     (r'^forum/libvim.so.0.(?P<forum_id>\d+)$', 'forum.views.topic_create'),
     (r'^forum/libvim.so.1.(?P<topic_id>\d+)$', 'forum.views.topic_edit'),

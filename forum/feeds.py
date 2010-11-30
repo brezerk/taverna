@@ -57,11 +57,6 @@ class RssForum(CachedFeed):
     def item_description(self, item):
         return markup(item.text, item.parser)
 
-class AtomForum(RssForum):
-    cache_prefix = "atom-forum"
-    feed_type = Atom1Feed
-    subtitle = RssForum.description
-
 
 class RssComments(CachedFeed):
     cache_prefix = "rss-comments"
@@ -100,8 +95,4 @@ class RssComments(CachedFeed):
 
         return reverse("blog.views.view", args=[item.blog.pk])
 
-class AtomComments(RssComments):
-    cache_prefix = "atom-comments"
-    feed_type = Atom1Feed
-    subtitle = RssComments.description
 

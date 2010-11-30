@@ -17,7 +17,7 @@
     {% else %}
         [<a href='?showall=1'>ls *</a>]
     {% endif %}
-    [<a href='{% url rss_comments startpost.pk %}'>RSS</a>|<a href='{% url atom_comments startpost.pk %}'>Atom</a>]
+    [<a href='{% url rss_comments startpost.pk %}'>RSS</a>]
 {% endblock %}
 
 {% block content %}

@@ -359,10 +359,8 @@ def vote_async(request, post_id, positive):
         }
 
     from forum.views import modify_rating
-    if positive == "1":
-        modify_rating(post, 1, False)
-    else:
-        modify_rating(post, 1, True)
+    modify_rating(post, 1, bool(int(positive)))
+
     return {"rating": post.rating}
 
 @login_required()
@@ -392,7 +390,7 @@ def vote_generic(request, post_id, positive):
         return error(request, "VOTE")
 
     from forum.views import modify_rating
-    modify_rating(post, 1, positive)
+    modify_rating(post, 1, bool(int(positive)))
 
     if post.reply_to:
         paginator = Paginator(Post.objects.filter(thread=post.thread) \

@@ -219,6 +219,10 @@ class Post(models.Model):
         else:
             return False
 
+    def save(self):
+        from util import invalidate_cache
+        super(Post, self).save()
+        invalidate_cache(self)
 
 class PostEdit(models.Model):
     post = models.ForeignKey(Post)
@@ -259,11 +263,4 @@ class PostVote(models.Model):
             return _("(Auto) Reply to: ") + ret
         else:
             return ret
-
-from signals import blog_update, forum_update, thread_update
-
-def blog_update_handler(sender, instance, **kwargs):
-    print "blog feed regen call"
-
-blog_update.connect(blog_update_handler, dispatch_uid="b6b097360b48b4d02eae3291251aee0f")
 

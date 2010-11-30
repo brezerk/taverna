@@ -40,11 +40,8 @@ class BlogTest(BaseTest):
     def testFeeds(self):
         client = self.getAnonymousClient()
 
-        for view in "rss_blog", "atom_blog":
-            self.assertEqual(client.get(reverse(view, args = [1])).status_code, 200)
-
-        for view in "rss_blog_tracker", "atom_blog_tracker":
-            self.assertEqual(client.get(reverse(view)).status_code, 200)
+        self.assertEqual(client.get(reverse("rss_blog", args = [1])).status_code, 200)
+        self.assertEqual(client.get(reverse("rss_blog_tracker")).status_code, 200)
 
     def testAnonymousStatusCodes(self):
         """
