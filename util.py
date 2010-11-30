@@ -109,6 +109,10 @@ class CachedFeed(Feed):
         if reply is None:
             reply = Feed.__call__( self, request, *args, **kwargs)
             cache.set(key, reply, 100500) # About 28 hours :]
+        else:
+            if settings.DEBUG:
+                print key
+                print "Mem hit!"
         return reply
 
 def rr(template, mimetype=None):
