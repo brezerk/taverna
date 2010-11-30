@@ -241,6 +241,7 @@ def reply(request, post_id):
                        )
     else:
         form = PostForm()
+
     return { 'form': form, 'post': reply_to}
 
 @login_required()
@@ -358,6 +359,7 @@ def scourge(request, post_id):
     else:
         return { 'startpost': startpost, 'form': form }
 
+
 def auto_remove(startpost, reason):
     if startpost.reply_to == None:
         for post in Post.objects.filter(thread=startpost.pk):
@@ -394,16 +396,17 @@ def auto_remove(startpost, reason):
 
 
 def modify_rating(post, cost = 1, positive = False):
+    from django.db.models import F
     if positive:
+        Post.objects.filter(id = post.pk).update(rating = F("rating") + cost)
         post.rating += cost
         post.owner.profile.karma += cost
     else:
-        post.rating -= cost
+        Post.objects.filter(id = post.pk).update(rating = F("rating") - cost)
         post.owner.profile.karma -= cost
         post.owner.profile.force -= cost
 
     post.owner.profile.save()
-    post.save()
 
 
 @login_required()
