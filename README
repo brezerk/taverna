@@ -1,6 +1,10 @@
 === DEPENDS ====
 
-python-openid: http://pypi.python.org/pypi/python-openid/
-markdown     : http://pypi.python.org/pypi/Markdown
-py-wikimarkup: http://pypi.python.org/pypi/py-wikimarkup/1.0.2
-postmarkup   : http://code.google.com/p/postmarkup/
+python-openid : http://pypi.python.org/pypi/python-openid/
+markdown      : http://pypi.python.org/pypi/Markdown
+py-wikimarkup : http://pypi.python.org/pypi/py-wikimarkup/1.0.2
+postmarkup    : http://code.google.com/p/postmarkup/
+
+=== Develop ment deps ====
+
+django-debug-toolbar : http://pypi.python.org/pypi/django-debug-toolbar/0.8.4
