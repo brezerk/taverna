@@ -110,9 +110,10 @@ class CachedFeed(Feed):
             reply = Feed.__call__( self, request, *args, **kwargs)
             cache.set(key, reply, 100500) # About 28 hours :]
         else:
+            # opium, it sems this don't work as expected :]
+            # it math only one of existing feeds...
             if settings.DEBUG:
-                print key
-                print "Mem hit!"
+                print "[ii] Key %s mem hit!" % (key)
         return reply
 
 def rr(template, mimetype=None):
