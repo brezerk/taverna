@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block menubox %}
-
-<div class='actionbox'>
-    <div class='left'>
+{% block action-left %}    
     {% if startpost.blog %}
        <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view startpost.blog.pk %}'>{{ startpost.blog.name}}</a>
        → <a href='{%url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
@@ -13,37 +10,68 @@
         <a href='{% url forum.views.forum startpost.forum.pk %}'>{{ startpost.forum.name }}</a> →
         <a href='{% url forum.views.thread startpost.pk %}'>{{ startpost.title }}</a>
     {% endif %}
-    </div>
-    <div class='right'>
-        {% if startpost.owner == user or user.is_staff %}
-            [<a href='{% url forum.views.post_rollback edit_post.pk %}'>
-            {% trans "Rollback to Source" %}
-            </a>]
+{% endblock %}
+
+{% block action-right %}
+    {% if startpost.owner == user or user.is_staff %}
+        [<a href='{% url forum.views.post_rollback edit_post.pk %}'>
+        {% trans "Rollback to Source" %}
+        </a>]
     {% endif %}
-    </div>
-</div>
 {% endblock %}
 
 {% block content %}
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr><td valign='top'>
-<table class="diff" cellspacing="0" cellpadding="0" rules="groups" >
-<thead><tr><th class="diff_next"><br /></th><th colspan="2" class="diff_header">{% trans "History" %}</th></tr></thead>
-<tbody>
-{% for edit in startpost.postedit_set.all %}
-<tr><td class="diff_next">{{ forloop.counter }}</td><td nowrap="nowrap" {% if edit.pk == edit_post.pk %}class="diff_this"{% endif %}>
-&nbsp;<span class='user'><a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a></span> {{ edit.edited|date:"d.m.Y H:i" }} <span class='user'><a href='{% url forum.views.post_diff edit.pk %}'>Diff</a></span><br>
-</td></tr>
-{% endfor %}
-<tr><th class="diff_next"><br /></th><th colspan="2" class="diff_header">{% trans "Legend" %}</th></tr>
-<tr><td class="diff_next">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Not changed text" %}</td></tr>
-<tr><td class="diff_chg">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Changed text" %}</td></tr>
-<tr><td class="diff_add">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Added text" %}</td></tr>
-<tr><td class="diff_sub">&nbsp;</td><td nowrap="nowrap">&nbsp;{% trans "Removed text" %}</td></tr>
-</tbody>
-</table>
-
-</td><td valign='top'>
-{{ edit_post.get_diff|safe }}
-</td></tr></table>
+    <table cellspacing='0' cellpadding='2' border='0' width='100%'>
+        <tr>
+            <td valign='top'>
+                <table class="diff" cellspacing="0" cellpadding="0" rules="groups" >
+                    <thead>
+                        <tr>
+                            <th class="diff_next"><br /></th>
+                            <th colspan="2" class="diff_header">{% trans "History" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for edit in startpost.postedit_set.all %}
+                        <tr>
+                            <td class="diff_next">{{ forloop.counter }}</td>
+                            <td nowrap="nowrap" {% if edit.pk == edit_post.pk %}class="diff_this"{% endif %}>
+                                &nbsp;
+                                <span class='user'>
+                                    <a href='{% url userauth.views.profile_view edit.user.pk %}'>{{ edit.user.profile.get_visible_name }}</a>
+                                </span> {{ edit.edited|date:"d.m.Y H:i" }}
+                                <span class='user'>
+                                    <a href='{% url forum.views.post_diff edit.pk %}'>Diff</a>
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th class="diff_next">&nbsp;</th>
+                            <th colspan="2" class="diff_header">{% trans "Legend" %}</th>
+                        </tr>
+                        <tr>
+                            <td class="diff_next">&nbsp;</td>
+                            <td nowrap="nowrap">&nbsp;{% trans "Not changed text" %}</td>
+                        </tr>
+                        <tr>
+                            <td class="diff_chg">&nbsp;</td>
+                            <td nowrap="nowrap">&nbsp;{% trans "Changed text" %}</td>
+                        </tr>
+                        <tr>
+                            <td class="diff_add">&nbsp;</td>
+                            <td nowrap="nowrap">&nbsp;{% trans "Added text" %}</td>
+                        </tr>
+                        <tr>
+                            <td class="diff_sub">&nbsp;</td>
+                            <td nowrap="nowrap">&nbsp;{% trans "Removed text" %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td valign='top'>
+                {{ edit_post.get_diff|safe }}
+            </td>
+        </tr>
+    </table>
 {% endblock %}
