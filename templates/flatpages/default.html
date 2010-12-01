@@ -1,29 +1,19 @@
 {% extends "base.html" %}
 
-{% load i18n %}
+{% load cache %}
 {% load markup %}
+
 
 {% block title %}{{ flatpage.title }}{% endblock %}
 
-{% block menubox %}
-<div class='actionbox'>
-<table cellspacing='0' cellpadding='2' border='0' width='100%'>
-<tr>
-<td width='300'>{{ flatpage.title }}</td>
-
-<td align='right'>
-</td>
-</tr>
-</table>
-</div>
+{% block action-left %}
+    {{ flatpage.title }}
 {% endblock %}
 
 {% block content %}
-
-<h3>{{ flatpage.title }}</h3>
-
-{{ flatpage.content|markup:1|safe }}
-
+    {% cache 500 flatpage flatpage.id %}
+        <h3>{{ flatpage.title }}</h3>
+        {{ flatpage.content|markup:1|safe }}
+    {% endcache %}
 {% endblock %}
-
 

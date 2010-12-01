@@ -103,7 +103,7 @@ urlpatterns = patterns('',
     (r'^login/$', 'userauth.views.openid_chalange'),
     (r'^login/finish/$', 'userauth.views.openid_finish'),
 
-    (r'^man/(?P<page>.*)/$', 'blog.views.test'),
+    (r'^man/(?P<page>.*)/$', 'blog.views.manpage'),
 
     (r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 

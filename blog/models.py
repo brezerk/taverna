@@ -25,6 +25,9 @@ from django.core.urlresolvers import reverse
 
 from django.conf import settings
 
+from django.contrib.flatpages.models import FlatPage
+from django.db.models.signals import post_save
+
 class Blog(models.Model):
     name = models.CharField(max_length = 32, unique = True)
     desc = models.CharField(max_length = 48, default = _("Blog description"))
@@ -41,3 +44,10 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
+def cache_flatpage(sender, **kwargs):
+    from util import clear_template_cache
+    instance = kwargs['instance']
+    clear_template_cache('flatpage', instance.id)
+    print "wwwwwooot"
+
+post_save.connect(cache_flatpage, dispatch_uid="3e63ec", sender=FlatPage)
