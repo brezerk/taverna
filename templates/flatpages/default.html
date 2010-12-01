@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    {% cache 500 flatpage flatpage.id %}
+    {% cache 2678400 flatpage flatpage.id %}
         <h3>{{ flatpage.title }}</h3>
         {{ flatpage.content|markup:1|safe }}
     {% endcache %}
