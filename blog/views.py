@@ -37,6 +37,10 @@ from django.http import Http404
 from django.core.paginator import InvalidPage, EmptyPage
 from django.conf import settings
 
+def test(request, page):
+    from django.utils import translation
+    return HttpResponseRedirect ("/usr/share/LC_LANG/%s/%s" % (translation.get_language(), page))
+
 @login_required()
 @rr('blog/settings.html')
 def blog_settings(request):
