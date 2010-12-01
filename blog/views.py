@@ -209,9 +209,6 @@ def post_add(request):
             post.thread = post
             post.save()
 
-            from signals import blog_update
-            blog_update.send(sender=None, instance=post)
-
             for name in [t.strip() for t in \
             self.cleaned_data["tag_string"].split(",")]:
                 try:

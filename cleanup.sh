@@ -4,12 +4,12 @@
 #
 # Run it before uploading to hosting.
 
-names="*~ *.pyc .*.swp"
+names="'*~' '*.pyc' '.*.swp'"
 
 for name in $names
 do
     echo "Removing files: ${name}"
-    find ./ -name ${name} -type f -delete;
+    find ./ -name ${name} -type f -delete
 done
 
 echo "Done";

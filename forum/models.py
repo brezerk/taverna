@@ -26,7 +26,6 @@ from userauth.models import ReasonList
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from parsers.templatetags import markup
-from django.db.models.signals import post_save
 
 class Forum(models.Model):
     name = models.CharField(_("Name"), max_length = 64)
