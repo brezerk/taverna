@@ -62,7 +62,7 @@
             $.getJSON('/lib/ajax.so.' + post_id + '.' + positive, {}, function(json){
                 if (json.vote.message){
                     var voite_msg = "#message-" + post_id;
-                    $(voite_msg).html("<span class='vote-negative'><a href='/errors/'>" + json.vote.message + "</a></span>");
+                    $(voite_msg).html("<span class='vote-negative'><a href='/man/errors/'>" + json.vote.message + "</a></span>");
                 } else {
                     var voite_id = "#rating-" + post_id;
                     $(voite_id).html(json.vote.rating);
