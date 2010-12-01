@@ -625,13 +625,17 @@ def thread(request, post_id):
     page = request.GET.get("offset", 1)
     showall = request.GET.get("showall", "0")
 
-    startpost = Post.objects \
-        .select_related(
-            'owner__profile',
-            'blog',
-            'forum',
-            'thread'
-        ).get(pk = post_id)
+    try:
+        startpost = Post.objects \
+            .select_related(
+                'owner__profile',
+                'blog',
+                'forum',
+                'thread'
+            ).get(pk = post_id)
+    except Post.DoesNotExist:
+        raise Http404
+
 
     posts = Post.objects.filter(thread=startpost.thread.pk) \
         .exclude(pk=startpost.pk) \
