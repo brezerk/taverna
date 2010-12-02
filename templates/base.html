@@ -41,11 +41,11 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $(".vote-positive").click(function(event){
-                vote_async($(this).attr('id'), 0);
+                vote_async($(this).attr('id'), 1);
                 event.preventDefault();
             });
             $(".vote-negative").click(function(event){
-                vote_async($(this).attr('id'), 1);
+                vote_async($(this).attr('id'), 0);
                 event.preventDefault();
             });
         });
@@ -56,9 +56,6 @@
 
             post_id = post_id.substring(9);
 
-            if (positive != 0){
-                positive == 1;
-            }
             $.getJSON('/lib/ajax.so.' + post_id + '.' + positive, {}, function(json){
                 if (json.vote.message){
                     var voite_msg = "#message-" + post_id;

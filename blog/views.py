@@ -28,7 +28,7 @@ from django.db import IntegrityError
 from taverna.blog.models import Blog, Tag
 from taverna.forum.models import Post, PostEdit, PostVote
 
-from util import rr, ExtendedPaginator
+from util import rr, ExtendedPaginator, modify_rating
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -365,7 +365,6 @@ def vote_async(request, post_id, positive):
             "message": _("ENOFORCE")
         }
 
-    from forum.views import modify_rating
     modify_rating(post, 1, bool(int(positive)))
 
     return {"rating": post.rating}
@@ -377,15 +376,10 @@ def vote_generic(request, post_id, positive):
     if post.owner == request.user:
         return error(request, _("ELOOP"))
 
-    if positive == "0":
-        positive = True
-    else:
-        positive = False
-
     if request.user.profile.use_force("VOTE"):
         try:
             PostVote(post=post, user=request.user,
-                     positive=positive).save()
+                     positive=bool(int(positive))).save()
         except IntegrityError:
             return error(
                 request,
@@ -396,7 +390,6 @@ def vote_generic(request, post_id, positive):
     else:
         return error(request, "VOTE")
 
-    from forum.views import modify_rating
     modify_rating(post, 1, bool(int(positive)))
 
     if post.reply_to:

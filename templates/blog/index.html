@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load cache %}
 
 {% block headlist %}<link rel="alternate" title="FOSS FEED" href="{% url rss_blog_tracker %}" type="application/rss+xml">{% endblock %}
 
@@ -13,14 +14,18 @@
 {% endblock %}
 
 {% block content %}
+
     {% include 'forum/pages.inc.html' %}
 
     {% if thread.object_list %}
         {% for startpost in thread.object_list %}
-            {% include "blog/startpost.inc.html" %}
+            {% cache 100500 blogpost startpost.pk %}
+                {% include "blog/startpost.inc.html" %}
+            {% endcache %}
         {% endfor %}
     {% endif %}
 
     {% include 'forum/pages.inc.html' %}
+
 {% endblock %}
 

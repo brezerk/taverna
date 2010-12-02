@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load markup %}
-
 <div class="post" id="post_{{post.pk}}">
     <div class="header">
         <div class="left">
@@ -13,11 +12,11 @@
                 <span id='rating-{{ post.pk }}'>{{ post.get_rating }}</span>
                 <span class="vote-positive">
                     <a class='vote-positive' 
-                    href='{% url blog.views.vote_generic post.pk 0 %}' 
+                    href='{% url blog.views.vote_generic post.pk 1 %}' 
                     id='positive-{{ post.pk }}'>&#43;</a></span>&#47;<span
                     class="vote-negative"><a class='vote-negative' 
                     id='negative-{{ post.pk }}' 
-                    href='{% url blog.views.vote_generic post.pk 1 %}'>&ndash;</a>
+                    href='{% url blog.views.vote_generic post.pk 0 %}'>&ndash;</a>
                 </span>
             </span>
             {% endblock %}

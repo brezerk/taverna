@@ -35,6 +35,7 @@ from userauth.models import Profile
 from blog.models import Blog
 from django.contrib.syndication.views import Feed
 
+
 class ExtendedPaginator(Paginator):
 
     page_range = None
@@ -59,17 +60,22 @@ class ExtendedPaginator(Paginator):
 
         return Paginator.page(self, number)
 
-
 def clear_template_cache(key, *variables):
     from django.utils.http import urlquote
     from django.utils.hashcompat import md5_constructor
 
     args = md5_constructor(u':'.join([urlquote(var) for var in variables]))
     cache_key = 'template.cache.%s.%s' % (key, args.hexdigest())
+    if settings.DEBUG and cache.get(cache_key) is not None:
+        print "Removed template cache %s" % (cache_key)
+    else:
+        print "Attempted to delete %s" % cache_key
     cache.delete(cache_key)
-    print "Remove template cache %s" % (cache_key)
+
 
 def invalidate_cache(post):
+    from forum.feeds import RssForum, RssComments
+    from blog.feeds import RssBlogFeed, RssBlog
     """
     Be carefull with invalidation! :]
     """
@@ -79,18 +85,35 @@ def invalidate_cache(post):
 
     if post.forum is not None and post.thread != post.pk:
         # Invalidating forum tracker cache
-        from forum.feeds import RssForum
         RssForum().clear_cache(forum_id = post.forum.pk)
 
     elif post.blog is not None:
-        # Invalidating blog cache
-        from blog.feeds import RssBlogFeed, RssBlog
+        # Blog post was changed
         RssBlogFeed().clear_cache()
         RssBlog().clear_cache(blog_id = post.thread.blog.pk)
+        # Invalidating post cache
+        clear_template_cache("blogpost", post.pk)
     else:
-        # Invalidating thread cache (forum or blog)
-        from forum.feeds import RssComments
+        # Comment for blog/forum was added/changed:
         RssComments().clear_cache(post_id = post.thread.pk)
+
+        if post.thread.blog is not None:
+            # On new comment added we need invalidate start post cache
+            clear_template_cache("blogpost", post.thread.pk)
+
+
+def modify_rating(post, cost = 1, positive = False):
+    from forum.models import Post
+    from django.db.models import F
+    if positive:
+        Post.objects.filter(id = post.pk).update(rating = F("rating") + cost)
+        post.owner.profile.karma += cost
+    else:
+        Post.objects.filter(id = post.pk).update(rating = F("rating") - cost)
+        post.owner.profile.karma -= cost
+        post.owner.profile.force -= cost
+    post.owner.profile.save()
+    invalidate_cache(post)
 
 class CachedFeed(Feed):
 

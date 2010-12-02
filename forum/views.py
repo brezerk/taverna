@@ -19,7 +19,7 @@
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 
 from models import *
-from util import rr
+from util import rr, modify_rating
 from django import forms
 from django.conf import settings
 from django.http import HttpResponseRedirect
@@ -392,20 +392,6 @@ def auto_remove(startpost, reason):
                     auto=True
                 ).save()
                 modify_rating(post, reason.cost)
-
-
-def modify_rating(post, cost = 1, positive = False):
-    from django.db.models import F
-    if positive:
-        Post.objects.filter(id = post.pk).update(rating = F("rating") + cost)
-        post.owner.profile.karma += cost
-    else:
-        Post.objects.filter(id = post.pk).update(rating = F("rating") - cost)
-        post.owner.profile.karma -= cost
-        post.owner.profile.force -= cost
-
-    post.owner.profile.save()
-
 
 @login_required()
 @rr('forum/topic_create.html')
