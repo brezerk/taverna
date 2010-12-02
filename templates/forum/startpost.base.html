@@ -16,13 +16,13 @@
             {% block vote %}
                 <span id='message-{{ startpost.pk }}'>
                 [<span class='vote-positive'><a class='vote-positive' 
-                    href='{% url blog.views.vote_generic startpost.pk 0 %}' 
+                    href='{% url blog.views.vote_generic startpost.pk 1 %}' 
                     id='positive-{{ startpost.pk }}'>▲</a></span>]
                 <span id='rating-{{ startpost.pk }}'>
                     {{ startpost.get_rating }}
                 </span>
                 [<span class='vote-negative'><a class='vote-negative' 
-                    href='{% url blog.views.vote_generic startpost.pk 1 %}'
+                    href='{% url blog.views.vote_generic startpost.pk 0 %}'
                     id='negative-{{ startpost.pk }}'>▼</a></span>]
                 </span>
             {% endblock %}
