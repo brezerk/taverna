@@ -97,6 +97,7 @@ def markup(value, parser):
 
         markup.add_tag(ImgTag, u'img')
         markup.add_tag(PygmentsCodeTag, u'code')
+        markup.add_tag(postmarkup.SimpleTag, u'block', u'div class="mblock"')
 
         value = "<p>" + markup(value) + "</p>"
         return value
