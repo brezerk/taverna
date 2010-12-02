@@ -48,6 +48,6 @@ def cache_flatpage(sender, **kwargs):
     from util import clear_template_cache
     instance = kwargs['instance']
     clear_template_cache('flatpage', instance.id)
-    print "wwwwwooot"
 
 post_save.connect(cache_flatpage, dispatch_uid="3e63ec", sender=FlatPage)
+
