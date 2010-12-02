@@ -106,13 +106,14 @@ def modify_rating(post, cost = 1, positive = False):
     from forum.models import Post
     from django.db.models import F
     if positive:
-        Post.objects.filter(id = post.pk).update(rating = F("rating") + cost)
+        post.rating += cost
         post.owner.profile.karma += cost
     else:
-        Post.objects.filter(id = post.pk).update(rating = F("rating") - cost)
+        post.rating -= cost
         post.owner.profile.karma -= cost
         post.owner.profile.force -= cost
     post.owner.profile.save()
+    post.save()
     invalidate_cache(post)
 
 class CachedFeed(Feed):
