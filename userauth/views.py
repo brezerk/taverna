@@ -69,10 +69,9 @@ def profile_view(request, user_id=None):
     else:
         user_info = request.user
 
-    try:
-        user_blog = get_object_or_404(Blog, owner=user_info)
-    except:
-        user_blog = None
+    user_blog = Blog.objects.filter(owner=user_info)[:1][0]
+    print user_blog
+    print user_blog.id
 
     return {
         'user_info': user_info,
@@ -123,7 +122,7 @@ def profile_edit(request):
             except KeyError:
                 pass
             else:
-                blog = Blog.objects.get(owner=request.user.id)
+                blog = Blog.objects.filter(owner=request.user.id)[:1]
                 blog.name = profile.visible_name
                 blog.save()
 

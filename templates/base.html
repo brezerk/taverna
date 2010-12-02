@@ -57,12 +57,14 @@
             post_id = post_id.substring(9);
 
             $.getJSON('/lib/ajax.so.' + post_id + '.' + positive, {}, function(json){
+
+                alert(json.vote.rating);
+                var vote_id = "#rating-" + post_id;
+                $(vote_id).html(json.vote.rating);
+
                 if (json.vote.message){
-                    var voite_msg = "#message-" + post_id;
-                    $(voite_msg).html("<span class='vote-negative'><a href='/man/errors/'>" + json.vote.message + "</a></span>");
-                } else {
-                    var voite_id = "#rating-" + post_id;
-                    $(voite_id).html(json.vote.rating);
+                    var vote_msg = "#message-" + post_id;
+                    $(vote_msg).html("<span class='vote-negative'><a href='/man/errors/'>" + json.vote.message + "</a></span>");
                 };
             }, 'json');
         };
