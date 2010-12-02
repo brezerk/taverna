@@ -8,6 +8,7 @@
 
  Redesign:
      * reorganize django admin pages;
+     * remove credits from bottom of the page (move it to /about/)
 
  == Have fun ==
 
