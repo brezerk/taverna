@@ -162,6 +162,8 @@ def rr(template, mimetype=None):
                     except Blog.DoesNotExist:
                         blog = Blog(owner=request.user, name=request.user.username)
                         blog.save()
+                    except:
+                        pass
 
                 if not profile.visible_name:
                     if request.path not in (reverseURL("userauth.views.profile_edit"), reverseURL("userauth.views.openid_logout")):
