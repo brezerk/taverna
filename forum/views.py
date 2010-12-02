@@ -168,8 +168,7 @@ def forum(request, forum_id):
 @rr('forum/tracker.html')
 def tracker(request):
     showall = request.GET.get("showall", "0")
-    posts = Post.objects.filter(blog=None) \
-                .exclude(owner=request.user) \
+    posts = Post.objects.exclude(owner=request.user) \
                 .order_by('-created') \
                 .select_related(
                     'owner__profile',
