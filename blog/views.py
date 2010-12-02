@@ -341,33 +341,28 @@ def vote_async(request, post_id, positive):
     post = get_object_or_404(Post, pk=post_id)
 
     if not request.user.is_authenticated():
-        return {"rating": post.rating,
-                "message": _("EACCES")}
+        return {"message": _("EACCES")}
 
     if post.owner == request.user:
-        return {"rating": post.rating,
-                "message": _("ELOOP")}
+        return {"message": _("ELOOP")}
 
     if request.user.profile.use_force("VOTE"):
         try:
             PostVote(post=post, user=request.user,
                      positive=bool(int(positive))).save()
         except IntegrityError:
-            return {
-                "rating": post.rating,
-                "message": _("EEXIST")
-            }
+            return {"message": _("EEXIST")}
         else:
             request.user.profile.save()
     else:
-        return {
-            "rating": post.rating,
-            "message": _("ENOFORCE")
-        }
+        return {"message": _("ENOFORCE")}
 
-    modify_rating(post, 1, bool(int(positive)))
-
-    return {"rating": post.rating}
+    if bool(int(positive)):
+        modify_rating(post, 1, True)
+        return {"rating": "+1"}
+    else:
+        modify_rating(post, 1, False)
+        return {"rating": "-1"}
 
 @login_required()
 def vote_generic(request, post_id, positive):
