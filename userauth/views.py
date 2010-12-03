@@ -301,20 +301,19 @@ def notify(request):
     except (MultiValueDictKeyError, TypeError):
         page = 1
 
-    paginator = Paginator(
-                    Post.objects.exclude(owner=request.user) \
-                    .filter(
-                        forum=None,
-                        blog=None,
-                        reply_to__owner=request.user
-                    ).order_by('-created') \
-                    .select_related(
-                        'owner__profile',
-                        'reply_to__owner__profile',
-                        'thread__blog',
-                        'thread__forum'
-                    ), settings.PAGE_LIMITATIONS["FORUM_TOPICS"]
-                )
+    posts = Post.objects.exclude(owner=request.user) \
+            .filter(
+                forum=None,
+                blog=None,
+                reply_to__owner=request.user
+            ).order_by('-created').select_related(
+                'owner__profile',
+                'reply_to__owner__profile',
+                'thread__blog',
+                'thread__forum'
+            )
+
+    paginator = Paginator(posts, settings.PAGE_LIMITATIONS["FORUM_TOPICS"])
 
     try:
         thread = paginator.page(page)

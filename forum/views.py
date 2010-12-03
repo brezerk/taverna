@@ -164,18 +164,19 @@ def forum(request, forum_id):
         'showall': showall,
     }
 
-@login_required()
 @rr('forum/tracker.html')
 def tracker(request):
     showall = request.GET.get("showall", "0")
-    posts = Post.objects.exclude(owner=request.user) \
-                .order_by('-created') \
+    posts = Post.objects.order_by('-created') \
                 .select_related(
                     'owner__profile',
                     'reply_to__owner__profile',
                     'thread__blog',
                     'thread__forum'
                 )
+
+    if request.user.is_authenticated():
+        posts.exclude(owner=request.user)
 
     if showall == "0":
         posts = posts.exclude(rating__lte=settings.MIN_RATING)
