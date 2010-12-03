@@ -21,6 +21,10 @@
 -->
 
 {% load i18n %}
+{% load cache%}
+
+{% get_current_language as LANGUAGE_CODE %}
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -52,11 +56,13 @@
         <tr>
             <td width='300'>&nbsp;</td>
             <td align='center'>
+            {% cache 2678400 menubox LANGUAGE_CODE %}
                 [<a href='{% url blog.views.index %}'>{% trans "Tracker" %}</a>]
                 [<a href='{% url blog.views.list %}'>share</a>/(<a href='{% url blog.views.list_public %}'>local</a>|<a href='{% url blog.views.list_users %}'>usr</a>)] 
                 [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
                 [<a href='{% url userauth.views.graveyard %}'>{% trans "Graveyard" %}</a>] 
                 [<a href='{% url blog.views.firebox %}'>{% trans "Firebox" %}</a>] 
+            {% endcache %}
             <td width='350' align='right'>
             {% if user.is_authenticated %}
                 {% trans "Welcome" %}, 
@@ -78,7 +84,9 @@
         </div>
         <div class='right'>
             {% block action-right %}{% endblock %}
+            {% cache 2678400 usertools LANGUAGE_CODE %}
             [<a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>|<a href='{% url forum.views.tracker %}'>{% trans "Tracker" %}</a>]
+            {% endcache %}
         </div>
     </div>
     <!-- end of action menu block -->
