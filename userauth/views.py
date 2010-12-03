@@ -92,21 +92,20 @@ def profile_edit(request):
         class Meta:
             model = Profile
             if profile.visible_name:
-                exclude = (
-                    'user',
-                    'karma',
-                    'photo',
-                    'visible_name',
-                    'force',
+                fields = (
+                    'jabber',
+                    'website',
+                    'location',
+                    'sign'
                 )
             else:
-                exclude = (
-                    'user',
-                    'karma',
-                    'photo',
-                    'force',
+                fields = (
+                    'visible_name',
+                    'jabber',
+                    'website',
+                    'location',
+                    'sign'
                 )
-
         def save(self, **args):
             profile = super(SettingsForm, self).save(commit=False, **args)
             if request.POST['email']:
@@ -122,7 +121,7 @@ def profile_edit(request):
             except KeyError:
                 pass
             else:
-                blog = Blog.objects.filter(owner=request.user.id)[:1]
+                blog = Blog.objects.filter(owner=request.user.id)[:1][0]
                 blog.name = profile.visible_name
                 blog.save()
 
@@ -240,6 +239,7 @@ def openid_finish(request):
             profile = Profile(
                           user=user,
                           photo="",
+                          openid=response.getDisplayIdentifier(),
                           openid_hash=openid_hash,
                           karma=settings.START_RATING,
                           force=settings.START_RATING

@@ -23,7 +23,7 @@ from django.contrib.auth.models import User
 from models import Profile, ReasonList
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'karma', 'jabber', 'website',)
+    list_display = ('user', 'karma', 'jabber', 'website', 'openid')
 
 admin.site.register(Profile, ProfileAdmin)
 

@@ -35,6 +35,7 @@ class ReasonList(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, editable = True)
+    openid = models.CharField(editable = True, blank = True, null = True, max_length = 256)
     openid_hash = models.CharField(editable = False, blank = True, null = True, max_length = 129)
     visible_name = models.SlugField(blank = False, null = True, max_length = 33, unique = True)
     karma = models.IntegerField(default = 10)
