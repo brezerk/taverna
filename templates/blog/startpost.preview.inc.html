@@ -12,6 +12,10 @@
 {% endblock %}
 
 {% block tags %}
+    <div class='tags'>
+        {% trans "Tags" %}:
+        {{ startpost.tag_string|tags|safe }}
+    </div>
 {% endblock %}
 
 {% block vote %}

@@ -15,10 +15,12 @@
 {% endblock %}
 
 {% block tags %}
+    {% if startpost.blog %}
     <div class='tags'>
         {% trans "Tags" %}:
         {{ startpost.get_tag_url_list|safe }}
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block comments %}
