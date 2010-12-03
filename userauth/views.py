@@ -70,8 +70,6 @@ def profile_view(request, user_id=None):
         user_info = request.user
 
     user_blog = Blog.objects.filter(owner=user_info)[:1][0]
-    print user_blog
-    print user_blog.id
 
     return {
         'user_info': user_info,
