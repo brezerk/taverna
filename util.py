@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response, redirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse as reverseURL
 from urlparse import urljoin
@@ -141,7 +141,12 @@ class CachedFeed(Feed):
                 print "Cache %s hit!" % (key)
         return reply
 
-def rr(template, mimetype=None):
+def rr(template, mimetype=None, templates={}):
+    from django.template.loader import get_template
+    from django.template import Context
+    if template not in templates:
+        templates[template] = get_template(template)
+
     def decor(view):
         def wrapper(request, *args, **kwargs):
             if request.user.is_authenticated():
@@ -167,13 +172,14 @@ def rr(template, mimetype=None):
                         pass
 
                 if not profile.visible_name:
-                    if request.path not in (reverseURL("userauth.views.profile_edit"), reverseURL("userauth.views.openid_logout")):
-                        return HttpResponseRedirect(reverseURL("userauth.views.profile_edit"))
+                    if request.path not in (reverseURL("userauth.views.profile_edit"), 
+                            reverseURL("userauth.views.openid_logout")):
+                        return redirect("userauth.views.profile_edit")
             val = view(request, *args, **kwargs)
             if type(val) == type({}):
                 val.update({'user': request.user})
                 val.update(csrf(request))
-                return render_to_response(template, val, mimetype=mimetype)
+                return HttpResponse(templates[template].render(Context(val)), mimetype = mimetype)
             else:
                 return val
         return wrapper
