@@ -359,10 +359,10 @@ def vote_async(request, post_id, positive):
 
     if bool(int(positive)):
         modify_rating(post, 1, True)
-        return {"rating": "+1"}
+        return {"rating": post.rating+1}
     else:
         modify_rating(post, 1, False)
-        return {"rating": "-1"}
+        return {"rating": post.rating-1}
 
 @login_required()
 def vote_generic(request, post_id, positive):
