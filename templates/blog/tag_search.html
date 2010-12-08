@@ -1,32 +1,19 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block menubox %}
-<div class='actionbox'>
-    <div class='left'>
-        <a href='{% url blog.views.index %}'>{% trans "Blogs tracker" %}</a> → {% trans "Search results for tag" %}: "<b>{{ tag.name }}</b>"
-    </div>
-    <div class='right'>
-        [<a href='/media/tracker.xml'>Atom</a>]
-    {% if user.is_authenticated %}
-        [<a href='{% url blog.views.post_add %}'>vim</a>]
-        [<a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>|<a href='{% url forum.views.tracker %}'>{% trans "Tracker" %}</a>]
-    {% endif %}
-    </div>
-</div>
+{% block action-left %}
+    <a href='{% url blog.views.index %}'>{% trans "Blogs tracker" %}</a> → {% trans "Search results for tag" %}: "<b>{{ tag.name }}</b>"
 {% endblock %}
 
 {% block content %}
+    {% include 'forum/pages.inc.html' %}
 
-{% include 'forum/pages.inc.html' %}
+    {% if thread.object_list %}
+        {% for startpost in thread.object_list %}
+            {% include "blog/startpost.inc.html" %}
+        {% endfor %}
+    {% endif %}
 
-{% if thread.object_list %}
-    {% for startpost in thread.object_list %}
-        {% include "blog/startpost.inc.html" %}
-    {% endfor %}
-{% endif %}
-
-{% include 'forum/pages.inc.html' %}
-
+    {% include 'forum/pages.inc.html' %}
 {% endblock %}
 

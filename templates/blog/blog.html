@@ -1,9 +1,12 @@
 {% extends "blog/index.html" %}
 {% load i18n %}
 
+{% block title %}{{blog_info.name}} :: {{blog_info.desc}}{% endblock %}
+
 {% block action-left %}
     <a href='{% url blog.views.index %}'>{% trans "Blogs" %}</a> → <a href='{%url blog.views.view blog_info.pk %}'>{{ blog_info.name }}</a> {{ blog_info.desc }}
 {% endblock %}
+
 {% block action-right %}
     [<a href='{% url rss_blog blog_info.id %}'>RSS</a>]
     {% if user.is_authenticated %}
