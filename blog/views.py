@@ -190,7 +190,7 @@ def post_add(request):
                      .exclude(name=settings.FRIDAY_BLOG).order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
-        tag_string = CharField(max_length=64)
+        tag_string = CharField(max_length=78)
         blog = ModelChoiceField(
                    queryset=user_blogs,
                    initial=user_blogs[0],
