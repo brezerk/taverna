@@ -1,7 +1,6 @@
  == General ==
 
      * Sitemap implementation (brezerk: done, need discusss);
-     * some cleanup and tests;
      * transplate into russtian and ukrainian languages;
 
  == Admin ===
@@ -16,14 +15,6 @@
      * Have fun;
      * Have some profit :P
 
- == Redesign ==
-     * redesing url loook like. e.t.c.
-
-== Cache ==
-    * forum post edit;
-    * userprofile;
-    * blog settings;
-    * blog views;
-    * user notify and tracker;
-    * grave yard;
+ == mobile ==
+     * Make an mobile version
 
