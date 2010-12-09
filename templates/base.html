@@ -46,12 +46,12 @@
 </head>
 <body>
     <!-- simple head title -->
-    <div class='titlebox'>
+    <div id='titlebox'>
         <pre><br>  ┏━━┏━┓┏━┓┏━┓<br>  ┣━ ┃ ┃┗━┓┗━┓<br>  ╹  ┗━┛┗━┛┗━┛</pre>
     </div>
     <!-- end of simple head title -->
     <!-- menu block -->
-    <div class='menubox'>
+    <div id='menubox'>
         <table cellspacing='0' cellpadding='2' border='0' width='100%'>
         <tr>
             <td width='300'>&nbsp;</td>
@@ -67,7 +67,7 @@
             {% if user.is_authenticated %}
                 {% trans "Welcome" %}, 
                 <a href='/~'>{{ user.profile.get_visible_name }}</a>
-                [<span class='logout'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
+                [<span id='logout'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
             {% else %}
                 [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
             {% endif %}
@@ -78,7 +78,7 @@
     <!-- end of menu block -->
 
     <!-- action menu block -->
-    <div class='actionbox'>
+    <div id='actionbox'>
         <div class='left'>
             {% block action-left %}{% endblock %}
         </div>
@@ -92,7 +92,7 @@
     <!-- end of action menu block -->
 
     <!-- news block -->
-    <div class='content'>
+    <div id='content'>
         {% block content %}{% endblock %}
     </div>
     <!-- end of news block -->

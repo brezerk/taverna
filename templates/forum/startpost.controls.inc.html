@@ -1,6 +1,6 @@
 {% load i18n %}
 
-        <div class='controls'>
+        <div class='block'>
                 {% if user.is_staff %} 
                     [<a href="{% url forum.views.scourge startpost.pk %}">{% trans "Scourge" %}</a>]
                 {% endif %}

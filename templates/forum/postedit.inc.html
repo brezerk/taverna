@@ -1,8 +1,6 @@
 {% load i18n %}
 
-<div class='editby'>
-<span class='comments'>
+<span class='info'>
 <a href='{{ edit_url }}'>{% trans "Total edits" %}: {{ edit_count }}</a>
 ( {{ edit_date|date:"d.m.Y H:i" }} )
 </span>
-</div>

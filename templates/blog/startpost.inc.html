@@ -16,16 +16,18 @@
 
 {% block tags %}
     {% if startpost.blog %}
-    <div class='tags'>
+    <div class='block'>
+        <span class='info'>
         {% trans "Tags" %}:
         {{ startpost.get_tag_url_list|safe }}
+        </span>
     </div>
     {% endif %}
 {% endblock %}
 
 {% block comments %}
     |
-    <span class='comments'>
+    <span class='info'>
         {{ startpost.get_comments_count|safe }}
     </span>
 {% endblock %}    

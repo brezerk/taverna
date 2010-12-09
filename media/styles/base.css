@@ -18,297 +18,60 @@
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-html, body {
-    background-color: #282828;
-    color: #c1c1c1;
-    margin: 0px;
-    padding: 0px;
-    font-family:Verdana,Trebuchet MS,sans-serif;
-    font-size:medium;
-/*    line-height:1.4*/
-}
+html, body {margin: 0px; padding: 0px}
+body {background-color: #282828; color: #c1c1c1; font-family:Verdana,Trebuchet MS,sans-serif; font-size:medium}
+img {margin: 10px; border: 4px solid #3f3f3f}
+h3 {margin: 25px 0px}
+a {color: #efefef; text-decoration: none}
+a:visited {color: #efefef}
+a:hover {color: #afafaf}
 
-/* Title box */
+div.left {float: left; text-align: left}
+div.right {float: right; text-align: right}
 
-.titlebox {
-    background-color: #111111;
-    padding-left: 2px;
-    padding-top: 2px;
-    padding-bottom: 16px;
-    color: #c8c8c8;
-    text-align: left;
-}
+span.vote-positive a {color: #71bc2e}
+span.vote-positive a:visited {color: #71bc2e}
+span.vote-positive a:hover {color: #71ff2e}
 
-.titlebox pre {
-    font-family: monospace;
-    font-size:medium;
-    line-height: 1;
-    margin: 0px;    
-    padding: 0px;
-}
+span.vote-negative a {color: #ae0f0f}
+span.vote-negative a:visited {color: #ae0f0f}
+span.vote-negative a:hover {color: #ff0000}
 
-/* Menu action box */
+span.user a {color: #71bc2e}
+span.user a:visited {color: #71bc2e}
+span.user a:hover {color: #71ff2e}
 
-.menubox {
-    background-color: #3f3f3f;
-    border-bottom: 1px solid #686868;
-    border-top: 1px solid #686868;
-    text-align: center;
-    color: #afafaf;
-}
+#titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; text-align: left}
+    #titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
 
-.menubox a {
-    color: #efefef;
-    text-decoration: none;
-}
+#menubox {background-color: #3f3f3f; border-bottom: 1px solid #686868; border-top: 1px solid #686868; text-align: center; color: #afafaf}
+    #menubox #logout a {color: #d50101; font-weight: bold; text-decoration: none}
+    #menubox #logout a:visited {color: #d50101}
+    #menubox #logout a:hover {color: #fb0404}
 
-.menubox a:visited {
-    color: #efefef;
-}
+#actionbox {overflow: hidden; margin: 10px}
 
-.menubox a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
+#content {margin-left: 25px; margin-right: 25px}
+    #profile {overflow: hidden}
 
-.menubox .logout a {
-    color: #d50101;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.menubox .logout a:visited {
-    color: #d50101;
-}
-
-.menubox .logout a:hover {
-    color: #fb0404;
-}
-
-
-/* User action box */
-
-.actionbox {
-    overflow: hidden;
-    margin: 10px;
-}
-
-.actionbox > .left {
-    float: left;
-    cursor: default;
-    text-align: left;
-}
-
-.actionbox > .right {
-    float: right;
-    cursor: default;
-    text-align: right;
-}
-
-.actionbox a {
-    color: #efefef;
-    text-decoration: none;
-}
-
-.actionbox a:visited {
-    color: #efefef;
-}
-
-.actionbox a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
-
-/* Content */
-
-.content {
-    margin-left: 25px;
-    margin-right: 25px;
-}
-
-.content a {
-    color: #efefef;
-    text-decoration: none;
-}
-
-.content a:visited {
-    color: #efefef;
-}
-
-.content a:hover {
-    color: #afafaf;
-}
-
-/* Profile layout and style */
-
-.profile {
-    overflow: hidden;
-}
-
-.profile > .left {
-    float: left;
-    text-align: left;
-}
-
-.profile > .right {
-    float: right;
-    text-align: right;
-}
-
-/* News layout and style */
-
-.news {
-    padding-bottom: 0px;
-}
-
-.news > h3 a {
-    color: #c1c1c1;
-    text-decoration: none;
-    padding: 0px;
-    margin: 0px;
-}
-
-.news > h3 a:visited {
-    color: #c1c1c1;
-}
-
-.news > h3 a:hover {
-    color: #818181;
-}
-
-.news a {
-    color: #729fcf;
-}
-
-.news a:visited {
-    color: #729fcf;
-}
-
-.news a:hover {
-    color: #729fcf;
-}
-
-.news > .block {
-    padding-top: 0em;
-    padding-bottom: 1em;
-    margin-left: 50px;
-    margin-right: 50px;
-    text-align: justify;
-}
-
-.news > .block > .text {
-    overflow: hidden;
-}
-
-.news > .block > .tags {
-    padding-bottom: 1em;
-}
-
-.news > .block > .tags a {
-    color: #f6a10e;
-    text-decoration: none;
-}
-
-.news > .block > .tags a:visited {
-    color: #f6a10e;
-    text-decoration: none;
-}
-
-.news > .block > .tags a:hover {
-    color: #afafaf;
-}
-
-.news > .block > .more {
-    padding-bottom: 1em;
-}
-
-.news > .block > .more a {
-    color: #729fcf;
-    text-decoration: none;
-}
-
-.news > .block > .more a:visited {
-    color: #729fcf;
-}
-
-.news > .block > .more a:hover {
-    color: #729fcf;
-}
-
-.news .vote-positive a {
-    color: #71bc2e;
-    text-decoration: none;
-}
-
-.news .vote-positive a:visited {
-    color: #71bc2e;
-}
-
-.news .vote-positive a:hover {
-    color: #71ff2e;
-}
-
-.news .vote-negative a {
-    color: #ae0f0f;
-    text-decoration: none;
-}
-
-.news .vote-negative a:visited {
-    color: #ae0f0f;
-}
-
-.news .vote-negative a:hover {
-    color: #ff0000;
-}
-
-.news .comments a {
-    color: #f6a10e;
-    text-decoration: none;
-}
-
-.news .comments a:visited {
-    color: #f6a10e;
-    text-decoration: none;
-}
-
-.news .comments a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
-
-.news .controls a {
-    color: #efefef;
-    text-decoration: none;
-}
-
-.news .controls a:visited {
-    color: #efefef;
-    text-decoration: none;
-}
-
-.news .controls a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
+    #content span.info {}
+        #content span.info a {color: #f6a10e}
+        #content span.info a:visited {color: #f6a10e}
+        #content span.info a:hover {color: #afafaf}
+    
+    #content div.startpost {}
+        #content div.startpost div.text {overflow: hidden; margin: 10px 40px; text-align: justify}
+        #content div.startpost div.text p {margin: 0px 0px 10px}
+        #content div.startpost div.text a {color: #729fcf}
+        #content div.startpost div.text a:visited {color: #729fcf}
+        #content div.startpost div.text a:hover {color: #729fcf}
+        #content div.startpost div.block {overflow: hidden; margin: 0px 40px 10px}
 
 .news .cut {
     border-bottom: 1px dashed #686868;
 }
 
 /* Color adjusts */
-
-.user a {
-    color: #71bc2e;
-    text-decoration: none;
-}
-
-.user a:visited {
-    color: #71bc2e;
-}
-
-.user a:hover {
-    color: #71ff2e;
-}
 
 
 .sticked {
@@ -563,10 +326,6 @@ html, body {
     margin-right: 0;
 }
 
-img {
-    margin: 10px;
-    border: 4px solid #3f3f3f;
-}
 
 .mblock {
     margin-left: 60px;

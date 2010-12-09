@@ -18,14 +18,13 @@
 
 {% block content %}
 <h3>{% trans "User's insformation" %}</h3>
-<div class='profile'>
+<div id='profile'>
     {% if user_info.profile.photo %}
         <div class='right'>
         <img class='gravatar' src='http://www.gravatar.com/avatar/{{ user_info.profile.photo }}?s=150&r=g&d=http%3A%2F%2Fwww.linux.org.ru%2Fimg%2Fp.gif'>
     </div>
     {% endif %}
     <div class='left'>
-        <div class='block'>
         <div>{% trans "Visible name" %}: {{ user_info.profile.get_visible_name }}</div>
         {% if user_info.first_name or user_info.last_name %}
             <div>{% trans "Real name" %}: {{ user_info.first_name }} {{ user_info.last_name }}</div>
@@ -49,7 +48,6 @@
             <div>{% trans "City" %}: {{ user_info.profile.location }}</div>
         {% endif %}
         <div>{{ user_info.profile.sign|linebreaksbr }}</div> 
-        </div>
     </div>
 </div>
 {% include "userauth/status.html" %}

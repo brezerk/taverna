@@ -12,9 +12,11 @@
 {% endblock %}
 
 {% block tags %}
-    <div class='tags'>
+    <div class='block'>
+        <span class='info'>
         {% trans "Tags" %}:
         {{ startpost.tag_string|tags|safe }}
+        </span>
     </div>
 {% endblock %}
 

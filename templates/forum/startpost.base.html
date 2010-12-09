@@ -1,50 +1,47 @@
 {% load i18n %}
 
-<div class='news'>
+<div class='startpost'>
     <h3>
         {% block header %}
         {% endblock %}
     </h3>
-    <div class='block'>
-        <div class='text'>
-            {% block text %}
-            {% endblock %}
-        </div>
-        {% block tags %}
-        {% endblock %}
-        <div>
-            {% block vote %}
-                <span id='message-{{ startpost.pk }}'>
-                [<span class='vote-positive'><a class='vote-positive' 
-                    href='{% url blog.views.vote_generic startpost.pk 1 %}' 
-                    id='positive-{{ startpost.pk }}'>▲</a></span>]
-                <span id='rating-{{ startpost.pk }}'>
-                    {{ startpost.get_rating }}
-                </span>
-                [<span class='vote-negative'><a class='vote-negative' 
-                    href='{% url blog.views.vote_generic startpost.pk 0 %}'
-                    id='negative-{{ startpost.pk }}'>▼</a></span>]
-                </span>
-            {% endblock %}
-            | <span class='user'>
-                {% block author %}
-                    <a href='{% url userauth.views.profile_view startpost.owner.pk %}'>
-                        {{ startpost.owner.profile.get_html_visible_name|safe }}
-                    </a>
-                {% endblock %}
-            </span> @
-            {% block date %}
-                {{ startpost.created|date:"d.m.Y H:i" }}
-            {% endblock %}
-
-            {% block comments %}
-            {% endblock %}
-        </div>
-        {% block edits %}
-        {% endblock %}
-
-        {% block controls %}
-            {% include 'forum/startpost.controls.inc.html' %}
+    <div class='text'>
+        {% block text %}
         {% endblock %}
     </div>
+    {% block tags %}
+    {% endblock %}
+    <div class='block'>
+        {% block vote %}
+            <span id='message-{{ startpost.pk }}'>
+            [<span class='vote-positive'><a class='vote-positive' 
+                href='{% url blog.views.vote_generic startpost.pk 1 %}' 
+                id='positive-{{ startpost.pk }}'>▲</a></span>]
+            <span id='rating-{{ startpost.pk }}'>
+                {{ startpost.get_rating }}
+            </span>
+            [<span class='vote-negative'><a class='vote-negative' 
+                href='{% url blog.views.vote_generic startpost.pk 0 %}'
+                id='negative-{{ startpost.pk }}'>▼</a></span>]
+            </span>
+        {% endblock %}
+        | <span class='user'>
+        {% block author %}
+            <a href='{% url userauth.views.profile_view startpost.owner.pk %}'>
+                {{ startpost.owner.profile.get_html_visible_name|safe }}
+            </a>
+        {% endblock %}
+        </span> @
+        {% block date %}
+            {{ startpost.created|date:"d.m.Y H:i" }}
+        {% endblock %}
+        {% block comments %}
+        {% endblock %}
+       {% block edits %}
+       {% endblock %}
+   </div>
+
+   {% block controls %}
+        {% include 'forum/startpost.controls.inc.html' %}
+   {% endblock %}
 </div>
