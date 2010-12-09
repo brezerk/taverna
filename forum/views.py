@@ -19,7 +19,7 @@
 # along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
 
 from models import *
-from util import rr, modify_rating
+from util import rr, modify_rating, invalidate_cache
 from django import forms
 from django.conf import settings
 from django.http import HttpResponseRedirect
@@ -361,6 +361,7 @@ def scourge(request, post_id):
 
 
 def auto_remove(startpost, reason):
+    invalidate_cache(startpost)
     if startpost.reply_to == None:
         for post in Post.objects.filter(thread=startpost.pk):
             if reason.cost == 0:
