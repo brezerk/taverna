@@ -53,7 +53,11 @@ DATABASES = {
     }
 }
 
-CACHE_BACKEND = 'locmem://'
+# Use dummy cache in develop proccess
+if DEBUG:
+    CACHE_BACKEND = 'dummy://'
+else:
+    CACHE_BACKEND = 'locmem://'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
