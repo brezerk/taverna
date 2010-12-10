@@ -53,8 +53,7 @@ DATABASES = {
     }
 }
 
-# Use dummy cache in develop proccess
-if DEBUG:
+if TEMPLATE_DEBUG:
     CACHE_BACKEND = 'dummy://'
 else:
     CACHE_BACKEND = 'locmem://'

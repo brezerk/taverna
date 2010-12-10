@@ -180,6 +180,10 @@ def rr(template, mimetype=None, templates={}):
             if type(val) == type({}):
                 val.update({'user': request.user})
                 val.update(csrf(request))
+
+                if settings.TEMPLATE_DEBUG:
+                    return render_to_response(template, val, mimetype=mimetype)
+
                 return HttpResponse(templates[template].render(Context(val)), mimetype = mimetype)
             else:
                 return val
