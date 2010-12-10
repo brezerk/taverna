@@ -35,7 +35,7 @@ register = template.Library()
 @register.filter
 @stringfilter
 def show_cut(value):
-    return value.replace("---cut---", "<div class='cut'>&nbsp;</div>")
+    return value.replace("---cut---", "<hr>")
 
 @register.filter
 @stringfilter
@@ -150,7 +150,7 @@ def strippost(value, post):
 
     if len(list) > 1:
         value = markup(list[0], post.parser)
-        value = value + "<div class='more'>>>> <a href='%s'>%s</a></div>" % (reverse('forum.views.thread', args=[post.pk]), _("Read full post"))
+        value = value + "<div class='block'>>>> <a href='%s'>%s</a></div>" % (reverse('forum.views.thread', args=[post.pk]), _("Read full post"))
     else:
         value = markup(value, post.parser)
     return value

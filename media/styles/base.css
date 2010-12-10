@@ -41,6 +41,10 @@ span.user a {color: #71bc2e}
 span.user a:visited {color: #71bc2e}
 span.user a:hover {color: #71ff2e}
 
+span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
+span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
+span.removed { color: red; font-weight: bold; padding: 0 2px}
+
 #titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; text-align: left}
     #titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
 
@@ -67,33 +71,10 @@ span.user a:hover {color: #71ff2e}
         #content div.startpost div.text a:hover {color: #729fcf}
         #content div.startpost div.block {overflow: hidden; margin: 0px 40px 10px}
 
-.news .cut {
-    border-bottom: 1px dashed #686868;
-}
+    #content div.post {background-color: #232323; margin-bottom: 5px;}
+        #content div.post div.block {overflow: hidden}
 
-/* Color adjusts */
-
-
-.sticked {
-    color: #72b2d8;
-    font-weight: bold;
-    padding-left: 2px;
-    padding-right: 2px;
-}
-
-.solved {
-    color: #00ff00;
-    font-weight: bold;
-    padding-left: 2px;
-    padding-right: 2px;
-}
-
-.removed {
-    font-weight: bold;
-    padding-left: 2px;
-    padding-right: 2px;
-    color: red;
-}
+    #content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
 
 /* Sign */
 
