@@ -24,7 +24,7 @@
         </thead>
         <tbody>
         {% for post in thread.object_list %}
-        <tr class="{% cycle "odd" "even" %}">
+        <tr class="{% cycle "normal" "dark" %}">
             <td>{{ post.thread.get_section_type }} </td>
             <td><a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a></td>
             <td>
