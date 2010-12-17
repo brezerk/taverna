@@ -103,14 +103,14 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
             #content table tbody tr.dark td {border: 1px solid #3f3f3f}
 
 
-    #content div.diff {width: 100%}
-         #content div.diff .diff_next {border: 1px solid #3f3f3f; background-color: #282828}
-         #content div.diff .diff_this td {background-color: #4e5466}
-         #content div.diff .diff_header {border: 1px solid #3f3f3f; background-color: #3f3f3f}
-         #content div.diff .diff_header {border: 1px solid #3f3f3f; background-color: #3f3f3f}
-         #content div.diff .diff_chg {background-color: #4e5466}
-         #content div.diff .diff_add {background-color: #355336}
-         #content div.diff .diff_sub {background-color: #682828}
+    #content table.diff {width: 100%}
+         #content table.diff .diff_next {border: 1px solid #3f3f3f; background-color: #282828}
+         #content table.diff .diff_this td {background-color: #4e5466}
+         #content table.diff .diff_header {border: 1px solid #3f3f3f; background-color: #3f3f3f}
+         #content table.diff .diff_header {border: 1px solid #3f3f3f; background-color: #3f3f3f}
+         #content table.diff .diff_chg {background-color: #4e5466}
+         #content table.diff .diff_add {background-color: #355336}
+         #content table.diff .diff_sub {background-color: #682828}
 
     #content div.pages {text-align: center}
         #content div.pages a {color: white; text-decoration: none}
