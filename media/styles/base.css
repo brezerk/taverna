@@ -58,6 +58,9 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 
 #titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; text-align: left}
     #titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+    #titlebox a{color: #c8c8c8}
+    #titlebox a:visited {color: #c8c8c8}
+    #titlebox a:hover {color: #c8c8c8}
 
 #menubox {background-color: #3f3f3f; border-bottom: 1px solid #686868; border-top: 1px solid #686868; text-align: center; color: #afafaf}
     #menubox #logout a {color: #d50101; font-weight: bold; text-decoration: none}
