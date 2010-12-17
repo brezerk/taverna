@@ -9,7 +9,8 @@
     {% include "userauth/status.html" %}
     {% include "forum/arrows.inc.html" %}
 
-    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
+    <table cellspacing='0' cellpadding='2' border='0'>
+        <thead>
         <tr class='theader'>
             <th width='100px'>{% trans "Section" %}</th>
             <th width='240px'>{% trans "Seaction name" %}</th>
@@ -17,6 +18,8 @@
             <th>{% trans "Reward reason" %}</th>
             <th width='280px'>{% trans "Date" %}</th>
         </tr>
+        </thead>
+        <tbody>
         {% for reward in rewards.object_list %}
         <tr class="{% cycle "odd" "even" %}">
              <td>{{ reward.post.thread.get_section_type }} </td>
@@ -26,6 +29,7 @@
              <td>{{reward.post.created|date:"d.m.Y H:i"}}</td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
 
     {% include "forum/arrows.inc.html" %}

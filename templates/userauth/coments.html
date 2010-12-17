@@ -14,17 +14,20 @@
 {% block content %}
     {% include "forum/arrows.inc.html" %}
 
-    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-        <tr class='theader'>
-            <th width='100px'>{% trans "Section" %}</th>
-            <th width='240px'>{% trans "Seaction name" %}</th>
-            <th>{% trans "Topic title" %}</th><th width='280px'>{% trans "Date" %}</th>
-        </tr>
+    <table cellspacing='0' cellpadding='2' border='0'>
+        <thead>
+            <tr>
+                <th width='100px'>{% trans "Section" %}</th>
+                <th width='240px'>{% trans "Seaction name" %}</th>
+                <th>{% trans "Topic title" %}</th><th width='280px'>{% trans "Date" %}</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for post in thread.object_list %}
         <tr class="{% cycle "odd" "even" %}">
-             <td>{{ post.thread.get_section_type }} </td>
-             <td><a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a></td>
-             <td>
+            <td>{{ post.thread.get_section_type }} </td>
+            <td><a href='{{ post.thread.get_section_url }}'>{{ post.thread.get_section_name }}</a></td>
+            <td>
                 {% if post.is_negative %}
                     <a href='{% url forum.views.offset post.thread.pk post.id %}?showall=1'>
                     <span class='removed'>&times;</span>
@@ -32,8 +35,8 @@
                     <a href='{% url forum.views.offset post.thread.pk post.id %}'>
                 {% endif %}
                 {{post.thread.title}}</a>
-             </td>
-             <td>
+            </td>
+            <td>
                 {{post.created|timesince}}
                 {% if not user_info %}
                     {% trans "by" %} (<a href='{% url userauth.views.profile_view post.owner.pk %}'>{{ post.owner.profile.get_visible_name }}</a>)
@@ -41,6 +44,7 @@
             </td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
 
     {% include "forum/arrows.inc.html" %}

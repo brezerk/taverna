@@ -23,13 +23,16 @@
 
 {% block content %}
     {% include "forum/pages.inc.html" %}
-    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-        <tr class='theader'>
-            <th>{% trans "Title" %}</th>
-            <th width='240px'>{% trans "Last post" %}</th>
-        </tr>
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Title" %}</th>
+                <th width='240px'>{% trans "Last post" %}</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for post in thread.object_list %}
-        <tr class="{% cycle "odd" "even" %}">
+        <tr class="{% cycle "normal" "dark" %}">
              <td>
                 {{post.get_flags|safe}}
                 {{post.get_forumtags|safe}}
@@ -39,6 +42,7 @@
              <td>{{post.get_last_comment_date|timesince}} {% trans "ago" %}</td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
     {% include "forum/pages.inc.html" %}
 {% endblock %}
