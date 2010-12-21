@@ -26,9 +26,6 @@ a {color: #efefef; text-decoration: none}
 a:visited {color: #efefef}
 a:hover {color: #afafaf}
 
-div.left {float: left; text-align: left}
-div.right {float: right; text-align: right}
-
 span.vote-positive a {color: #71bc2e}
 span.vote-positive a:visited {color: #71bc2e}
 span.vote-positive a:hover {color: #71ff2e}
@@ -45,15 +42,19 @@ span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
 span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
 span.removed { color: red; font-weight: bold; padding: 0 2px}
 
-#titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; text-align: left}
+#titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; }
     #titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
 
-#menubox {background-color: #3f3f3f; border-bottom: 1px solid #686868; border-top: 1px solid #686868; text-align: center; color: #afafaf}
-    #menubox #logout a {color: #d50101; font-weight: bold; text-decoration: none}
-    #menubox #logout a:visited {color: #d50101}
-    #menubox #logout a:hover {color: #fb0404}
+#menubox { background-color: #3f3f3f; border-bottom: 1px solid #686868; 
+        border-top: 1px solid #686868; color: #afafaf; padding: 2pt; text-align: center; }
+    #menubox #menu { display: inline;}
+    #menubox #auth { display: inline; float: right; }
+    #menubox li,ul { display: inline; }
+    #menubox #auth a.logout {color: #d50101; font-weight: bold; text-decoration: none}
+    #menubox #auth a.logout:hover {color: #fb0404}
 
-#actionbox {overflow: hidden; margin: 10px}
+#actionbox { margin: 7pt; }
+    #actionbox #action { display: inline; float: right; }
 
 #content {margin-left: 25px; margin-right: 25px}
     #profile {overflow: hidden}
@@ -78,30 +79,17 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 
 /* Sign */
 
-.sign {
-    text-align: center;
+#infobox {
+    margin: 2em 5em;
+    padding-top: 1em; 
     color: #6f6f6f;
     font-size: 8pt;
-    margin-top: 20px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    margin-left: 55px;
-    margin-right: 55px;
     border-top: 1px dashed #686868;
 }
 
-.sign a {
-    color: #efefef;
-    text-decoration: none;
-}
+#infobox #about { display: inline; text-align: left; position: absolute; margin-top: 1em }
 
-.sign a:visited {
-    color: #efefef;
-}
-
-.sign a:hover {
-    color: #afafaf;
-}
+#infobox #copyrights { text-align: center }
 
 /* Form elements */
 
@@ -121,28 +109,6 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
     background-color: #606060;
     color: #e8e8e8;
     border: 1px solid #a8a8a8;
-}
-
-/* Table */
-
-.theader {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.theader td {
-    border: 1px solid #3f3f3f;
-}
-
-.theader th {
-    border: 1px solid #3f3f3f;
-    background-color: #3f3f3f;
-}
-
-.theader .normal { }
-
-.theader .dark {
-    background-color: #232323;
 }
 
 /* Pages */
