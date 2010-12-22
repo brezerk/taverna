@@ -43,7 +43,7 @@ span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
 span.removed { color: red; font-weight: bold; padding: 0 2px}
 
 #titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; }
-    #titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+    #titlebox pre {font-family: "menlo", "Consolas", "monospace"; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
 
 #menubox { background-color: #3f3f3f; border-bottom: 1px solid #686868; 
         border-top: 1px solid #686868; color: #afafaf; padding: 2pt; text-align: center; }
