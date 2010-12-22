@@ -1,0 +1,124 @@
+/*
+# Copyright (C) 2010 by Alexey S. Malakhov <brezerk@gmail.com>
+#                       Opium <opium@jabber.com.ua>
+#
+# This file is part of Taverna
+#
+# Taverna is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Taverna is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+html, body {margin: 0px; padding: 0px}
+body {background-color: #e0e5f4; color: #000000; font-family:Verdana,Trebuchet MS,sans-serif; font-size:medium}
+img {margin: 10px; border: 4px solid #b2b7c6}
+h3 {margin: 25px 0px}
+
+a {color: #000000; text-decoration: none}
+a:visited {color: #000000}
+a:hover {color: #000000}
+
+p {margin: 0px 0px 10px}
+    p a {color: #002800}
+    p a:visited {color: #002800}
+    p a:hover {color: #002800}
+
+div.block {overflow: hidden; margin: 0px 0px 10px}
+div.left {float: left; text-align: left}
+div.right {float: right; text-align: right}
+
+span.vote-positive a {color: #ff000d}
+span.vote-positive a:visited {color: #ff000d}
+span.vote-positive a:hover {color: #ff0000}
+
+span.vote-negative a {color: #98c5ff}
+span.vote-negative a:visited {color: #98c5ff}
+span.vote-negative a:hover {color: #6cb1ff}
+
+span.user a {color: #ff000d}
+span.user a:visited {color: #ff000d}
+span.user a:hover {color: #ff0000}
+
+span.header a {color: #002800}
+span.header a:visited {color: #002800}
+span.header a:hover {color: #002800}
+
+span.sticked { color: #000700; font-weight: bold; padding: 0 2px}
+span.solved { color: #ff0000; font-weight: bold; padding: 0 2px}
+span.removed { color: #6cb1ff; font-weight: bold; padding: 0 2px}
+
+#titlebox {background-color: #ffffff; padding: 2px 0px 16px 2px; color: #000000; text-align: left}
+    #titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+    #titlebox a{color: #000000}
+    #titlebox a:visited {color: #000000}
+    #titlebox a:hover {color: #000000}
+
+#menubox {background-color: #b2b7c6; border-bottom: 1px solid #606574; border-top: 1px solid #606574; text-align: center; color: #000000}
+    #menubox #logout a {color: #8bc5ff; font-weight: bold; text-decoration: none}
+    #menubox #logout a:visited {color: #8bc5ff}
+    #menubox #logout a:hover {color: #6aadff}
+
+#actionbox {overflow: hidden; margin: 10px}
+
+#content {margin-left: 25px; margin-right: 25px}
+    #profile {overflow: hidden}
+
+    #content span.info {}
+        #content span.info a {color: #df00ff}
+        #content span.info a:visited {color: #df00ff}
+        #content span.info a:hover {color: #000000}
+    
+    #content div.startpost {}
+        #content div.startpost div.text {overflow: hidden; margin: 10px 40px; text-align: justify}
+
+    #content div.post {background-color: #eaeffe; margin-bottom: 5px;}
+        #content div.post div.block {margin: 0px}
+        #content div.post div.text {overflow: hidden; margin: 10px 3px; text-align: justify; padding: 2px 3px 5px 3px} 
+        #content div.post div.info {font-size: 9pt}
+
+    #content hr {border: 0px; border-bottom: 1px dashed #606574; margin: 15px 0}
+
+    #content div.form form {margin: 1em, 1em}
+        #content div.form table {width: 700px}
+        #content div.form table th {text-align: right; vertical-align: top; width: 200px; background-color: transparent; border: 0px}
+        @media screen and (max-width: 800px) {
+            #content div.form table {width: 100%}
+            #content div.from table th {text-align: right; vertical-align: top; width: 100px; background-color: transparent; border: 0px}
+        }
+        #content div.form form input, select, textarea {width: 100%; background-color: #707584; color: #000000; border: 1px solid #000000}
+
+    #content table {width: 100%; border-collapse: collapse}
+        #content table thead {width: 100%}
+        #content table th {text-align: center; font-weight: bold; background-color: #b2b7c6; border: 1px solid #b2b7c6}
+        #content table tbody {}
+        #content table tbody tr.normal {}
+            #content table tbody tr.normal td {border: 1px solid #b2b7c6}
+        #content table tbody tr.dark {background-color: #eaeffe; border: 1px solid #b2b7c6}
+            #content table tbody tr.dark td {border: 1px solid #b2b7c6}
+
+
+    #content table.diff {width: 100%}
+         #content table.diff .diff_next {border: 1px solid #b2b7c6; background-color: #e0e5f4}
+         #content table.diff .diff_this td {background-color: #679a7d}
+         #content table.diff .diff_header {border: 1px solid #b2b7c6; background-color: #b2b7c6}
+         #content table.diff .diff_header {border: 1px solid #b2b7c6; background-color: #b2b7c6}
+         #content table.diff .diff_chg {background-color: #679a7d}
+         #content table.diff .diff_add {background-color: #dd8f96}
+         #content table.diff .diff_sub {background-color: #afc4ff}
+
+    #content div.pages {text-align: center}
+        #content div.pages a {color: #000000; text-decoration: none}
+        #content div.pages a:visited {color: #000000; text-decoration: none}
+        #content div.pages a:hover {color: #000000; text-decoration: none}
+
+#sign {text-align: center; color: #525766; font-size: 8pt; margin: 20px 55px 0; padding: 8px 0; border-top: 1px dashed #606574}
+

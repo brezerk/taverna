@@ -45,6 +45,7 @@ class Profile(models.Model):
     location = models.CharField(blank = True, null = True, max_length = 32)
     sign = models.TextField(blank = True, null = True, max_length = 256)
     photo = models.CharField(blank = True, null = True, max_length = 33)
+    theme = models.IntegerField(choices = settings.THEMES, default = 0)
 
     def __unicode__(self):
         return self.get_visible_name()
@@ -117,4 +118,7 @@ class Profile(models.Model):
     def get_buryed_reason(self):
         if self.karma < 0:
             return _("Temporary auto ban due high karma loss.")
+
+    def get_theme(self):
+        return settings.THEMES[self.theme][1]
 

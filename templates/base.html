@@ -29,7 +29,11 @@
 <html>
 <head>
     <title>FOSS :: {% block title %}{% trans "Free and Open-Source Software Developers and Users" %}{% endblock %}</title>
-    <link rel='stylesheet' type='text/css' href='/media/styles/base.css'>
+    {% if user.is_authenticated %}
+        <link rel='stylesheet' type='text/css' href='/media/styles/themes/{{user.profile.get_theme}}.css'>
+    {% else %}
+        <link rel='stylesheet' type='text/css' href='/media/styles/themes/default.css'>
+    {% endif %}
     <link rel='stylesheet' type='text/css' href='/media/styles/code.css'>
     {% block headlist %}{% endblock %}
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
