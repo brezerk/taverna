@@ -203,6 +203,6 @@ FRIDAY_BLOG = u"Пепятничный бред"
 THEMES = (
     (0, 'default'),
     (1, 'lor'),
-    (2, 'carbon'),
+    (2, 'cocoa'),
 )
 
