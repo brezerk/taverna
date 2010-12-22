@@ -111,6 +111,29 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
     border: 1px solid #a8a8a8;
 }
 
+
+/* Table */
+
+.theader {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.theader td {
+    border: 1px solid #3f3f3f;
+}
+
+.theader th {
+    border: 1px solid #3f3f3f;
+    background-color: #3f3f3f;
+}
+
+.theader .normal { }
+
+.theader .dark {
+    background-color: #232323;
+}
+
 /* Pages */
 
 .pages {
