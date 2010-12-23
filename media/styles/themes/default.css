@@ -38,265 +38,81 @@ span.user a {color: #71bc2e}
 span.user a:visited {color: #71bc2e}
 span.user a:hover {color: #71ff2e}
 
+span.header a {color: #729fcf}
+span.header a:visited {color: #729fcf}
+span.header a:hover {color: #729fcf}
+
 span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
 span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
 span.removed { color: red; font-weight: bold; padding: 0 2px}
 
-#titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; }
-    #titlebox pre {font-family: "menlo", "Consolas", "monospace"; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+#titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; text-align: left}
+	#titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+	#titlebox a{color: #c8c8c8}
+	#titlebox a:visited {color: #c8c8c8}
+	#titlebox a:hover {color: #c8c8c8}
 
-#menubox { background-color: #3f3f3f; border-bottom: 1px solid #686868; 
-        border-top: 1px solid #686868; color: #afafaf; padding: 2pt; text-align: center; }
-    #menubox #menu { display: inline;}
-    #menubox #auth { display: inline; float: right; }
-    #menubox li,ul { display: inline; }
-    #menubox #auth a.logout {color: #d50101; font-weight: bold; text-decoration: none}
-    #menubox #auth a.logout:hover {color: #fb0404}
-
+#menubox { background-color: #3f3f3f; border-bottom: 1px solid #686868; border-top: 1px solid #686868; color: #afafaf; padding: 2pt; text-align: center; }
+	#menubox #menu { display: inline;}
+	#menubox #auth { display: inline; float: right; }
+	#menubox li,ul { display: inline; }
+	#menubox #auth a.logout {color: #d50101; font-weight: bold; text-decoration: none}
+	#menubox #auth a.logout:hover {color: #fb0404}
+	
 #actionbox { margin: 7pt; }
-    #actionbox #action { display: inline; float: right; }
+	#actionbox #action { display: inline; float: right; }
 
 #content {margin-left: 25px; margin-right: 25px}
-    #profile {overflow: hidden}
+	#profile {overflow: hidden}
 
-    #content span.info {}
-        #content span.info a {color: #f6a10e}
-        #content span.info a:visited {color: #f6a10e}
-        #content span.info a:hover {color: #afafaf}
-    
-    #content div.startpost {}
-        #content div.startpost div.text {overflow: hidden; margin: 10px 40px; text-align: justify}
-        #content div.startpost div.text p {margin: 0px 0px 10px}
-        #content div.startpost div.text a {color: #729fcf}
-        #content div.startpost div.text a:visited {color: #729fcf}
-        #content div.startpost div.text a:hover {color: #729fcf}
-        #content div.startpost div.block {overflow: hidden; margin: 0px 40px 10px}
+	#content span.info {}
+		#content span.info a {color: #f6a10e}
+		#content span.info a:visited {color: #f6a10e}
+		#content span.info a:hover {color: #afafaf}
+		
+	#content div.startpost {}
+		#content div.startpost div.text {overflow: hidden; margin: 10px 40px; text-align: justify}
 
-    #content div.post {background-color: #232323; margin-bottom: 5px;}
-        #content div.post div.block {overflow: hidden}
+	#content div.post {background-color: #232323; margin-bottom: 5px;}
+		#content div.post div.block {margin: 0px}
+		#content div.post div.text {overflow: hidden; margin: 10px 3px; text-align: justify; padding: 2px 3px 5px 3px} 
+		#content div.post div.info {font-size: 9pt}
 
-    #content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
+	#content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
 
-/* Sign */
+	#content div.form form {margin: 1em, 1em}
+		#content div.form table {width: 700px}
+		#content div.form table th {text-align: right; vertical-align: top; width: 200px; background-color: transparent; border: 0px}
+		@media screen and (max-width: 800px) {
+			#content div.form table {width: 100%}
+			#content div.from table th {text-align: right; vertical-align: top; width: 100px; background-color: transparent; border: 0px}
+		}
+		#content div.form form input, select, textarea {width: 100%; background-color: #606060; color: #e8e8e8; border: 1px solid #a8a8a8}
 
-#infobox {
-    margin: 2em 5em;
-    padding-top: 1em; 
-    color: #6f6f6f;
-    font-size: 8pt;
-    border-top: 1px dashed #686868;
-}
-
-#infobox #about { display: inline; text-align: left; position: absolute; margin-top: 1em }
-
-#infobox #copyrights { text-align: center }
-
-/* Form elements */
-
-.form form {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-.form th {
-    width: 200px;
-    text-align: right;
-    vertical-align: top;
-}
-
-.form input, select, textarea {
-    width: 100%;
-    background-color: #606060;
-    color: #e8e8e8;
-    border: 1px solid #a8a8a8;
-}
+	#content table {width: 100%; border-collapse: collapse}
+		#content table thead {width: 100%}
+		#content table th {text-align: center; font-weight: bold; background-color: #3f3f3f; border: 1px solid #3f3f3f}
+		#content table tbody {}
+		#content table tbody tr.normal {}
+			#content table tbody tr.normal td {border: 1px solid #3f3f3f}
+		#content table tbody tr.dark {background-color: #232323; border: 1px solid #3f3f3f}
+			#content table tbody tr.dark td {border: 1px solid #3f3f3f}
 
 
-/* Table */
+	#content table.diff {width: 100%}
+		#content table.diff .diff_next {border: 1px solid #3f3f3f; background-color: #282828}
+		#content table.diff .diff_this td {background-color: #4e5466}
+		#content table.diff .diff_header {border: 1px solid #3f3f3f; background-color: #3f3f3f}
+		#content table.diff .diff_header {border: 1px solid #3f3f3f; background-color: #3f3f3f}
+		#content table.diff .diff_chg {background-color: #4e5466}
+		#content table.diff .diff_add {background-color: #355336}
+		#content table.diff .diff_sub {background-color: #682828}
 
-.theader {
-    width: 100%;
-    border-collapse: collapse;
-}
+	#content div.pages {text-align: center}
+		#content div.pages a {color: white; text-decoration: none}
+		#content div.pages a:visited {color: white; text-decoration: none}
+		#content div.pages a:hover {color: #afafaf; text-decoration: none}
 
-.theader td {
-    border: 1px solid #3f3f3f;
-}
-
-.theader th {
-    border: 1px solid #3f3f3f;
-    background-color: #3f3f3f;
-}
-
-.theader .normal { }
-
-.theader .dark {
-    background-color: #232323;
-}
-
-/* Pages */
-
-.pages {
-    text-align: center;
-}
-
-.pages > a {
-    color: white;
-    text-decoration: none;
-}
-
-.pages > a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-.pages > a:hover {
-    color: #afafaf;
-    text-decoration: none;
-}
-
-/* Posts */
-
-.post {
-    background-color: #232323;
-    margin-bottom: 5px;
-}
-
-.post > .header {
-    padding: 3px;
-    overflow: hidden;
-}
-
-.post .header a {
-    color: #729fcf;
-    text-decoration: underline;
-}
-
-.post .header a:visited {
-    color: #729fcf;
-}
-
-.post .header a:hover {
-    color: #729fcf;
-}
-
-.post > .header > .left {
-    float: left;
-    text-align: left;
-}
-
-.post > .header > .right {
-    float: right;
-    text-align: right;
-}
-
-.post > .content {
-    padding-left: 4px;
-    padding-right: 4px;
-    margin: 0px;
-    overflow: hidden;
-}
-
-.post > .content > .title {
-    font-weight: bold;
-}
-
-.post > .content > .text {
-    text-align: justify;
-}
-
-.post > .content > .text a {
-    color: #729fcf;
-    text-decoration: underline;
-}
-
-.post > .content > .text a:visited {
-    color: #729fcf;
-}
-
-.post > .content > .text a:hover {
-    color: #729fcf;
-}
-
-.post > .info {
-    font-size: 9pt;
-    padding-left: 4px;
-}
-
-.post > .controls {
-    padding-left: 4px;
-    padding-bottom: 4px;
-}
-
-.post .vote-positive a {
-    color: #71bc2e;
-    text-decoration: none;
-}
-
-.post .vote-positive a:visited {
-    color: #71bc2e;
-}
-
-.post .vote-positive a:hover {
-    color: #71ff2e;
-}
-
-.post .vote-negative a {
-    color: #ae0f0f;
-    text-decoration: none;
-}
-
-.post .vote-negative a:visited {
-    color: #ae0f0f;
-}
-
-.post .vote-negative a:hover {
-    color: #ff0000;
-}
-
-/* Difflib */
-
-
-.diff {
-    width: 100%;
-}
-
-.diff_next {
-    border: 1px solid #3f3f3f;
-}
-
-.diff_this {
-    background-color: #4e5466;
-}
-
-.diff_header {
-    border: 1px solid #3f3f3f;
-    background-color: #3f3f3f;
-}
-
-.diff_chg {
-    background-color: #4e5466;
-}
-
-.diff_add {
-    background-color: #355336;
-}
-
-.diff_sub {
-    background-color: #682828;
-}
-
-.float-left {
-    float: left;
-    margin-left: 0;
-}
-
-.float-right {
-    float: right;
-    margin-right: 0;
-}
-
-
-.mblock {
-    margin-left: 60px;
-}
+#infobox {margin: 2em 5em; padding-top: 1em; color: #6f6f6f; font-size: 8pt; border-top: 1px dashed #686868}
+	#infobox #about {display: inline; text-align: left; position: absolute; margin-top: 1em}
+	#infobox #copyrights {text-align: center}
