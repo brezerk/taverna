@@ -12,7 +12,7 @@
     <div class='form'>
         <h3>{% trans "Edit profile" %} {{ user.profile.get_visible_name }}</h3>
         <form method="POST">{% csrf_token %}
-            <table border='0' width='600px'>
+            <table>
             {{ formUser }}
             {{ formProfile }}
             <tr>

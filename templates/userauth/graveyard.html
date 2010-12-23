@@ -8,6 +8,7 @@
 
 {% block content %}
     <table cellspacing='0' cellpadding='2' border='0' width='100%'>
+        <tbody>
         <tr>
             <td width='180px'>
 <pre>    _____
@@ -41,22 +42,27 @@
   </pre>
             </td>
         </tr>
+        </tbody>
     </table>
 
     {% include "forum/arrows.inc.html" %}
-    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-        <tr class='theader'>
+    <table cellspacing='0' cellpadding='2' border='0'>
+        <thead>
+        <tr>
             <th width='160px'>{% trans "User" %}</th>
             <th width='60px'>{% trans "Karma" %}</th>
             <th>{% trans "Reason" %}</th>
         </tr>
+        </thead>
+        <tbody>
         {% for user_info in users.object_list %}
-        <tr class="{% cycle "odd" "even" %}">
+        <tr class="{% cycle "normal" "dark" %}">
             <td><span class='plus'><a href='{% url userauth.views.profile_view user_info.user.pk %}'>{{ user_info }}</a></span></td>
             <td>{{ user_info.karma }}</td>
             <td>{{ user_info.get_buryed_reason }}</td>
         </tr>
         {% endfor %}
+        </tbody>
         </table>
     {% include "forum/arrows.inc.html" %}
 {% endblock %}

@@ -10,16 +10,20 @@
 {% endblock %}
 
 {% block content %}
-    <table cellspacing='0' cellpadding='2' border='0' class='theader'>
-        <tr class='theader'>
-            <th width='220px'>{% trans "Forum name" %}</th>
-            <th>{% trans "Description" %}</th>
-        </tr>
+    <table cellspacing='0' cellpadding='2' border='0'>
+        <thead>
+            <tr>
+                <th width='260px'>{% trans "Forum name" %}</th>
+                <th>{% trans "Description" %}</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for forum in forums %}
-        <tr class="{% cycle "noraml" "dark" %}">
+        <tr class="{% cycle "normal" "dark" %}">
             <td><a href="{% url forum.views.forum forum.id %}">{{forum.name}}</a></td>
             <td>{{forum.description}}</td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

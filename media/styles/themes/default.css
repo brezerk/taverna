@@ -26,6 +26,13 @@ a {color: #efefef; text-decoration: none}
 a:visited {color: #efefef}
 a:hover {color: #afafaf}
 
+p {margin: 0px 0px 10px}
+    p a {color: #729fcf}
+    p a:visited {color: #729fcf}
+    p a:hover {color: #729fcf}
+
+div.block {overflow: hidden; margin: 0px 0px 10px}
+
 span.vote-positive a {color: #71bc2e}
 span.vote-positive a:visited {color: #71bc2e}
 span.vote-positive a:hover {color: #71ff2e}
@@ -59,8 +66,8 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 	#menubox #auth a.logout {color: #d50101; font-weight: bold; text-decoration: none}
 	#menubox #auth a.logout:hover {color: #fb0404}
 	
-#actionbox { margin: 7pt; }
-	#actionbox #action { display: inline; float: right; }
+#actionbox {overflow: hidden; margin: 10px}
+	#actionbox #action {display: inline; float: right}
 
 #content {margin-left: 25px; margin-right: 25px}
 	#profile {overflow: hidden}
@@ -97,7 +104,6 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 			#content table tbody tr.normal td {border: 1px solid #3f3f3f}
 		#content table tbody tr.dark {background-color: #232323; border: 1px solid #3f3f3f}
 			#content table tbody tr.dark td {border: 1px solid #3f3f3f}
-
 
 	#content table.diff {width: 100%}
 		#content table.diff .diff_next {border: 1px solid #3f3f3f; background-color: #282828}

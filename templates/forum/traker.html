@@ -1,0 +1,16 @@
+{% extends "userauth/coments.html" %}
+{% load i18n %}
+{% load markup %}
+
+{% block action-left %}
+    {% trans "Recent comments list" %}
+{% endblock %}
+
+{% block action-right %}
+    {% if showall == "1" %}
+        [<a href='?showall=0'>grep positive</a>]
+    {% else %}
+        [<a href='?showall=1'>ls *</a>]
+    {% endif %}
+{% endblock %}
+
