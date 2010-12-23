@@ -29,7 +29,11 @@
 <html>
 <head>
     <title>FOSS :: {% block title %}{% trans "Free and Open-Source Software Developers and Users" %}{% endblock %}</title>
-    <link rel='stylesheet' type='text/css' href='/media/styles/base.css'>
+    {% if user.is_authenticated %}
+        <link rel='stylesheet' type='text/css' href='/media/styles/themes/{{user.profile.get_theme}}.css'>
+    {% else %}
+        <link rel='stylesheet' type='text/css' href='/media/styles/themes/default.css'>
+    {% endif %}
     <link rel='stylesheet' type='text/css' href='/media/styles/code.css'>
     {% block headlist %}{% endblock %}
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
@@ -39,7 +43,7 @@
     <meta name="author" content="Design by Brezerk. Developed by Opium & Brezerk.">
     <meta name="copyright" content="All trademarks and copyrights on this page are owned by their respective owners. Comments are owned by the Poster. The Rest &#169 1997-2010 FOSS.">
     <script src="/media/scripts/general.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
     <script src="/media/scripts/vote.js" type="text/javascript"></script>
 </head>
 <body>
@@ -49,53 +53,52 @@
     </div>
     <!-- end of simple head title -->
     <!-- menu block -->
-    <div id='menubox'>
-        <table cellspacing='0' cellpadding='2' border='0' width='100%'>
-        <tr>
-            <td width='300'>&nbsp;</td>
-            <td align='center'>
+    <div id=menubox>
+        <div id=menu>
             {% cache 2678400 menubox LANGUAGE_CODE %}
-                [<a href='{% url blog.views.index %}'>{% trans "Tracker" %}</a>]
-                [<a href='{% url blog.views.list %}'>share</a>/(<a href='{% url blog.views.list_public %}'>local</a>|<a href='{% url blog.views.list_users %}'>usr</a>)] 
-                [<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
-                [<a href='{% url userauth.views.graveyard %}'>{% trans "Graveyard" %}</a>] 
-                [<a href='{% url blog.views.firebox %}'>{% trans "Firebox" %}</a>] 
+            <ul class="menu">
+            <li>[<a href='{% url blog.views.index %}'>{% trans "Tracker" %}</a>]
+            <li>[<a href='{% url blog.views.list %}'>share</a>/(<a href='{% url blog.views.list_public %}'>local</a>|<a href='{% url blog.views.list_users %}'>usr</a>)] 
+            <li>[<a href='{% url forum.views.index %}'>{% trans "Forum" %}</a>] 
+            <li>[<a href='{% url userauth.views.graveyard %}'>{% trans "Graveyard" %}</a>] 
+            <li>[<a href='{% url blog.views.firebox %}'>{% trans "Firebox" %}</a>] 
+            </ul>
             {% endcache %}
-            <td width='350' align='right'>
+        </div>
+        <div id=auth>
             {% if user.is_authenticated %}
-                {% trans "Welcome" %}, 
-                <a href='/~'>{{ user.profile.get_visible_name }}</a>
-                [<span id='logout'><a href="{% url userauth.views.openid_logout %}">x</a></span>]
+            {% trans "Welcome" %}, 
+            <a href='/~'>{{ user.profile.get_visible_name }}</a>
+            [<a href="{% url userauth.views.openid_logout %}" class=logout>x</a>]
             {% else %}
-                [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
+            [<a href='{% url userauth.views.openid_chalange %}'>{% trans "Log In"%}</a>]
             {% endif %}
-            </td>
-        </tr>
-        </table>
+        </div>
     </div>
     <!-- end of menu block -->
 
     <!-- action menu block -->
-    <div id='actionbox'>
-        <div class='left'>
-            {% block action-left %}{% endblock %}
-        </div>
-        <div class='right'>
+    <div id=actionbox>
+        <div id=action>
             {% block action-right %}{% endblock %}
             {% cache 2678400 usertools LANGUAGE_CODE %}
             [<a href='{% url userauth.views.notify %}'>{% trans "Notifies" %}</a>|<a href='{% url forum.views.tracker %}'>{% trans "Tracker" %}</a>]
             {% endcache %}
         </div>
+        <div id=subaction>
+            {% block action-left %}{% endblock %}
+        </div>
     </div>
     <!-- end of action menu block -->
 
     <!-- news block -->
-    <div id='content'>
+    <div id=content>
         {% block content %}{% endblock %}
     </div>
     <!-- end of news block -->
 
     <!-- sign block -->
+<<<<<<< HEAD
     <div id='sign'>
         <table cellspacing='0' cellpadding='2' border='0' width='100%'>
         <tr>
@@ -118,6 +121,25 @@
             <td valign='top' width='20%'>&nbsp;</td>
         </tr>
         </table>
+=======
+    <div id=infobox>
+        <div id=about>
+            {% trans "Information" %}:
+            <a href='/man/about'>{% trans "About"%}</a> &amp; 
+            <a href='/man/rules'>{% trans "Site rules"%}</a>
+            <br>
+            W3C: 
+            <a href='http://validator.w3.org/check?uri=referer'>Valid HTML 4.01</a> &amp;
+            <a href='http://jigsaw.w3.org/css-validator/check/referer'>Valid CSS 2.1</a>
+        </div>
+        <div id=copyrights>
+            Design and develop by <a href='mailto:brezerk@gmail.com'>Brezerk</a> 
+            and <a href='mailto:opium@jabber.com.ua'>Opium</a>.<br>
+            All trademarks and copyrights on this page are owned by their respective owners.<br>
+            Comments are owned by the Poster.<br>
+            The Rest © 1997-2010 <a href='http://foss.org.ua'>FOSS</a>.
+        </div>
+>>>>>>> 28f398dc43f1bf7a735e256c5aab34975f8266ed
     </div>
     <!-- end of sign block -->
 </body>

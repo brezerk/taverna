@@ -1,6 +1,6 @@
 {
-    vote:{
-        rating: "{{ rating }}",
-        message: "{{ message }}"
+    "vote":{
+        "rating": "{{ rating }}",
+        "message": "{{ message }}"
     }
 }

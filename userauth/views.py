@@ -91,6 +91,7 @@ def profile_edit(request):
             model = Profile
             if profile.visible_name:
                 fields = (
+                    'theme',
                     'jabber',
                     'website',
                     'location',
@@ -99,6 +100,7 @@ def profile_edit(request):
             else:
                 fields = (
                     'visible_name',
+                    'theme',
                     'jabber',
                     'website',
                     'location',
