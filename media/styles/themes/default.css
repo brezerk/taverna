@@ -72,6 +72,7 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 
 #content {margin-left: 25px; margin-right: 25px}
 	#profile {overflow: hidden}
+        #content #profile img {float: right}
 
 	#content span.info {}
 		#content span.info a {color: #f6a10e}
