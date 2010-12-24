@@ -33,13 +33,13 @@ p {margin: 0px 0px 10px}
 
 div.block {overflow: hidden; margin: 0px 0px 10px}
 
-span.vote-positive a {color: #71bc2e}
-span.vote-positive a:visited {color: #71bc2e}
-span.vote-positive a:hover {color: #71ff2e}
+span.vote-positive a {color: #D1D0D0}
+span.vote-positive a:visited {color: #D1D0D0}
+span.vote-positive a:hover {color: #D1D0D0}
 
-span.vote-negative a {color: #ae0f0f}
-span.vote-negative a:visited {color: #ae0f0f}
-span.vote-negative a:hover {color: #ff0000}
+span.vote-negative a {color: #D1D0D0}
+span.vote-negative a:visited {color: #D1D0D0}
+span.vote-negative a:hover {color: #D1D0D0}
 
 span.user a {color: #fff}
 span.user a:visited {color: #fff}
@@ -70,7 +70,7 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 #actionbox {overflow: hidden; margin: 10px}
 	#actionbox #action {display: inline; float: right}
 
-#content {margin-left: 25px; margin-right: 25px}
+#content {margin-left: 10px; margin-right: 10px}
 	#profile {overflow: hidden}
         #content #profile img {float: right}
 
@@ -82,9 +82,12 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 	#content div.startpost {border-top: 1px solid #fff}
 		#content div.startpost div.text {overflow: hidden; margin: 0px 40px 10px; text-align: justify}
 
-	#content div.post {background-color: #232323; margin-bottom: 5px;}
-		#content div.post div.block {margin: 0px}
-		#content div.post div.text {overflow: hidden; margin: 10px 3px; text-align: justify; padding: 2px 3px 5px 3px} 
+	#content div.post {background-color: #000040; margin-bottom: 5px}
+        #content div.post div.header {margin: 0px; overflow: hidden; background-color: #000080}
+            #content div.post div.header div.title {float: left}
+            #content div.post div.header div.vote {float: right}
+		#content div.post div.block {margin: 0px; overflow: hidden}
+		#content div.post div.text {overflow: hidden; text-align: justify; padding: 2px 3px 5px 3px} 
 		#content div.post div.info {font-size: 9pt}
 
 	#content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
@@ -96,7 +99,7 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 			#content div.form table {width: 100%}
 			#content div.from table th {text-align: right; vertical-align: top; width: 100px; background-color: transparent; border: 0px}
 		}
-		#content div.form form input, select, textarea {width: 100%; background-color: #606060; color: #e8e8e8; border: 1px solid #a8a8a8}
+		#content div.form form input, select, textarea {width: 100%}
 
 	#content table {width: 100%; border-collapse: collapse}
 		#content table thead {width: 100%}

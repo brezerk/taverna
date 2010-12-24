@@ -2,14 +2,14 @@
 {% load markup %}
 <div class="post" id="post_{{post.pk}}">
     <div class="text">
-        <div class="block">
-            <div class="left">
+        <div class="header">
+            <div class="title">
                 <span class="header">
                 {% block header %}
                 {% endblock %}
                 </span>
             </div>
-            <div class="right">
+            <div class="vote">
                 {% block vote %}
                 <span id='message-{{ post.pk }}'>
                     <span id='rating-{{ post.pk }}'>{{ post.get_rating }}</span>

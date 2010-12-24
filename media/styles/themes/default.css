@@ -83,6 +83,9 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 		#content div.startpost div.text {overflow: hidden; margin: 10px 40px; text-align: justify}
 
 	#content div.post {background-color: #232323; margin-bottom: 5px;}
+        #content div.post div.header {margin: 0px; overflow: hidden}
+            #content div.post div.header div.title {float: left}
+            #content div.post div.header div.vote {float: right}
 		#content div.post div.block {margin: 0px}
 		#content div.post div.text {overflow: hidden; margin: 10px 3px; text-align: justify; padding: 2px 3px 5px 3px} 
 		#content div.post div.info {font-size: 9pt}
