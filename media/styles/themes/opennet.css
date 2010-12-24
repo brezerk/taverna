@@ -1,0 +1,130 @@
+/*
+# Copyright (C) 2010 by Alexey S. Malakhov <brezerk@gmail.com>
+#                       Opium <opium@jabber.com.ua>
+#
+# This file is part of Taverna
+#
+# Taverna is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Taverna is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Taverna.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+html, body {margin: 0px; padding: 0px}
+body {background-color: #E9EAD6; color: #191919; font-family:Verdana,Trebuchet MS,sans-serif; font-size:medium}
+img {margin: 10px; border: 4px solid #3f3f3f}
+h3 {margin: 10px 0px}
+a {color: #0000AD; text-decoration: none}
+a:visited {color: #0000AD}
+a:hover {color: #0000AD}
+
+p {margin: 0px 0px 10px}
+    p a {color: #fff}
+    p a:visited {color: #fff}
+    p a:hover {color: #fff}
+
+div.block {overflow: hidden; margin: 0px 0px 10px}
+
+span.vote-positive a {color: #60B060}
+span.vote-positive a:visited {color: #60B060}
+span.vote-positive a:hover {color: #60B060}
+
+span.vote-negative a {color: #B06060}
+span.vote-negative a:visited {color: #B06060}
+span.vote-negative a:hover {color: #B06060}
+
+span.user a {color: #0000AD}
+span.user a:visited {color: #0000AD}
+span.user a:hover {color: #0000AD}
+
+span.header a {color: #729fcf}
+span.header a:visited {color: #729fcf}
+span.header a:hover {color: #729fcf}
+
+span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
+span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
+span.removed { color: red; font-weight: bold; padding: 0 2px}
+
+#titlebox {background-color: #DDE1C2; padding: 2px 0px 16px 2px; color: #464A3C; text-align: left}
+	#titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+	#titlebox a{color: #464A3C}
+	#titlebox a:visited {color: #464A3C}
+	#titlebox a:hover {color: #6F755F}
+
+#menubox {background-color: #C7CBB1; border-top: 1px solid #B0B190; border-bottom: 2px solid #B0B190; color: #505050; padding: 0px; text-align: center}
+	#menubox #menu {display: inline}
+	#menubox #auth {display: inline; float: right}
+	#menubox ul {display: inline}
+	#menubox li {display: inline}
+	#menubox #auth a.logout {color: #D1D0D0; font-weight: bold; text-decoration: none}
+	#menubox #auth a.logout:hover {color: #D1D0D0}
+	
+#actionbox {overflow: hidden; margin: 10px}
+	#actionbox #action {display: inline; float: right}
+
+#content {margin-left: 25px; margin-right: 25px}
+	#profile {overflow: hidden}
+        #content #profile img {float: right}
+
+	#content span.info {}
+		#content span.info a {color: #606090}
+		#content span.info a:visited {color: #606090}
+		#content span.info a:hover {color: #606090}
+		
+	#content div.startpost {}
+		#content div.startpost div.text {overflow: hidden; margin: 0px 40px 10px; text-align: justify}
+
+	#content div.post {margin-bottom: 5px; border-left: 3px solid #C7CBB1}
+        #content div.post div.header {margin: 0px; overflow: hidden; background-color: #D7D8C5}
+            #content div.post div.header div.title {float: left}
+            #content div.post div.header div.vote {float: right}
+		#content div.post div.block {margin: 0px; overflow: hidden; margin-left: 5px}
+            #content div.post div.text p {margin-left: 5px}
+		#content div.post div.text {overflow: hidden; text-align: justify; margin: 2px 3px 5px 0px} 
+		#content div.post div.info {font-size: 9pt}
+
+	#content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
+
+	#content div.form form {margin: 1em, 1em}
+		#content div.form table {width: 700px}
+		#content div.form table th {text-align: right; vertical-align: top; width: 200px; background-color: transparent; border: 0px}
+		@media screen and (max-width: 800px) {
+			#content div.form table {width: 100%}
+			#content div.from table th {text-align: right; vertical-align: top; width: 100px; background-color: transparent; border: 0px}
+		}
+		#content div.form form input, select, textarea {width: 100%}
+
+	#content table {width: 100%; border-collapse: collapse}
+		#content table thead {width: 100%}
+		#content table th {text-align: center; font-weight: bold; background-color: #C7CBB1; border: 1px solid #C7CBB1}
+		#content table tbody {}
+		#content table tbody tr.normal {}
+			#content table tbody tr.normal td {background-color: #E9EAD6; border: 1px solid #B0B190}
+		#content table tbody tr.dark {background-color: #DDE1C2; border: 1px solid #B0B190}
+			#content table tbody tr.dark td {border: 1px solid #DDE1C2; border: 1px solid #B0B190}
+
+	#content table.diff {width: 100%}
+		#content table.diff .diff_next {border: 1px solid #B0B190; background-color: #C7CBB1}
+		#content table.diff .diff_this td {background-color: #4e5466}
+		#content table.diff .diff_header {border: 1px solid #B0B190; background-color: #B0B190}
+		#content table.diff .diff_header {border: 1px solid #B0B190; background-color: #B0B190}
+		#content table.diff .diff_chg {background-color: #606090}
+		#content table.diff .diff_add {background-color: #60B060}
+		#content table.diff .diff_sub {background-color: #B06060}
+
+	#content div.pages {text-align: center}
+		#content div.pages a {color: white; text-decoration: none}
+		#content div.pages a:visited {color: white; text-decoration: none}
+		#content div.pages a:hover {color: #afafaf; text-decoration: none}
+
+#infobox {margin: 2em 5em; padding-top: 1em; color: #6f6f6f; font-size: 8pt; border-top: 1px dashed #686868}
+	#infobox #about {display: inline; text-align: left; position: absolute; margin-top: 1em}
+	#infobox #copyrights {text-align: center}
