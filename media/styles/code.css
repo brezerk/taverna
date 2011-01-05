@@ -1,4 +1,10 @@
-.code {}
+div.code {background-color: #333333; border: solid 2px #5D5D5D; padding-left: 15px}
+
+.codetable {background-color: #333333; border: solid 2px #5D5D5D}
+td.linenos {background-color: #333333; width: 15px; padding-left: 15px}
+
+    td.code > div.code {background-color: transparent; border: 0px; padding-left: 10px}
+
 .code .c { color: #87ceeb; } /* Comment */
 .code .err { border: 1px solid #FF0000 } /* Error */
 .code .k { color: #f0e68c; font-weight: bold } /* Keyword */

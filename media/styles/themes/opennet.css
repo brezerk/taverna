@@ -27,9 +27,9 @@ a:visited {color: #0000AD}
 a:hover {color: #0000AD}
 
 p {margin: 0px 0px 10px}
-    p a {color: #fff}
-    p a:visited {color: #fff}
-    p a:hover {color: #fff}
+    p a {color: #0000AD}
+    p a:visited {color: #0000AD}
+    p a:hover {color: #0000AD}
 
 div.block {overflow: hidden; margin: 0px 0px 10px}
 
@@ -50,11 +50,11 @@ span.header a:visited {color: #729fcf}
 span.header a:hover {color: #729fcf}
 
 span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
-span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
-span.removed { color: red; font-weight: bold; padding: 0 2px}
+span.solved { color: #60B060; font-weight: bold; padding: 0 2px}
+span.removed { color: #B06060; font-weight: bold; padding: 0 2px}
 
-#titlebox {background-color: #DDE1C2; padding: 2px 0px 16px 2px; color: #464A3C; text-align: left}
-	#titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+#titlebox {background-color: #DDE1C2; padding: 9px 13px; color: #464A3C; text-align: left}
+	#titlebox pre {font-family: Consolas, monospace; font-size: 7pt; line-height: 0.65; margin: 0px; padding: 0px}
 	#titlebox a{color: #464A3C}
 	#titlebox a:visited {color: #464A3C}
 	#titlebox a:hover {color: #6F755F}
@@ -64,8 +64,8 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 	#menubox #auth {display: inline; float: right}
 	#menubox ul {display: inline}
 	#menubox li {display: inline}
-	#menubox #auth a.logout {color: #D1D0D0; font-weight: bold; text-decoration: none}
-	#menubox #auth a.logout:hover {color: #D1D0D0}
+	#menubox #auth a.logout {color: #B06060; font-weight: bold; text-decoration: none}
+	#menubox #auth a.logout:hover {color: #B06060}
 	
 #actionbox {overflow: hidden; margin: 10px}
 	#actionbox #action {display: inline; float: right}
@@ -121,9 +121,9 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 		#content table.diff .diff_sub {background-color: #B06060}
 
 	#content div.pages {text-align: center}
-		#content div.pages a {color: white; text-decoration: none}
-		#content div.pages a:visited {color: white; text-decoration: none}
-		#content div.pages a:hover {color: #afafaf; text-decoration: none}
+		#content div.pages a {#0000AD: white; text-decoration: none}
+		#content div.pages a:visited {color: #0000AD; text-decoration: none}
+		#content div.pages a:hover {color: #0000AD; text-decoration: none}
 
 #infobox {margin: 2em 5em; padding-top: 1em; color: #6f6f6f; font-size: 8pt; border-top: 1px dashed #686868}
 	#infobox #about {display: inline; text-align: left; position: absolute; margin-top: 1em}

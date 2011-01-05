@@ -74,7 +74,7 @@ def markup(value, parser):
                     return u'<img src="%s" alt="%s">' % (contents, contents)
 
         class PygmentsCodeTag(postmarkup.TagBase):
-            def __init__(self, name, pygments_line_numbers=False, **kwargs):
+            def __init__(self, name, pygments_line_numbers=True, **kwargs):
                 postmarkup.TagBase.__init__(self, name, enclosed=True, strip_first_newline=True)
                 self.line_numbers = pygments_line_numbers
 

@@ -41,6 +41,8 @@ span.vote-negative a {color: #ae0f0f}
 span.vote-negative a:visited {color: #ae0f0f}
 span.vote-negative a:hover {color: #ff0000}
 
+
+
 span.user a {color: #71bc2e}
 span.user a:visited {color: #71bc2e}
 span.user a:hover {color: #71ff2e}
@@ -53,8 +55,8 @@ span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
 span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
 span.removed { color: red; font-weight: bold; padding: 0 2px}
 
-#titlebox {background-color: #111111; padding: 2px 0px 16px 2px; color: #c8c8c8; text-align: left}
-	#titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+#titlebox {background-color: #111111; padding: 9px 13px; color: #c8c8c8; text-align: left}
+	#titlebox pre {font-family: Consolas, monospace; font-size: 7pt; line-height: 0.65; margin: 0px; padding: 0px}
 	#titlebox a{color: #c8c8c8}
 	#titlebox a:visited {color: #c8c8c8}
 	#titlebox a:hover {color: #c8c8c8}

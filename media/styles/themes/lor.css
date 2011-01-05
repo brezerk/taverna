@@ -53,8 +53,8 @@ span.sticked { color: #72b2d8; font-weight: bold; padding: 0 2px}
 span.solved { color: #00ff00; font-weight: bold; padding: 0 2px}
 span.removed { color: red; font-weight: bold; padding: 0 2px}
 
-#titlebox {background-color: #000; padding: 2px 0px 16px 2px; color: #fff; text-align: left}
-	#titlebox pre {font-family: monospace; font-size:medium; line-height: 1; margin: 0px; padding: 0px}
+#titlebox {background-color: #000; padding: 9px 13px; color: #fff; text-align: left}
+	#titlebox pre {font-family: Consolas, monospace; font-size: 7pt; line-height: 0.65; margin: 0px; padding: 0px}
 	#titlebox a{color: #fff}
 	#titlebox a:visited {color: #fff}
 	#titlebox a:hover {color: #fff}
