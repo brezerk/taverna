@@ -31,7 +31,7 @@ p {margin: 0px 0px 10px}
     p a:visited {color: #729fcf}
     p a:hover {color: #729fcf}
 
-div.block {overflow: hidden; margin: 0px 0px 10px}
+div.block {overflow: hidden; margin: 10px 0}
 
 span.vote-positive a {color: #71bc2e}
 span.vote-positive a:visited {color: #71bc2e}
@@ -94,13 +94,9 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 
 	#content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
 
-	#content div.form form {margin: 1em, 1em}
-		#content div.form table {width: 700px}
-		#content div.form table th {text-align: right; vertical-align: top; width: 200px; background-color: transparent; border: 0px}
-		@media screen and (max-width: 800px) {
-			#content div.form table {width: 100%}
-			#content div.from table th {text-align: right; vertical-align: top; width: 100px; background-color: transparent; border: 0px}
-		}
+	#content div.form  {padding: 0 30px}
+		#content div.form table {width:100%}
+		#content div.form table th {width: 100px; text-align: left; vertical-align: top; background-color: transparent; border: 0px}
 		#content div.form form input, select, textarea {width: 100%; background-color: #606060; color: #e8e8e8; border: 1px solid #a8a8a8}
 
 	#content table {width: 100%; border-collapse: collapse}

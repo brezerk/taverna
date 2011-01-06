@@ -35,12 +35,15 @@ register = template.Library()
 @register.filter
 @stringfilter
 def show_cut(value):
-    return value.replace("---cut---", "<hr>")
+    value = value.replace("---cut---", "<hr>")
+    value = value.replace("&mdash;cut&mdash;", "<hr>")
+    return value
 
 @register.filter
 @stringfilter
 def strip_cut(value):
     value = value.replace("---cut---", "")
+    value = value.replace("&mdash;cut&mdash;", "")
     return value
 
 @register.filter
@@ -147,6 +150,8 @@ def tags(value):
 @register.filter
 def strippost(value, post):
     list = value.split("---cut---")
+    if len(list) <= 1:
+        list = value.split("&mdash;cut&mdash;")
 
     if len(list) > 1:
         value = markup(list[0], post.parser)

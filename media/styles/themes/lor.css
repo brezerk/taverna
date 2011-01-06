@@ -31,7 +31,7 @@ p {margin: 0px 0px 10px}
     p a:visited {color: #fff}
     p a:hover {color: #fff}
 
-div.block {overflow: hidden; margin: 0px 0px 10px}
+div.block {overflow: hidden; margin: 10px 0}
 
 span.vote-positive a {color: #D1D0D0}
 span.vote-positive a:visited {color: #D1D0D0}

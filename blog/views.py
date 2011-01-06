@@ -109,7 +109,7 @@ def post_edit(request, post_id):
     tag_string = ""
 
     class EditForm(ModelForm):
-        tag_string = CharField(initial=post_orig.get_tag_list())
+        tag_string = CharField(initial=post_orig.get_tag_list(), label=_("Tags"))
         blog = ModelChoiceField(queryset=user_blogs,
                             initial=user_blogs[0],
                             label=_("Post to"))
@@ -190,7 +190,7 @@ def post_add(request):
                      .exclude(name=settings.FRIDAY_BLOG).order_by('name').order_by('-owner__id')
 
     class PostForm(ModelForm):
-        tag_string = CharField(max_length=78)
+        tag_string = CharField(max_length=78, label=_("Tags"))
         blog = ModelChoiceField(
                    queryset=user_blogs,
                    initial=user_blogs[0],

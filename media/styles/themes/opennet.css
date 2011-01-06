@@ -31,7 +31,7 @@ p {margin: 0px 0px 10px}
     p a:visited {color: #0000AD}
     p a:hover {color: #0000AD}
 
-div.block {overflow: hidden; margin: 0px 0px 10px}
+div.block {overflow: hidden; margin: 10px 0}
 
 span.vote-positive a {color: #60B060}
 span.vote-positive a:visited {color: #60B060}
@@ -128,3 +128,6 @@ span.removed { color: #B06060; font-weight: bold; padding: 0 2px}
 #infobox {margin: 2em 5em; padding-top: 1em; color: #6f6f6f; font-size: 8pt; border-top: 1px dashed #686868}
 	#infobox #about {display: inline; text-align: left; position: absolute; margin-top: 1em}
 	#infobox #copyrights {text-align: center}
+
+.codetable {color: #eee}
+.code {color: #eee}
