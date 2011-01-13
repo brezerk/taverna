@@ -3,17 +3,21 @@
 <html>
 <head>
     <title>FOSS :. 404</title>
-    <link rel='stylesheet' type='text/css' href='/media/styles/base.css'>
+    {% if user.is_authenticated %}
+        <link rel='stylesheet' type='text/css' href='/media/styles/themes/{{user.profile.get_theme}}.css'>
+    {% else %}
+        <link rel='stylesheet' type='text/css' href='/media/styles/themes/default.css'>
+    {% endif %}
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 </head>
 <body>
-    <div class='titlebox'>
-        <pre><br>  ┏━━┏━┓┏━┓┏━┓<br>  ┣━ ┃ ┃┗━┓┗━┓<br>  ╹  ┗━┛┗━┛┗━┛</pre>
+    <div id='titlebox'>
+         <pre><a href="/">XXXX XXXX XXXX XXXX<br>X    X  X X    X   <br>XXX  X  X XXXX XXXX<br>X    X  X    X    X<br>X    XXXX XXXX XXXX</a></pre> 
     </div>
-    <div class='menubox'>
+    <div id='menubox'>
         &nbsp;
     </div>
-    <div class='content'>
+    <div id='content'>
     <h3>Error 404</h3>
 <pre>
      ______________
