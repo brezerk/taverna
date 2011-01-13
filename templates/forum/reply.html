@@ -9,7 +9,7 @@
     <h4>{% trans "Reply to message"%}</h4>
     {% if post.blog or post.forum %}
         {% with post as startpost %}
-        {% include 'blog/startpost.inc.html' %}
+        {% include 'forum/startpost.inc.html' %}
         {% endwith %}
     {% else %}
         {% include 'forum/post.inc.html' %}
