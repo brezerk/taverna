@@ -619,7 +619,7 @@ def thread(request, post_id):
                 'blog',
                 'forum',
                 'thread'
-            ).get(pk = post_id)
+            ).get(pk = post_id, reply_to = None)
     except Post.DoesNotExist:
         raise Http404
 

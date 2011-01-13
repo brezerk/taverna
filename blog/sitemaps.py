@@ -27,7 +27,7 @@ class BlogSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return Post.objects.filter(thread__id = F("thread__id")).order_by('-created')[:10]
+        return Post.objects.filter(reply_to = None).order_by('-created')[:10]
 
     def lastmod(self, obj):
         return obj.created

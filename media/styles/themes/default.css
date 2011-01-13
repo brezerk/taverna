@@ -21,12 +21,14 @@
 html, body {margin: 0px; padding: 0px}
 body {background-color: #282828; color: #c1c1c1; font-family:Verdana,Trebuchet MS,sans-serif; font-size:medium}
 img {margin: 10px; border: 4px solid #3f3f3f}
+    img.float-left {float: left}
+    img.float-right {float: right}
 h3 {margin: 25px 0px}
 a {color: #efefef; text-decoration: none}
 a:visited {color: #efefef}
 a:hover {color: #afafaf}
 
-p {margin: 0px 0px 10px}
+p {overflow: hidden; margin: 0px 0px 10px}
     p a {color: #729fcf}
     p a:visited {color: #729fcf}
     p a:hover {color: #729fcf}
@@ -72,7 +74,7 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 #actionbox {overflow: hidden; margin: 10px}
 	#actionbox #action {display: inline; float: right}
 
-#content {margin-left: 25px; margin-right: 25px}
+#content {overflow: hidden; margin-left: 25px; margin-right: 25px}
 	#profile {overflow: hidden}
         #content #profile img {float: right}
 
