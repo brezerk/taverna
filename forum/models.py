@@ -71,9 +71,9 @@ class Post(models.Model):
 
     def get_section_type(self):
         if self.blog:
-            return _("Blog")
+            return "Blog"
         else:
-            return _("Forum")
+            return "Forum"
 
     def get_section_url(self):
         if self.blog:

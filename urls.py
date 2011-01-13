@@ -27,7 +27,7 @@ from django.contrib import admin
 
 from taverna.blog.feeds import RssBlog, RssBlogFeed
 from taverna.blog.sitemaps import BlogSitemap
-from taverna.forum.feeds import RssForum, RssComments
+from taverna.forum.feeds import RssForum, RssComments, RssTrackerFeed
 from taverna.userauth.feeds import RssUser, AtomUser, RssNotify, AtomNotify
 
 admin.autodiscover()
@@ -74,7 +74,9 @@ urlpatterns = patterns('',
     (r'^forum/libvim.so.1.(?P<topic_id>\d+)$', 'forum.views.topic_edit'),
     (r'^bin/mkdir$', 'forum.views.forum_create'),
     (r'^forum/libtag.so.(?P<tag_id>\d+)$', 'forum.views.tags_search'),
+
     (r'^forum/tracker.so$', 'forum.views.tracker'),
+    url(r'^lib/tracker/librss.so$', RssTrackerFeed(), name='rss_tracker'),
 
     (r'^lib/offset.so.(?P<root_id>\d+).(?P<offset_id>\d+)$', 'forum.views.offset'),
     (r'^sbin/scourge.so.(?P<post_id>\d+)$', 'forum.views.scourge'),

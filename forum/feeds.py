@@ -95,4 +95,41 @@ class RssComments(CachedFeed):
 
         return reverse("blog.views.view", args=[item.blog.pk])
 
+class RssTrackerFeed(CachedFeed):
+    cache_prefix = "rss-tracker"
+    link = ""
+    description = ""
+    ttle = ""
+
+    paginator = None
+
+    def items(self):
+        posts = Post.objects.order_by('-created') \
+                    .select_related(
+                        'thread__blog',
+                        'thread__forum'
+                    )[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
+
+        return posts
+
+    def item_title(self, item):
+        if item.thread:
+            section = item.thread.get_section_type()
+            section_name = item.thread.get_section_name()
+        else:
+            section = item.get_section_type()
+            section_name = item.get_section_name()
+
+        if item.title:
+            title = item.title
+        else:
+            title = item.thread.title
+
+        return "%s: %s - %s" % (section, section_name, title)
+
+    def item_description(self, item):
+        if item.reply_to:
+            return item.text
+        else:
+            return markup(item.text, item.parser)
 

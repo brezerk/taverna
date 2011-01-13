@@ -74,11 +74,13 @@ def clear_template_cache(key, *variables):
 
 
 def invalidate_cache(post):
-    from forum.feeds import RssForum, RssComments
+    from forum.feeds import RssForum, RssComments, RssTrackerFeed
     from blog.feeds import RssBlogFeed, RssBlog
     """
     Be carefull with invalidation! :]
     """
+
+    RssTrackerFeed().clear_cache()
 
     if post.thread is None:
         return

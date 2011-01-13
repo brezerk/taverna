@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block action-right %}
+    [<a href='{% url rss_tracker %}'>RSS</a>]
     {% if showall == "1" %}
         [<a href='?showall=0'>grep positive</a>]
     {% else %}
