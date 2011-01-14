@@ -1,0 +1,7 @@
+User-agent: *
+
+Disallow: /media/
+Disallow: /login/
+Disallow: /lib/pam_logout.so
+Sitemap: /sitemap.xml
+
