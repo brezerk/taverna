@@ -108,7 +108,7 @@ class RssTrackerFeed(CachedFeed):
                     .select_related(
                         'thread__blog',
                         'thread__forum'
-                    )[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
+                    )[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
         return posts
 
@@ -120,10 +120,7 @@ class RssTrackerFeed(CachedFeed):
             section = item.get_section_type()
             section_name = item.get_section_name()
 
-        if item.title:
-            title = item.title
-        else:
-            title = item.thread.title
+        title = item.get_title()
 
         return "%s: %s - %s" % (section, section_name, title)
 
@@ -132,4 +129,7 @@ class RssTrackerFeed(CachedFeed):
             return item.text
         else:
             return markup(item.text, item.parser)
+
+    def item_link(self, item):
+        return reverse("forum.views.offset", args=[item.thread.pk, item.id])
 
