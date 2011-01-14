@@ -108,7 +108,7 @@ class RssTrackerFeed(CachedFeed):
                     .select_related(
                         'thread__blog',
                         'thread__forum'
-                    )[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
+                    )[:settings.PAGE_LIMITATIONS["FORUM_TOPICS"]]
 
         return posts
 
