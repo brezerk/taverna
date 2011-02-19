@@ -49,7 +49,7 @@ class ExtendedPaginator(Paginator):
         start = number - 5
         end = number + 5
 
-        if start < 1:
+        if start <= 1:
             end = 10 if self.num_pages > 9 else self.num_pages
             start = 1
         elif end >= self.num_pages:
