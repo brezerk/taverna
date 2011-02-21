@@ -112,6 +112,9 @@ def markup(value, parser):
     elif parser == 3:
         from wikimarkup import parselite
         value = parselite(value)
+    elif parser == 4:
+        from django.template.defaultfilters import removetags
+        value = removetags(value, 'style html script applet form frame iframe map noframes noscript object var area input button select')
     else:
         value = esc(value)
         value = urlize(value)
