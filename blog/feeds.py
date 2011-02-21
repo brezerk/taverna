@@ -48,7 +48,7 @@ class RssBlogFeed(CachedFeed):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
-        return strippost(item.text, item)
+        return "%s %s: %s" % (strippost(item.text, item), _("Author"), item.owner.profile.visible_name)
 
 
 class RssBlog(CachedFeed):
@@ -64,7 +64,8 @@ class RssBlog(CachedFeed):
         self.title = "%s: %s" % (_("Last topics for blog"), obj.name)
         self.description = obj.desc
         self.link = obj.get_absolute_url()
-        post_list = Post.objects.filter(blog = obj).order_by('-created')
+        post_list = Post.get_rated_users_blog_posts(obj)
+
         posts = post_list[:settings.PAGE_LIMITATIONS["BLOG_POSTS"]]
         return posts
 
@@ -72,6 +73,5 @@ class RssBlog(CachedFeed):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
-        return strippost(item.text, item)
-
+        return "%s %s: %s" % (strippost(item.text, item), _("Author"), item.owner.profile.visible_name)
 

@@ -212,6 +212,12 @@ class Post(models.Model):
             ).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
             ).order_by('-created').select_related('owner__profile','blog','thread')
 
+    @staticmethod
+    def get_rated_users_post_comments(startpost):
+        return Post.objects.filter(thread = startpost.thread
+            ).exclude(pk = startpost.pk).exclude(rating__lte = settings.MIN_RATING
+            ).order_by('-created').select_related('owner__profile','blog','forum')
+
     def is_negative(self):
         if self.rating < settings.MIN_RATING:
             return True

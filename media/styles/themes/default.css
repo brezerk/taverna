@@ -125,5 +125,5 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 		#content div.pages a:hover {color: #afafaf; text-decoration: none}
 
 #infobox {margin: 2em 5em; padding-top: 1em; color: #6f6f6f; font-size: 8pt; border-top: 1px dashed #686868}
-	#infobox #about {display: inline; text-align: left; position: absolute; margin-top: 1em}
+	#infobox #about {display: inline; text-align: left; position: absolute; margin-top: 1em; margin-bottom: 1em}
 	#infobox #copyrights {text-align: center}

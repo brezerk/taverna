@@ -74,7 +74,7 @@ class RssComments(CachedFeed):
         self.title = obj.title
         self.description = markup(obj.text, obj.parser)
 
-        thread_list = Post.objects.filter(thread = obj.thread).exclude(pk = obj.pk).order_by('-created')
+        thread_list = Post.get_rated_users_post_comments(obj)
 
         self.paginator = Paginator(thread_list, settings.PAGE_LIMITATIONS["FORUM_COMMENTS"])
         return thread_list[:settings.PAGE_LIMITATIONS["FORUM_COMMENTS"]]
@@ -86,7 +86,7 @@ class RssComments(CachedFeed):
             return item.thread.title
 
     def item_description(self, item):
-        return item.text
+        return "%s <p>%s: %s</p>" % (item.text, _("Author"), item.owner.profile.visible_name)
 
     def item_link(self, item):
         for page in self.paginator.page_range:
@@ -104,7 +104,7 @@ class RssTrackerFeed(CachedFeed):
     paginator = None
 
     def items(self):
-        posts = Post.objects.order_by('-created') \
+        posts = Post.objects.exclude(rating__lte = settings.MIN_RATING).order_by('-created') \
                     .select_related(
                         'thread__blog',
                         'thread__forum'
@@ -126,9 +126,9 @@ class RssTrackerFeed(CachedFeed):
 
     def item_description(self, item):
         if item.reply_to:
-            return item.text
+            return "%s <p>%s: %s</p>" % (item.text, _("Author"), item.owner.profile.visible_name)
         else:
-            return markup(item.text, item.parser)
+            return "%s <p>%s: %s</p>" % (markup(item.text, item.parser), _("Author"), item.owner.profile.visible_name)
 
     def item_link(self, item):
         return reverse("forum.views.offset", args=[item.thread.pk, item.id])
