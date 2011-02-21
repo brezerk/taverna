@@ -57,6 +57,11 @@ class RssForum(CachedFeed):
     def item_description(self, item):
         return markup(item.text, item.parser)
 
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
 
 class RssComments(CachedFeed):
     cache_prefix = "rss-comments"
@@ -86,7 +91,13 @@ class RssComments(CachedFeed):
             return item.thread.title
 
     def item_description(self, item):
-        return "%s <p>%s: %s</p>" % (item.text, _("Author"), item.owner.profile.visible_name)
+        return item.text
+
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
 
     def item_link(self, item):
         for page in self.paginator.page_range:
@@ -126,9 +137,15 @@ class RssTrackerFeed(CachedFeed):
 
     def item_description(self, item):
         if item.reply_to:
-            return "%s <p>%s: %s</p>" % (item.text, _("Author"), item.owner.profile.visible_name)
+            return item.text
         else:
-            return "%s <p>%s: %s</p>" % (markup(item.text, item.parser), _("Author"), item.owner.profile.visible_name)
+            return markup(item.text, item.parser)
+
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
 
     def item_link(self, item):
         return reverse("forum.views.offset", args=[item.thread.pk, item.id])

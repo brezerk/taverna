@@ -48,7 +48,13 @@ class RssBlogFeed(CachedFeed):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
-        return "%s %s: %s" % (strippost(item.text, item), _("Author"), item.owner.profile.visible_name)
+        return strippost(item.text, item)
+
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
 
 
 class RssBlog(CachedFeed):
@@ -73,5 +79,11 @@ class RssBlog(CachedFeed):
         return "%s - %s" % (item.blog.name, item.title)
 
     def item_description(self, item):
-        return "%s %s: %s" % (strippost(item.text, item), _("Author"), item.owner.profile.visible_name)
+        return strippost(item.text, item)
+
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
 

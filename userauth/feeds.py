@@ -52,6 +52,12 @@ class RssNotify(Feed):
     def item_description(self, item):
         return markup(item.text, item.parser)
 
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
+
     def item_link(self, item):
         return reverse("forum.views.offset", args=[item.thread.pk, item.pk])
 
@@ -79,6 +85,12 @@ class RssUser(Feed):
 
     def item_description(self, item):
         return markup(item.text, item.parser)
+
+    def item_author_name(self, item):
+        return item.owner.profile.visible_name
+
+    def item_pubdate(self, item):
+        return item.created
 
 class AtomUser(RssUser):
     feed_type = Atom1Feed
