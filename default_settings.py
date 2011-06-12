@@ -163,7 +163,8 @@ PARSER_ENGINES = (
     (0, 'Plain Text'),
     (1, 'BBCode'),
 #   (2, 'Markdown'),
-    (3, 'HTML'),
+#   (3, 'MediaWiki'),
+    (4, 'HTML'),
 )
 
 # Limit posts per page for blog, forums. etc.

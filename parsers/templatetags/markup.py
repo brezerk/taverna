@@ -95,7 +95,7 @@ def markup(value, parser):
                 #else:
                 #    lexer = guess_lexer(contents)
 
-                formatter = HtmlFormatter(linenos=self.line_numbers, cssclass="code")
+                formatter = HtmlFormatter(linenos='inline', cssclass="code")
                 return highlight(contents, lexer, formatter)
 
         markup.add_tag(ImgTag, u'img')
@@ -115,6 +115,7 @@ def markup(value, parser):
     elif parser == 4:
         from django.template.defaultfilters import removetags
         value = removetags(value, 'style html script applet form frame iframe map noframes noscript object var area input button select')
+        value = linebreaks(value)
     else:
         value = esc(value)
         value = urlize(value)

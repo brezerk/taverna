@@ -75,7 +75,21 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 	#actionbox #action {display: inline; float: right}
 
 #content {overflow: hidden; margin-left: 25px; margin-right: 25px}
-	#profile {overflow: hidden}
+    #content div.text {}
+        #content div.text pre {background-color: #333333; border: dashed 2px #3f3f3f; padding: 10px; white-space: pre-wrap}
+        #content div.text pre p {margin: 0; padding: 0}
+        #content div.text div.code pre {border: solid 2px #3f3f3f}
+        #content div.text h3 {margin: 10px 0}
+        #content div.text ul {margin-top: 0px}
+
+        #content div.text .codetable {border: solid 2px #3f3f3f; background-color: #333333}
+        #content div.text td.linenos {width: 15px; padding-left: 15px}
+        #content div.text .codetable pre {padding: 0; border: none; margin: 0}
+        #content div.text td.code {vertical-align: top}
+        #content div.text td.linenos {vertical-align: top}
+        #content div.text td.code > div.code pre {background-color: transparent; border: none; padding-left: 10px}
+
+    #profile {overflow: hidden}
         #content #profile img {float: right}
 
 	#content span.info {}
@@ -86,12 +100,12 @@ span.removed { color: red; font-weight: bold; padding: 0 2px}
 	#content div.startpost {}
 		#content div.startpost div.text {overflow: hidden; margin: 10px 40px; text-align: justify}
 
-	#content div.post {background-color: #232323; margin-bottom: 5px;}
+	#content div.post {background-color: #232323; margin: 10px 3px;}
         #content div.post div.header {margin: 0px; overflow: hidden}
             #content div.post div.header div.title {float: left}
             #content div.post div.header div.vote {float: right}
 		#content div.post div.block {margin: 0px}
-		#content div.post div.text {overflow: hidden; margin: 10px 3px; text-align: justify; padding: 2px 3px 5px 3px} 
+		#content div.post div.text {overflow: hidden; text-align: justify; padding: 2px 3px 5px 3px} 
 		#content div.post div.info {font-size: 9pt}
 
 	#content hr {border: 0px; border-bottom: 1px dashed #686868; margin: 15px 0}
