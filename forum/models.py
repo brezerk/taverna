@@ -53,6 +53,7 @@ class Post(models.Model):
     sticked = models.BooleanField(editable = True, default = 0)
     closed = models.BooleanField(editable = True, default = 0)
     solved = models.BooleanField(editable = True, default = 0)
+    draft = models.BooleanField(editable = True, default = 0)
 
     class Meta:
         ordering = ('created',)
@@ -203,14 +204,21 @@ class Post(models.Model):
 
     @staticmethod
     def get_rated_blog_posts():
-        return Post.objects.exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
+        return Post.objects.exclude(blog = None).exclude(draft = True).exclude(rating__lte = settings.MIN_RATING
             ).order_by('-created').select_related('owner__profile','blog','thread')
 
     @staticmethod
     def get_rated_users_blog_posts(blog):
         return Post.objects.filter(blog = blog
+            ).exclude(blog = None).exclude(draft = True).exclude(rating__lte = settings.MIN_RATING
+            ).order_by('-created').select_related('owner__profile','blog','thread')
+
+    @staticmethod
+    def get_users_blog_posts(blog):
+        return Post.objects.filter(blog = blog
             ).exclude(blog = None).exclude(rating__lte = settings.MIN_RATING
             ).order_by('-created').select_related('owner__profile','blog','thread')
+
 
     @staticmethod
     def get_rated_users_post_comments(startpost):

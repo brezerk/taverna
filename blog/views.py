@@ -284,7 +284,8 @@ def view(request, blog_id):
     except:
         raise Http404
 
-    posts = Post.get_rated_users_blog_posts(blog_info)
+    posts = Post.get_users_blog_posts(blog_info)
+
     paginator = ExtendedPaginator(
                     posts,
                     settings.PAGE_LIMITATIONS["BLOG_POSTS"]
@@ -340,6 +341,9 @@ def firebox(request):
 def vote_async(request, post_id, positive):
     post = get_object_or_404(Post, pk=post_id)
 
+    if post.draft:
+        return {"message": _("EDRAFT")}
+
     if not request.user.is_authenticated():
         return {"message": _("EACCES")}
 
@@ -367,6 +371,9 @@ def vote_async(request, post_id, positive):
 @login_required()
 def vote_generic(request, post_id, positive):
     post = get_object_or_404(Post, pk=post_id)
+
+    if post.draft:
+        return error(request, _("EDRAFT"))
 
     if post.owner == request.user:
         return error(request, _("ELOOP"))

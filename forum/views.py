@@ -52,6 +52,7 @@ class ThreadForm(forms.ModelForm):
             'solved',
             'sticked',
             'closed',
+            'draft'
         )
         widgets = {
             'text': forms.Textarea(attrs={'cols': 80, 'rows': 27}),
@@ -97,6 +98,7 @@ class AdminThreadForm(ThreadForm):
             'thread',
             'flags',
             'solved',
+            'draft',
         )
         widgets = {
             'text': forms.Textarea(attrs={'cols': 80, 'rows': 27}),
@@ -114,6 +116,7 @@ class PostForm(forms.ModelForm):
             'solved',
             'sticked',
             'closed',
+            'draft',
         )
         widgets = {
             'text': forms.Textarea(attrs={'cols': 80, 'rows': 27}),
@@ -204,6 +207,9 @@ def reply(request, post_id):
 
     if reply_to.thread.closed:
         raise Http404
+
+    if reply_to.draft or reply_to.thread.draft:
+        return error(request, "You can't comment draft's :)")
 
     if not request.user.profile.can_create_comment():
         return error(request, "COMMENT_CREATE")

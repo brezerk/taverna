@@ -6,6 +6,9 @@
 {% block header %}
     {{ startpost.get_flags|safe }}
     {{ startpost.get_forumtags|safe }}
+    {% if startpost.draft %}
+        [draft]
+    {% endif %}
     <a href='{{ startpost.get_absolute_url }}'>{{ startpost.title }}</a>
 {% endblock %}
 
